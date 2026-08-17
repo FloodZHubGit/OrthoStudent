@@ -1056,6 +1056,48 @@ kbd {
 .gl-see .chip { font-size: 11px; }
 
 /* ============================================================
+   Constellation du vocabulaire
+   ============================================================ */
+
+.cst-wrap {
+  position: relative; height: 64vh; min-height: 430px;
+  border: 1px solid var(--line-soft); border-radius: var(--r);
+  background:
+    radial-gradient(900px 500px at 25% 10%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 60%),
+    linear-gradient(160deg, var(--surface-2), var(--surface));
+  overflow: hidden; cursor: grab; box-shadow: var(--shadow-s);
+}
+.cst-wrap.dragging { cursor: grabbing; }
+.cst-wrap canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+
+.cst-dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  display: inline-block; flex: none;
+}
+.cst-legend .chip { font-size: 11px; gap: 6px; opacity: .45; }
+.cst-legend .chip.on { opacity: 1; }
+
+.cst-k {
+  font-size: 9.5px; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--txt-3); font-weight: 700; align-self: center;
+}
+.cst-arrow { color: var(--accent); align-self: center; font-size: 12px; }
+.cst-path { margin-top: 10px; }
+.cst-path .chip { font-size: 11px; }
+
+.cst-top { display: flex; flex-direction: column; gap: 2px; }
+.cst-top-row {
+  display: flex; align-items: center; gap: 9px; cursor: pointer;
+  padding: 5px 8px; border-radius: var(--r-s); transition: .14s var(--ease);
+}
+.cst-top-row:hover { background: var(--surface-3); }
+.cst-top-t { font-size: 12.8px; }
+.cst-deg {
+  font-family: var(--mono); font-size: 11px; color: var(--accent);
+  background: var(--accent-soft); border-radius: 20px; padding: 1px 8px;
+}
+
+/* ============================================================
    Navigation au clavier
    Tout élément cliquable est atteignable à la tabulation ; il doit
    donc montrer clairement où se trouve le focus.
