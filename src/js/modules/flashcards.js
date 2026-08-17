@@ -28,7 +28,18 @@
     desc: 'Répétition espacée, import de fiches (NotebookLM, cours…), export Anki',
     keywords: 'fiches flashcards revision memoire repetition espacee leitner import notebooklm anki export',
     render: function (ctx) {
-      var st = { deck: null, queue: [], i: 0, flipped: false, session: { ok: 0, ko: 0 }, focused: false };
+      var st = {
+        deck: null, queue: [], i: 0, flipped: false, focused: false,
+        session: { ok: 0, ko: 0, missed: [] },
+        /* réglages de session, conservés d'une session à l'autre */
+        opts: Object.assign({ limit: 20, order: 'due', dueOnly: false },
+          (Store.state.settings.review || {}))
+      };
+
+      function saveOpts() {
+        Store.state.settings.review = st.opts;
+        Store.save();
+      }
 
       // fiche ouverte directement depuis la recherche rapide (Ctrl+K)
       var wantedCard = (ctx && ctx.params && ctx.params.cardId) || null;
@@ -39,28 +50,57 @@
       function tabReview() {
         var body = el('div');
 
-        function buildQueue() {
-          var pool = Cards.all().filter(function (c) { return !st.deck || c.deck === st.deck; });
-          var due = Store.dueCards(pool.map(function (c) { return c.id; }));
-          var list = pool.filter(function (c) { return due.indexOf(c.id) >= 0; });
-          if (!list.length) list = pool.slice();
-          st.queue = list.sort(function (a, b) {
-            return (Store.state.srs[a.id] || { box: 1 }).box - (Store.state.srs[b.id] || { box: 1 }).box;
-          });
-          st.i = 0; st.flipped = false; st.session = { ok: 0, ko: 0 }; st.focused = false;
+        function box(c) { return (Store.state.srs[c.id] || { box: 1 }).box; }
+        function seen(c) { return (Store.state.srs[c.id] || { seen: 0 }).seen; }
+
+        function shuffle(a) {
+          for (var i = a.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var t = a[i]; a[i] = a[j]; a[j] = t;
+          }
+          return a;
+        }
+
+        /* La file dépend des réglages : périmètre (un paquet ou tout),
+           filtre « seulement ce qui est dû », ordre, puis longueur. */
+        function buildQueue(cards) {
+          var list = cards || Cards.all().filter(function (c) { return !st.deck || c.deck === st.deck; });
+          list = list.slice();
+
+          if (!cards) {
+            if (st.opts.dueOnly) list = list.filter(Cards.isDue);
+
+            if (st.opts.order === 'random') shuffle(list);
+            else if (st.opts.order === 'weak') {
+              list.sort(function (a, b) { return box(a) - box(b) || seen(b) - seen(a); });
+            } else if (st.opts.order === 'due') {
+              // ce qui est dû d'abord, et parmi eux les fiches les moins solides
+              list.sort(function (a, b) {
+                return (Cards.isDue(a) ? 0 : 1) - (Cards.isDue(b) ? 0 : 1) || box(a) - box(b);
+              });
+            }
+            // 'deck' : on garde l'ordre du paquet, utile pour un chapitre suivi
+
+            if (st.opts.limit && list.length > st.opts.limit) list = list.slice(0, st.opts.limit);
+          }
+
+          st.queue = list;
+          st.i = 0; st.flipped = false; st.session = { ok: 0, ko: 0, missed: [] }; st.focused = false;
         }
 
         /* file d'une seule fiche : révision ciblée, sans score de session */
         function focusCard(id) {
           var c = Cards.all().filter(function (x) { return x.id === id; })[0];
           if (!c) return false;
-          st.queue = [c]; st.i = 0; st.flipped = false; st.session = { ok: 0, ko: 0 }; st.focused = true;
+          st.queue = [c]; st.i = 0; st.flipped = false; st.session = { ok: 0, ko: 0, missed: [] }; st.focused = true;
           return true;
         }
 
         function answer(q) {
-          Store.reviewCard(st.queue[st.i].id, q);
-          if (q === 2) st.session.ok++; else st.session.ko++;
+          var c = st.queue[st.i];
+          Store.reviewCard(c.id, q);
+          if (q === 2) st.session.ok++;
+          else { st.session.ko++; st.session.missed.push(c); }
           st.i++; st.flipped = false;
           draw();
         }
@@ -81,12 +121,14 @@
           ]);
 
           body.appendChild(UI.card(null, [
-            el('div', { class: 'flex' }, [
+            el('div', { class: 'flex wrap' }, [
               UI.chip(c.deck, 'blue'),
               c.custom ? UI.chip('importée', 'violet') : null,
               c.hint ? UI.chip(c.hint.length > 42 ? c.hint.slice(0, 40) + '…' : c.hint) : null,
               UI.chip('Boîte ' + srs.box + '/5', srs.box >= 4 ? 'green' : srs.box >= 2 ? 'amber' : ''),
               el('span', { class: 'spacer' }),
+              st.session.ok ? el('span', { class: 'small', style: { color: 'var(--green)' }, text: '✓ ' + st.session.ok }) : null,
+              st.session.ko ? el('span', { class: 'small', style: { color: 'var(--amber)' }, text: '↻ ' + st.session.ko }) : null,
               el('span', { class: 'muted small', text: (st.i + 1) + ' / ' + st.queue.length })
             ].filter(Boolean)),
             UI.bar((st.i / st.queue.length) * 100),
@@ -101,8 +143,10 @@
           ]));
 
           body.appendChild(el('div', { class: 'btn-row' }, [
-            UI.btn('Changer de paquet', function () { st.queue = []; draw(); }),
-            UI.btn('Passer', function () { st.i++; st.flipped = false; draw(); })
+            UI.btn('← Changer de paquet', function () { st.queue = []; draw(); }),
+            UI.btn('Passer', function () { st.i++; st.flipped = false; draw(); }),
+            el('span', { class: 'spacer' }),
+            el('span', { class: 'muted small', text: st.focused ? 'Fiche isolée — hors session' : 'Reste ' + (st.queue.length - st.i) + ' fiche(s)' })
           ]));
 
           body.appendChild(UI.keyhint([
@@ -122,65 +166,164 @@
           }
         });
 
+        var scored = false;   // une session ne compte qu'une fois, même si on la ré-affiche
+
         function done() {
           var total = st.session.ok + st.session.ko;
           var pct = total ? Math.round((st.session.ok / total) * 100) : 0;
           // une fiche isolée ouverte depuis la recherche ne fait pas une session
-          if (!st.focused) Store.recordScore('flashcards', pct, { n: total });
+          if (!st.focused && total && !scored) { Store.recordScore('flashcards', pct, { n: total }); scored = true; }
+          var missed = st.session.missed.slice();
+
           return UI.card('Session terminée', [
             el('div', { class: 'grid g3' }, [
               UI.stat(st.session.ok, 'Sues', 'var(--green)'),
               UI.stat(st.session.ko, 'À revoir', 'var(--amber)'),
               UI.stat(pct + ' %', 'Taux')
             ]),
+            missed.length
+              ? el('div', {}, [
+                  el('h3', { text: 'Les ' + missed.length + ' fiche(s) à retravailler' }),
+                  UI.table(['Question', 'Réponse'], missed.slice(0, 12).map(function (c) { return [c.f, c.b]; }), { scroll: '260px' })
+                ])
+              : UI.note('Tout est passé du premier coup — la file suivante sera plus espacée.'),
             UI.note('Les cartes ratées reviennent demain, les cartes sues sont reprogrammées de plus en plus loin (1, 2, 5, 10 puis 25 jours).'),
             el('div', { class: 'btn-row' }, [
-              UI.btn('Nouvelle session', function () { buildQueue(); draw(); }, 'primary'),
-              UI.btn('Changer de paquet', function () { st.queue = []; draw(); })
-            ])
+              missed.length
+                ? UI.btn('↻ Revoir les ' + missed.length + ' ratées', function () {
+                    scored = true; buildQueue(missed); st.focused = true; draw();
+                  }, 'primary')
+                : null,
+              UI.btn('Nouvelle session', function () { scored = false; buildQueue(); draw(); }, missed.length ? '' : 'primary'),
+              UI.btn('← Changer de paquet', function () { scored = false; st.queue = []; draw(); })
+            ].filter(Boolean))
+          ]);
+        }
+
+        /* ---- sélecteur de paquets ---- */
+        function start(deck) {
+          st.deck = deck;
+          buildQueue();
+          if (!st.queue.length) {
+            UI.toast(st.opts.dueOnly
+              ? 'Rien à revoir dans ce paquet aujourd’hui — décochez « seulement les fiches dues ».'
+              : 'Ce paquet est vide.');
+            return;
+          }
+          draw();
+        }
+
+        function deckCard(name, label, stats, tags) {
+          var pct = stats.pct;
+          return el('div', { class: 'tool-card deck-pick', onClick: function () { start(name); } }, [
+            el('div', { class: 'flex', style: { marginBottom: '6px' } }, [
+              el('h4', { style: { margin: 0 }, text: label }),
+              el('span', { class: 'spacer' })
+            ].concat(tags || [])),
+            el('p', { style: { margin: '0 0 8px' } , text:
+              stats.n + ' fiche' + (stats.n > 1 ? 's' : '') +
+              ' · ' + stats.mastered + ' mémorisée' + (stats.mastered > 1 ? 's' : '') +
+              (stats.due ? ' · ' + stats.due + ' à revoir' : '') }),
+            UI.bar(pct, pct >= 70 ? 'var(--green)' : pct >= 30 ? 'var(--accent)' : 'var(--amber)'),
+            el('div', { class: 'small muted', style: { marginTop: '5px' }, text: pct + ' % en boîte 4 ou 5' })
           ]);
         }
 
         function picker() {
-          var d = Cards.decks();
           var all = Cards.all();
-          var due = Store.dueCards(all.map(function (c) { return c.id; })).length;
-          var boxes = [0, 0, 0, 0, 0, 0];
-          all.forEach(function (c) { boxes[(Store.state.srs[c.id] || { box: 1 }).box]++; });
+          var global = Cards.stats(all);
+          var groups = Cards.groups();
+          var streak = Store.streak();
 
-          return el('div', {}, [
-            UI.card('Choisir un paquet', [
-              el('div', { class: 'grid g3' },
-                [{ k: null, n: all.length, label: 'Toutes les fiches', custom: false }]
-                  .concat(Object.keys(d).map(function (k) { return { k: k, n: d[k].n, label: k, custom: d[k].custom, generated: d[k].generated }; }))
-                  .map(function (o) {
-                    var pool = all.filter(function (c) { return !o.k || c.deck === o.k; });
-                    var dueN = Store.dueCards(pool.map(function (c) { return c.id; })).length;
-                    return el('div', { class: 'tool-card', onClick: function () { st.deck = o.k; buildQueue(); draw(); } }, [
-                      el('div', { class: 'flex', style: { marginBottom: '6px' } }, [
-                        el('h4', { style: { margin: 0 }, text: o.label }),
-                        el('span', { class: 'spacer' }),
-                        o.custom ? UI.chip('importé', 'violet') : null,
-                        o.generated ? UI.chip('chiffres clés', 'blue') : null,
-                        dueN ? UI.chip(dueN + ' à revoir', 'amber') : null
-                      ].filter(Boolean)),
-                      el('p', { text: o.n + ' fiche' + (o.n > 1 ? 's' : '') })
-                    ]);
-                  }))
-            ]),
-            UI.card('Progression de la mémorisation', [
-              el('div', { class: 'grid g3' }, [
-                UI.stat(due, 'À réviser aujourd’hui', due ? 'var(--amber)' : 'var(--green)'),
-                UI.stat(boxes[4] + boxes[5], 'Bien mémorisées', 'var(--green)'),
-                UI.stat(all.length, 'Fiches au total')
+          /* réglages de session */
+          var limitSel = UI.select([
+            { value: '10', label: '10 fiches — révision éclair' },
+            { value: '20', label: '20 fiches — session courte' },
+            { value: '30', label: '30 fiches' },
+            { value: '50', label: '50 fiches' },
+            { value: '0', label: 'Tout le paquet' }
+          ], String(st.opts.limit), function (v) { st.opts.limit = parseInt(v, 10) || 0; saveOpts(); });
+
+          var orderSel = UI.select([
+            { value: 'due', label: 'Ce qui est dû en premier' },
+            { value: 'weak', label: 'Les plus fragiles d’abord' },
+            { value: 'random', label: 'Ordre aléatoire' },
+            { value: 'deck', label: 'Ordre du paquet' }
+          ], st.opts.order, function (v) { st.opts.order = v; saveOpts(); });
+
+          var dueChip = el('span', {
+            class: 'chip' + (st.opts.dueOnly ? ' on' : ''),
+            text: '⏳ Seulement les fiches dues',
+            onClick: function (e) {
+              st.opts.dueOnly = !st.opts.dueOnly;
+              e.currentTarget.classList.toggle('on', st.opts.dueOnly);
+              saveOpts();
+            }
+          });
+
+          var wrap = el('div', {}, [
+            /* 1. où en est-on */
+            UI.card('Où en êtes-vous', [
+              el('div', { class: 'grid g4' }, [
+                UI.stat(global.due, 'À réviser aujourd’hui', global.due ? 'var(--amber)' : 'var(--green)'),
+                UI.stat(global.mastered, 'Bien mémorisées', 'var(--green)'),
+                UI.stat(global.n, 'Fiches au total'),
+                UI.stat(streak.current + ' j', 'Série en cours', streak.current ? 'var(--accent)' : null)
               ]),
-              UI.table(['Boîte', 'Fiches', 'Prochain rappel'], [1, 2, 3, 4, 5].map(function (b) {
-                return ['Boîte ' + b, boxes[b], Store.boxIntervals[b] + ' jour' + (Store.boxIntervals[b] > 1 ? 's' : '')];
-              })),
-              UI.note('Système de Leitner : une carte sue monte d’une boîte, une carte oubliée retombe en boîte 1. ' +
-                'Réviser 10 minutes par jour vaut mieux que deux heures la veille de l’examen.')
+              UI.bar(global.pct, 'var(--green)'),
+              el('div', { class: 'small muted', style: { marginTop: '6px' },
+                text: global.pct + ' % du fonds est en boîte 4 ou 5 — ' + global.started + ' fiche(s) déjà vue(s) au moins une fois.' })
+            ]),
+
+            /* 2. comment réviser */
+            UI.card('Régler la session', [
+              el('div', { class: 'grid g2' }, [
+                UI.field('Longueur', limitSel, 'Mieux vaut une file courte tous les jours qu’une longue une fois par semaine.'),
+                UI.field('Ordre de passage', orderSel, '« Les plus fragiles » remonte les fiches restées en boîte 1.')
+              ]),
+              el('div', { class: 'btn-row' }, [
+                dueChip,
+                el('span', { class: 'spacer' }),
+                UI.btn('🎴 Réviser tout le fonds (' + global.n + ')', function () { start(null); }, 'primary'),
+                global.due
+                  ? UI.btn('⏳ Réviser les ' + global.due + ' fiches dues', function () {
+                      st.opts.dueOnly = true; saveOpts(); start(null);
+                    })
+                  : null
+              ].filter(Boolean))
             ])
           ]);
+
+          /* 3. les paquets, groupés par origine */
+          groups.forEach(function (g) {
+            var gStats = Cards.stats(g.decks.reduce(function (a, d) { return a.concat(d.cards); }, []));
+            wrap.appendChild(UI.card(g.icon + '  ' + g.label, [
+              el('p', { class: 'muted small', style: { margin: '-4px 0 12px' },
+                text: g.desc + ' — ' + g.decks.length + ' paquet(s), ' + gStats.n + ' fiche(s)' +
+                  (gStats.due ? ', ' + gStats.due + ' à revoir' : '') }),
+              el('div', { class: 'grid g3' }, g.decks.map(function (d) {
+                return deckCard(d.name, d.name, d.stats, [
+                  d.stats.due ? UI.chip(d.stats.due + ' à revoir', 'amber') : null,
+                  d.kind === 'custom' ? UI.chip('importé', 'violet') : null
+                ].filter(Boolean));
+              }))
+            ]));
+          });
+
+          /* 4. le détail du système de boîtes */
+          wrap.appendChild(UI.card('Répartition dans les boîtes de Leitner', [
+            UI.table(['Boîte', 'Fiches', 'Prochain rappel'], [1, 2, 3, 4, 5].map(function (b) {
+              return [
+                'Boîte ' + b,
+                global.boxes[b],
+                Store.boxIntervals[b] + ' jour' + (Store.boxIntervals[b] > 1 ? 's' : '')
+              ];
+            }), { numeric: [1] }),
+            UI.note('Une carte sue monte d’une boîte, une carte oubliée retombe en boîte 1. ' +
+              'Réviser 10 minutes par jour vaut mieux que deux heures la veille de l’examen.')
+          ]));
+
+          return wrap;
         }
 
         if (wantedCard) { focusCard(wantedCard); wantedCard = null; }

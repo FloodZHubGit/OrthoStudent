@@ -247,8 +247,11 @@
         M[id].keywords || '', M[id].desc || '', function () { go(id); }));
     });
 
+    /* les abréviations comptent comme mots-clés : « AC/A », « DVD », « BUT »
+       doivent tomber sur l'entrée même quand le titre est en clair */
     GLOSSARY.forEach(function (g) {
-      idx.push(entry('glossaire', 'Glossaire · ' + g.c, g.t, g.d, '', g.d,
+      idx.push(entry('glossaire', 'Glossaire · ' + g.c, g.t, g.n || g.d, g.a || '',
+        g.d + ' ' + (g.n || '') + ' ' + (g.v || []).join(' '),
         function () { go('glossary', { term: g.t }); }));
     });
 
