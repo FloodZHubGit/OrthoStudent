@@ -303,6 +303,58 @@
       return d;
     },
 
+    /* ------------------------------------------------------------
+       Statistiques d'un lot de fiches : ce qui est dû aujourd'hui,
+       la répartition dans les cinq boîtes et le taux de mémorisation.
+       ------------------------------------------------------------ */
+    srsOf: function (card) {
+      return Store.state.srs[card.id] || null;
+    },
+
+    isDue: function (card) {
+      var s = Store.state.srs[card.id];
+      return !s || s.due <= Date.now();
+    },
+
+    stats: function (cards) {
+      var boxes = [0, 0, 0, 0, 0, 0], due = 0, started = 0;
+      cards.forEach(function (c) {
+        var s = Store.state.srs[c.id];
+        boxes[s ? s.box : 1]++;
+        if (s) started++;
+        if (Cards.isDue(c)) due++;
+      });
+      var mastered = boxes[4] + boxes[5];
+      return {
+        n: cards.length, due: due, started: started, boxes: boxes,
+        mastered: mastered,
+        pct: cards.length ? Math.round((mastered / cards.length) * 100) : 0
+      };
+    },
+
+    /* Paquets rangés par origine — c'est ce que le sélecteur affiche :
+       les fiches livrées, les chiffres tirés du référentiel d'UE, puis
+       les fiches importées par l'étudiant. */
+    groups: function () {
+      var by = {};
+      Cards.all().forEach(function (c) {
+        var k = c.deck || 'Sans paquet';
+        (by[k] = by[k] || []).push(c);
+      });
+      var out = [
+        { id: 'core', label: 'Fiches OrthoStudent', icon: '📗', desc: 'Livrées avec l’application', decks: [] },
+        { id: 'generated', label: 'Chiffres clés du référentiel', icon: '🔢', desc: 'Extraits automatiquement des fiches d’UE', decks: [] },
+        { id: 'custom', label: 'Mes fiches importées', icon: '📥', desc: 'NotebookLM, cours, Quizlet…', decks: [] }
+      ];
+      Object.keys(by).sort(function (a, b) { return a.localeCompare(b, 'fr'); }).forEach(function (k) {
+        var cards = by[k];
+        var kind = cards[0].custom ? 'custom' : cards[0].generated ? 'generated' : 'core';
+        var g = out.filter(function (o) { return o.id === kind; })[0];
+        g.decks.push({ name: k, kind: kind, cards: cards, stats: Cards.stats(cards) });
+      });
+      return out.filter(function (o) { return o.decks.length; });
+    },
+
     add: function (list, deck, source) {
       if (!Store.state.customCards) Store.state.customCards = [];
       var existing = {};
