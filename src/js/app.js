@@ -12,7 +12,7 @@
     { group: 'Mise en situation', items: ['patient', 'rehab'] },
     { group: 'Simulateurs', items: ['phoropter', 'skiascopy', 'acuity', 'covertest', 'prism', 'motility', 'lancaster', 'binocular', 'ppc', 'fundus', 'colorvision', 'fields'] },
     { group: 'Outils', items: ['converters'] },
-    { group: 'Savoir', items: ['theory', 'anatomy', 'glossary'] }
+    { group: 'Savoir', items: ['theory', 'anatomy', 'glossary', 'constellation'] }
   ];
 
   var ALIASES = { disclaimer: 'help' };
