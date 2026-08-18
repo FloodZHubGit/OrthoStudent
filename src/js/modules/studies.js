@@ -16,6 +16,7 @@
   var C = window.CURRICULUM;
   var GUIDE = window.UE_GUIDE || {};
   var EXTRA = window.UE_EXTRA || {};
+  var DEEP = window.UE_DEEP || {};
 
   /* Le graphe de prérequis se lit dans les deux sens. UE_EXTRA ne
      déclare que « repose sur » ; on inverse une fois pour disposer
@@ -146,6 +147,12 @@
     if (e && e.qr) {
       e.qr.forEach(function (p) {
         out.push({ q: p[0], a: p[1], kind: 'question' });
+      });
+    }
+    var d = DEEP[u.code];
+    if (d && d.mnemo) {
+      d.mnemo.forEach(function (m) {
+        out.push({ q: 'Que code le moyen « ' + m[0] + ' » ?', a: m[1], kind: 'mnemo' });
       });
     }
     return out;
@@ -406,7 +413,7 @@
           var card = el('div', {
             class: 'recite-card', onClick: function () { st.shown = !st.shown; draw(); }
           }, [
-            el('span', { class: 'side-label', text: it.kind === 'chiffre' ? 'Chiffre à connaître' : 'Question' }),
+            el('span', { class: 'side-label', text: it.kind === 'chiffre' ? 'Chiffre à connaître' : it.kind === 'mnemo' ? 'Moyen mnémotechnique' : 'Question' }),
             el('div', { class: 'recite-q selectable', html: it.q }),
             st.shown
               ? el('div', { class: 'recite-a selectable', html: it.a })
@@ -416,7 +423,7 @@
           box.appendChild(UI.card(null, [
             el('div', { class: 'flex wrap' }, [
               UI.chip(u.code, 'blue'),
-              UI.chip(it.kind === 'chiffre' ? '🔢 chiffre' : '💬 question'),
+              UI.chip(it.kind === 'chiffre' ? '🔢 chiffre' : it.kind === 'mnemo' ? '🧠 moyen mnémotechnique' : '💬 question'),
               el('span', { class: 'spacer' }),
               st.ok ? el('span', { class: 'small', style: { color: 'var(--green)' }, text: '✓ ' + st.ok }) : null,
               st.ko ? el('span', { class: 'small', style: { color: 'var(--amber)' }, text: '↻ ' + st.ko }) : null,
@@ -656,6 +663,75 @@
                 });
               }))
             ]);
+          })(),
+
+          /* --- les tableaux à savoir refaire --- */
+          (function () {
+            var d = DEEP[u.code];
+            if (!d || !d.tableaux || !d.tableaux.length) return null;
+            return UI.card('Les tableaux à savoir refaire', d.tableaux.map(function (tb) {
+              return el('div', { class: 'ue-tab selectable' }, [
+                el('h4', { text: tb.t }),
+                UI.table(tb.c, tb.r)
+              ]);
+            }), { right: UI.chip(d.tableaux.length + ' tableau' + (d.tableaux.length > 1 ? 'x' : '')) });
+          })(),
+
+          /* --- cas d'application, réponse masquée --- */
+          (function () {
+            var d = DEEP[u.code];
+            if (!d || !d.cas) return null;
+            var c = d.cas, open = false;
+            var box = el('div');
+            var btn = UI.btn('Voir le raisonnement attendu', function () {
+              open = !open; render();
+            }, 'primary');
+            function render() {
+              UI.clear(box);
+              btn.textContent = open ? 'Masquer le raisonnement' : 'Voir le raisonnement attendu';
+              if (!open) return;
+              box.appendChild(el('div', { class: 'ue-cas-r selectable' }, [
+                el('div', { class: 'k', text: 'Raisonnement' }),
+                el('p', { html: c.r }),
+                el('div', { class: 'k', text: 'Conclusion' }),
+                el('p', { html: c.c })
+              ]));
+            }
+            render();
+            return UI.card('Cas d’application — ' + c.t, [
+              el('p', { class: 'ue-cas-s selectable', html: c.s }),
+              (c.q && c.q.length) ? el('ol', { class: 'ue-cas-q selectable' },
+                c.q.map(function (x) { return el('li', { html: x }); })) : null,
+              el('div', { class: 'btn-row' }, [btn]),
+              box
+            ].filter(Boolean));
+          })(),
+
+          /* --- plan de réponse type --- */
+          (function () {
+            var d = DEEP[u.code];
+            if (!d || !d.reponse) return null;
+            return UI.card('Plan de réponse type', [
+              el('p', { class: 'ue-rep-q selectable', html: '« ' + d.reponse.q + ' »' }),
+              el('ol', { class: 'ue-rep selectable' }, d.reponse.p.map(function (x) {
+                return el('li', { html: x });
+              })),
+              UI.note('Savoir quoi dire ne suffit pas : c’est l’ordre qui fait la différence entre une réponse ' +
+                'complète et un catalogue. Récitez ce plan à voix haute avant de rédiger.')
+            ]);
+          })(),
+
+          /* --- moyens mnémotechniques --- */
+          (function () {
+            var d = DEEP[u.code];
+            if (!d || !d.mnemo || !d.mnemo.length) return null;
+            return UI.card('Moyens mnémotechniques', el('div', { class: 'ue-mnemo selectable' },
+              d.mnemo.map(function (m) {
+                return el('div', { class: 'ue-mnemo-row' }, [
+                  el('span', { class: 'm', html: m[0] }),
+                  el('span', { class: 'd', html: m[1] })
+                ]);
+              })));
           })(),
 
           g ? UI.card('Comment travailler cette UE', UI.note(g.methode)) : null,
