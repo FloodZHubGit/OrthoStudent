@@ -121,9 +121,21 @@
   /* ---------------- Construction de l'épreuve ---------------- */
   function build(cfg) {
     var stations = [];
-    var nSim = cfg.sims ? Math.max(1, Math.round(cfg.n * 0.3)) : 0;
-    var nCalc = Math.round((cfg.n - nSim) * 0.4);
-    var nQcm = cfg.n - nSim - nCalc;
+    /* un reglage invalide ne doit pas produire une epreuve vide */
+    cfg.n = Math.max(3, Math.min(40, parseInt(cfg.n, 10) || 8));
+    cfg.minutes = Math.max(5, Math.min(120, parseInt(cfg.minutes, 10) || 20));
+    var bankItems = window.UEBank ? UEBank.all() : [];
+    var bankCases = window.UEBank ? UEBank.cases() : [];
+
+    /* Une épreuve d'orthoptie n'est pas qu'un QCM : il y a de l'oral et du
+       raisonnement sur dossier. On réserve donc une part fixe à chacun
+       avant de répartir le reste entre calcul et QCM. */
+    var nSim = cfg.sims ? Math.max(1, Math.round(cfg.n * 0.25)) : 0;
+    var nCas = (cfg.cas && bankCases.length) ? Math.max(1, Math.round(cfg.n * 0.12)) : 0;
+    var nOral = (cfg.oral && bankItems.length) ? Math.max(1, Math.round(cfg.n * 0.2)) : 0;
+    var rest = Math.max(0, cfg.n - nSim - nCas - nOral);
+    var nCalc = Math.round(rest * 0.4);
+    var nQcm = rest - nCalc;
 
     // épreuve ciblée sur une UE : on restreint la banque à ses thèmes
     var bank = window.QUIZ;
@@ -134,12 +146,40 @@
     var pool = shuffle(bank).slice(0, nQcm);
     pool.forEach(function (q) { stations.push({ type: 'qcm', q: q }); });
     for (var i = 0; i < nCalc; i++) stations.push({ type: 'calc', gen: pick(CALC_GENS)() });
+    /* postes oraux : on restreint aux UE ciblées si l'épreuve l'est */
+    if (nOral) {
+      var oralPool = bankItems;
+      if (cfg.ueCodes && cfg.ueCodes.length) {
+        var sc = bankItems.filter(function (x) { return cfg.ueCodes.indexOf(x.code) >= 0; });
+        if (sc.length) oralPool = sc;
+      }
+      shuffle(oralPool).slice(0, nOral).forEach(function (it) {
+        stations.push({ type: 'oral', item: it });
+      });
+    }
+
+    if (nCas) {
+      var casPool = bankCases;
+      if (cfg.ueCodes && cfg.ueCodes.length) {
+        var sc2 = bankCases.filter(function (x) { return cfg.ueCodes.indexOf(x.code) >= 0; });
+        if (sc2.length) casPool = sc2;
+      }
+      shuffle(casPool).slice(0, nCas).forEach(function (c) {
+        stations.push({ type: 'cas', cas: c.cas, code: c.code });
+      });
+    }
+
     shuffle(SIM_TASKS).slice(0, nSim).forEach(function (t) {
       // un dossier complet par poste : le simulateur est réglé dessus,
       // exactement comme en mode patient
       var dossier = window.CaseGen.generate(pick(t.cases));
       stations.push({ type: 'sim', mod: t.mod, task: t.task, dossier: dossier });
     });
+
+    if (!stations.length) {
+      // filet : plutot une epreuve courte de QCM qu'un ecran casse
+      shuffle(bank).slice(0, 5).forEach(function (q) { stations.push({ type: 'qcm', q: q }); });
+    }
 
     return {
       stations: shuffle(stations),
@@ -154,6 +194,11 @@
     };
   }
 
+  var STATION_LABEL = {
+    qcm: 'QCM', calc: 'Calcul clinique', sim: 'Simulation',
+    oral: 'Poste oral', cas: 'Cas d’application'
+  };
+
   function remaining() { return Math.max(0, session.endsAt - Date.now()); }
   function mmss(ms) {
     var s = Math.round(ms / 1000);
@@ -166,6 +211,7 @@
     var a = session.answers[idx], s = session.stations[idx];
     if (!a) return false;
     if (s.type === 'sim') return !!a.validated;
+    if (s.type === 'oral' || s.type === 'cas') return a.self !== undefined && a.self !== null;
     if (s.type === 'calc') return a.value !== null && a.value !== undefined && !isNaN(a.value);
     return true;
   }
@@ -175,6 +221,8 @@
     var s = session.stations[idx], a = session.answers[idx];
     if (!a) return 0;
     if (s.type === 'qcm') return a.choice === s.q.a ? 100 : 0;
+    /* auto-notation : l'étudiant juge sa propre réponse, comme à l'oral */
+    if (s.type === 'oral' || s.type === 'cas') return a.self || 0;
     if (s.type === 'calc') {
       if (a.value === null || a.value === undefined || isNaN(a.value)) return 0;
       var d = Math.abs(a.value - s.gen.a);
@@ -205,9 +253,20 @@
 
       /* ============ écran de configuration ============ */
       function setup() {
-        var cfg = { n: 8, minutes: 20, sims: true, cats: scope.cats || null, label: scope.label || null };
+        var cfg = {
+          n: 8, minutes: 20, sims: true, oral: true, cas: true,
+          cats: scope.cats || null, ueCodes: scope.ueCodes || null, label: scope.label || null
+        };
         var sc = Store.score('exam');
 
+        function toggle(label, key) {
+          return el('span', {
+            class: 'chip on', text: label,
+            onClick: function (e) { cfg[key] = !cfg[key]; e.currentTarget.classList.toggle('on', cfg[key]); }
+          });
+        }
+        var oralChip = toggle('🎤 Avec postes oraux', 'oral');
+        var casChip = toggle('🩺 Avec cas d’application', 'cas');
         var simChip = el('span', { class: 'chip on', text: '🔦 Avec postes de simulation', onClick: function (e) {
           cfg.sims = !cfg.sims;
           e.currentTarget.classList.toggle('on', cfg.sims);
@@ -230,7 +289,8 @@
                 { value: 30, label: '30 minutes' },
                 { value: 45, label: '45 minutes' }
               ], 20, function (v) { cfg.minutes = parseInt(v, 10); })),
-              UI.field('Contenu', simChip)
+              UI.field('Contenu', el('div', { class: 'flex wrap', style: { gap: '6px' } },
+                [simChip, oralChip, casChip]))
             ]),
             el('div', { class: 'btn-row mt16' }, [
               UI.btn('⏱ Commencer l’épreuve', function () {
@@ -303,15 +363,22 @@
 
         function drawStation() {
           UI.clear(body);
+          if (!session.stations.length) {
+            body.appendChild(UI.note('Aucun poste n’a pu etre construit avec ces reglages.', 'warn'));
+            return;
+          }
+          session.i = Math.max(0, Math.min(session.i, session.stations.length - 1));
           var s = session.stations[session.i];
           var a = session.answers[session.i];
           var head = el('div', { class: 'flex', style: { marginBottom: '12px' } }, [
             UI.chip('Poste ' + (session.i + 1) + ' / ' + session.stations.length, 'blue'),
-            UI.chip(s.type === 'qcm' ? 'QCM' : s.type === 'calc' ? 'Calcul clinique' : 'Simulation',
-              s.type === 'sim' ? 'violet' : ''),
+            UI.chip(STATION_LABEL[s.type] || 'Poste',
+              s.type === 'sim' ? 'violet' : s.type === 'cas' ? 'blue' : ''),
+            (s.type === 'oral' || s.type === 'cas')
+              ? UI.chip(UEBank.label(s.code || s.item.code).split(' — ')[0]) : null,
             el('span', { class: 'spacer' }),
             answered(session.i) ? UI.chip('Traité ✓', 'green') : UI.chip('Sans réponse', 'amber')
-          ]);
+          ].filter(Boolean));
 
           if (s.type === 'qcm') {
             var opts = el('div');
@@ -344,7 +411,9 @@
               UI.note('Répondez en chiffres. Le séparateur décimal est le point ; une petite tolérance est admise.')
             ]));
 
-          } else {
+          } else if (s.type === 'sim') {
+            /* branche explicite : un else fourre-tout traiterait aussi les
+               postes oraux et les cas comme des simulations */
             var d = s.dossier;
             body.appendChild(UI.card(null, [
               head,
@@ -378,6 +447,54 @@
                 }, 'primary')
               ])
             ].filter(Boolean)));
+          }
+
+          /* ---- poste oral : on répond à voix haute, puis on se note ---- */
+          if (s.type === 'oral' || s.type === 'cas') {
+            var shown = a && a.shown;
+            var content = s.type === 'oral'
+              ? [
+                  el('div', { class: 'exam-oral-q selectable', html: s.item.q }),
+                  shown ? el('div', { class: 'exam-oral-a selectable' }, [
+                    el('div', { class: 'k', text: 'Réponse attendue' }),
+                    el('p', { html: s.item.a })
+                  ]) : el('p', { class: 'muted center', text: 'Formulez la réponse à voix haute avant de la découvrir.' })
+                ]
+              : [
+                  el('h3', { style: { marginTop: 0 }, text: s.cas.t }),
+                  el('p', { class: 'ue-cas-s selectable', html: s.cas.s }),
+                  (s.cas.q && s.cas.q.length) ? el('ol', { class: 'ue-cas-q selectable' },
+                    s.cas.q.map(function (q) { return el('li', { html: q }); })) : null,
+                  shown ? el('div', { class: 'ue-cas-r selectable' }, [
+                    el('div', { class: 'k', text: 'Raisonnement' }),
+                    el('p', { html: s.cas.r }),
+                    el('div', { class: 'k', text: 'Conclusion' }),
+                    el('p', { html: s.cas.c })
+                  ]) : el('p', { class: 'muted center', text: 'Traitez le cas avant de découvrir le raisonnement.' })
+                ];
+
+            function note(v) {
+              session.answers[session.i] = { shown: true, self: v };
+              drawStrip(); drawStation();
+            }
+
+            body.appendChild(UI.card(null, [head].concat(content.filter(Boolean)).concat([
+              shown
+                ? el('div', { class: 'btn-row', style: { justifyContent: 'center' } }, [
+                    UI.btn('✗ Pas su', function () { note(0); }, a && a.self === 0 ? 'danger' : ''),
+                    UI.btn('~ Partiel', function () { note(50); }, a && a.self === 50 ? 'primary' : ''),
+                    UI.btn('✓ Su', function () { note(100); }, a && a.self === 100 ? 'primary' : '')
+                  ])
+                : el('div', { class: 'btn-row', style: { justifyContent: 'center' } }, [
+                    UI.btn(s.type === 'oral' ? 'Voir la réponse attendue' : 'Voir le raisonnement attendu',
+                      function () {
+                        session.answers[session.i] = { shown: true, self: (a && a.self) };
+                        drawStation();
+                      }, 'primary')
+                  ]),
+              shown ? UI.note('Notez-vous honnêtement : une auto-notation complaisante fausse le score ' +
+                'de l’épreuve et, surtout, vous prive de l’information qui vous sert.') : null
+            ].filter(Boolean))));
           }
 
           body.appendChild(el('div', { class: 'btn-row' }, [
@@ -434,32 +551,54 @@
 
       /* ============ écran de résultats ============ */
       function results() {
-        var byType = { qcm: { n: 0, sum: 0 }, calc: { n: 0, sum: 0 }, sim: { n: 0, sum: 0 } };
+        var byType = {
+          qcm: { n: 0, sum: 0 }, calc: { n: 0, sum: 0 }, sim: { n: 0, sum: 0 },
+          oral: { n: 0, sum: 0 }, cas: { n: 0, sum: 0 }
+        };
+        var ICON = { qcm: '❓ ', calc: '🧮 ', sim: '🔬 ', oral: '🎤 ', cas: '🩺 ' };
+        function plain(x) { return String(x == null ? '' : x).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim(); }
+
         var rows = session.stations.map(function (s, i) {
           var sc = stationScore(i);
-          byType[s.type].n++; byType[s.type].sum += sc;
-          var label = s.type === 'qcm' ? s.q.q
-                    : s.type === 'calc' ? s.gen.q.replace(/<[^>]+>/g, '')
-                    : M[s.mod].title + (s.dossier ? ' — ' + s.dossier.name + ', ' + s.dossier.age + ' ans' : '');
-          var mine = s.type === 'qcm'
-            ? (session.answers[i] ? s.q.opts[session.answers[i].choice] : '—')
-            : s.type === 'calc'
-              ? (session.answers[i] && session.answers[i].value !== null ? String(session.answers[i].value) : '—')
-              : (!session.answers[i] ? 'non ouvert'
-                 : session.answers[i].validated ? session.answers[i].score + ' %' : 'ouvert, non validé');
-          var truth = s.type === 'qcm' ? s.q.opts[s.q.a]
-                    : s.type === 'calc' ? s.gen.a.toFixed(2) + (s.gen.unit ? ' ' + s.gen.unit : '')
-                    : s.dossier ? s.dossier.diagnosis.options[s.dossier.diagnosis.correct]
-                    : '—';
+          if (byType[s.type]) { byType[s.type].n++; byType[s.type].sum += sc; }
+          var a = session.answers[i];
+          var label, mine, truth;
+
+          if (s.type === 'qcm') {
+            label = s.q.q;
+            mine = a ? s.q.opts[a.choice] : '—';
+            truth = s.q.opts[s.q.a];
+          } else if (s.type === 'calc') {
+            label = plain(s.gen.q);
+            mine = (a && a.value !== null && a.value !== undefined) ? String(a.value) : '—';
+            truth = s.gen.a.toFixed(2) + (s.gen.unit ? ' ' + s.gen.unit : '');
+          } else if (s.type === 'oral') {
+            label = UEBank.label(s.item.code).split(' — ')[0] + ' · ' + plain(s.item.q);
+            mine = !a || a.self === undefined || a.self === null ? '—'
+                 : a.self === 100 ? 'su' : a.self === 50 ? 'partiel' : 'pas su';
+            truth = plain(s.item.a);
+          } else if (s.type === 'cas') {
+            label = UEBank.label(s.code).split(' — ')[0] + ' · ' + s.cas.t;
+            mine = !a || a.self === undefined || a.self === null ? '—'
+                 : a.self === 100 ? 'traité' : a.self === 50 ? 'partiel' : 'à reprendre';
+            truth = plain(s.cas.c);
+          } else {
+            label = M[s.mod].title + (s.dossier ? ' — ' + s.dossier.name + ', ' + s.dossier.age + ' ans' : '');
+            mine = !a ? 'non ouvert' : a.validated ? a.score + ' %' : 'ouvert, non validé';
+            truth = s.dossier ? s.dossier.diagnosis.options[s.dossier.diagnosis.correct] : '—';
+          }
+
           return [
-            (s.type === 'qcm' ? '❓ ' : s.type === 'calc' ? '🧮 ' : '🔬 ') + label.slice(0, 90),
+            (ICON[s.type] || '') + String(label).slice(0, 90),
             mine, truth,
             el('span', { style: { color: sc >= 100 ? 'var(--green)' : sc > 0 ? 'var(--amber)' : 'var(--red)', fontWeight: '700' }, text: sc + ' %' })
           ];
         });
 
         var wrong = session.stations.map(function (s, i) { return { s: s, i: i, sc: stationScore(i) }; })
-          .filter(function (x) { return x.sc < 100 && x.s.type !== 'sim'; });
+          .filter(function (x) {
+            return x.sc < 100 && x.s.type !== 'sim' && x.s.type !== 'oral' && x.s.type !== 'cas';
+          });
 
         function part(k, label) {
           return byType[k].n ? UI.stat(Math.round(byType[k].sum / byType[k].n) + ' %', label) : null;
@@ -470,7 +609,8 @@
             el('div', { class: 'grid g4' }, [
               UI.stat(session.score + ' %', 'Note globale',
                 session.score >= 70 ? 'var(--green)' : session.score >= 50 ? 'var(--amber)' : 'var(--red)'),
-              part('qcm', 'QCM'), part('calc', 'Calculs'), part('sim', 'Simulation')
+              part('qcm', 'QCM'), part('calc', 'Calculs'), part('sim', 'Simulation'),
+              part('oral', 'Oral'), part('cas', 'Cas')
             ].filter(Boolean)),
             el('div', { class: 'grid g3 mt16' }, [
               UI.stat(mmss(session.usedMs || 0), 'Temps utilisé'),

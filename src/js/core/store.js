@@ -27,7 +27,8 @@
       examDates: {},       // 'S3' -> 'AAAA-MM-JJ' (date des partiels)
       ueDone: {},          // 'S3:UE25' -> horodatage de la revision
       planDone: {},        // 'S3:w2:UE25:qcm' -> true
-      recite: {}           // 'S3:UE25' -> { pct, n, at } derniere recitation
+      recite: {},          // 'S3:UE25' -> { pct, n, at } derniere recitation
+      reciteLog: {}        // 'S3:UE25' -> [{ pct, n, at }] historique borne
     },
     favorites: []
   };
@@ -165,6 +166,10 @@
       Store.bump('cards');
       save();
       return c;
+    },
+
+    reciteHistory: function (key) {
+      return Store.studies().reciteLog[key] || [];
     },
 
     dueCards: function (allIds) {
@@ -305,6 +310,7 @@
       if (!s.ueDone) s.ueDone = {};
       if (!s.planDone) s.planDone = {};
       if (!s.recite) s.recite = {};
+      if (!s.reciteLog) s.reciteLog = {};
       return s;
     },
 
@@ -314,10 +320,16 @@
     recite: function (key, value) {
       var s = Store.studies();
       if (value === undefined) return s.recite[key] || null;
-      if (value === null) delete s.recite[key];
-      else s.recite[key] = { pct: value.pct, n: value.n, at: Date.now() };
+      if (value === null) { delete s.recite[key]; delete s.reciteLog[key]; save(); return null; }
+      var entry = { pct: value.pct, n: value.n, at: Date.now() };
+      s.recite[key] = entry;
+      // l'historique dit la progression ; un score isole ne dit rien
+      var log = s.reciteLog[key] || [];
+      log.push(entry);
+      if (log.length > 24) log = log.slice(log.length - 24);
+      s.reciteLog[key] = log;
       save();
-      return s.recite[key] || null;
+      return entry;
     },
 
     ueDone: function (key, value) {

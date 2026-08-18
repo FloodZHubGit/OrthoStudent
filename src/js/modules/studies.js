@@ -147,48 +147,50 @@
     return reciteItems(u).filter(function (x) { return !kind || x.kind === kind; }).length;
   }
 
-  /* Ce sur quoi on peut s'interroger : les chiffres à connaître par cœur,
-     les questions d'auto-interrogation, les lignes de tableau et les
-     moyens mnémotechniques de l'UE. */
+  /* Ce sur quoi on peut s'interroger. La construction des items vit
+     dans UEBank, partagée avec l'examen blanc : deux versions de la
+     même question finiraient par diverger. */
   function reciteItems(u) {
-    var g = GUIDE[u.code], e = EXTRA[u.code];
-    var out = [];
-    if (g && g.chiffres) {
-      g.chiffres.forEach(function (c) {
-        out.push({ q: c[0], a: c[1], kind: 'chiffre' });
-      });
-    }
-    if (e && e.qr) {
-      e.qr.forEach(function (p) {
-        out.push({ q: p[0], a: p[1], kind: 'question' });
-      });
-    }
-    var d = DEEP[u.code];
-    /* Un tableau se récite en masquant une colonne : c'est l'exercice le
-       plus rentable qui existe sur une comparaison, et il ne coûte aucune
-       donnée supplémentaire. La première colonne sert d'entrée. */
-    if (d && d.tableaux) {
-      d.tableaux.forEach(function (tb) {
-        tb.r.forEach(function (row) {
-          for (var i = 1; i < tb.c.length; i++) {
-            var v = String(row[i] || '').trim();
-            if (!v || v === '—') continue;
-            out.push({
-              kind: 'tableau',
-              q: '<span class="rc-tab">' + tb.t + '</span>' +
-                 '<b>' + row[0] + '</b><span class="rc-arrow">→</span>' + tb.c[i] + ' ?',
-              a: v
-            });
-          }
-        });
-      });
-    }
-    if (d && d.mnemo) {
-      d.mnemo.forEach(function (m) {
-        out.push({ q: 'Que code le moyen « ' + m[0] + ' » ?', a: m[1], kind: 'mnemo' });
-      });
-    }
-    return out;
+    return window.UEBank ? UEBank.items(u.code) : [];
+  }
+
+  /* Courbe des récitations successives : un score isolé ne dit rien,
+     c'est la pente qui renseigne. */
+  function sparkline(log) {
+    var W = 260, H = 46, pad = 4;
+    var g = s('svg', { viewBox: '0 0 ' + W + ' ' + H, class: 'ue-spark' });
+    var pts = log.map(function (e, i) {
+      return {
+        x: pad + (log.length === 1 ? 0 : i * (W - pad * 2) / (log.length - 1)),
+        y: pad + (1 - e.pct / 100) * (H - pad * 2),
+        e: e
+      };
+    });
+    [25, 50, 75].forEach(function (v) {
+      var y = pad + (1 - v / 100) * (H - pad * 2);
+      g.appendChild(s('line', { x1: pad, y1: y, x2: W - pad, y2: y, stroke: 'var(--line-soft)' }));
+    });
+    g.appendChild(s('polyline', {
+      fill: 'none', stroke: 'var(--accent)', 'stroke-width': 2, 'stroke-linejoin': 'round',
+      points: pts.map(function (p) { return p.x.toFixed(1) + ',' + p.y.toFixed(1); }).join(' ')
+    }));
+    pts.forEach(function (p) {
+      var c = s('circle', { cx: p.x, cy: p.y, r: 3, fill: masteryColor(p.e.pct) });
+      c.appendChild(s('title', {}, p.e.pct + ' % sur ' + p.e.n + ' items'));
+      g.appendChild(c);
+    });
+    var first = log[0].pct, last = log[log.length - 1].pct;
+    var delta = last - first;
+    return el('div', { class: 'ue-spark-wrap' }, [
+      g,
+      el('div', { class: 'small muted' }, [
+        el('span', { text: log.length + ' récitations · ' }),
+        el('b', {
+          style: { color: delta > 0 ? 'var(--green)' : delta < 0 ? 'var(--amber)' : 'var(--txt-3)' },
+          text: (delta > 0 ? '+' : '') + delta + ' points depuis la première'
+        })
+      ])
+    ]);
   }
 
   function masteryLabel(pct) {
@@ -618,6 +620,7 @@
           /* --- réciter : mis en tête, c'est le geste le plus rentable --- */
           reciteItems(u).length ? (function () {
             var total = reciteCount(u);
+            var history = Store.reciteHistory(key);
             var lenSel = UI.select([
               { value: '20', label: '20 items — session courte' },
               { value: '40', label: '40 items' },
@@ -638,6 +641,7 @@
                   '<b>' + total + ' items</b> — ' +
                   kinds.map(function (x) { return reciteCount(u, x.k) + ' ' + x.label.slice(3).toLowerCase(); }).join(', ') + '.' +
                   (m.rec ? ' Dernière récitation : <b>' + m.rec.pct + ' %</b> sur ' + m.rec.n + ' items.' : '') }),
+              history.length > 1 ? sparkline(history) : null,
               el('div', { class: 'btn-row' }, [
                 UI.btn('🎤 Réciter', function () { go(null); }, 'primary'),
                 lenSel,
@@ -775,16 +779,16 @@
             var btn = UI.btn('Voir le raisonnement attendu', function () {
               open = !open; render();
             }, 'primary');
+            var inner = el('div', { class: 'ue-cas-r selectable collapsed' }, [
+              el('div', { class: 'k', text: 'Raisonnement' }),
+              el('p', { html: c.r }),
+              el('div', { class: 'k', text: 'Conclusion' }),
+              el('p', { html: c.c })
+            ]);
+            box.appendChild(inner);
             function render() {
-              UI.clear(box);
               btn.textContent = open ? 'Masquer le raisonnement' : 'Voir le raisonnement attendu';
-              if (!open) return;
-              box.appendChild(el('div', { class: 'ue-cas-r selectable' }, [
-                el('div', { class: 'k', text: 'Raisonnement' }),
-                el('p', { html: c.r }),
-                el('div', { class: 'k', text: 'Conclusion' }),
-                el('p', { html: c.c })
-              ]));
+              inner.classList.toggle('collapsed', !open);
             }
             render();
             return UI.card('Cas d’application — ' + c.t, [

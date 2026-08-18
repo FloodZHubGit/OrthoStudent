@@ -1231,3 +1231,35 @@ kbd {
   color: var(--txt-3); font-weight: 750; margin-bottom: 10px;
 }
 .rc-arrow { color: var(--accent); margin: 0 8px; }
+
+/* examen blanc : postes oraux */
+.exam-oral-q {
+  font-size: 16px; line-height: 1.55; font-weight: 550;
+  padding: 22px 20px; text-align: center;
+  background: linear-gradient(150deg, var(--surface-3), var(--surface-2));
+  border: 1px solid var(--line-soft); border-radius: var(--r);
+}
+.exam-oral-a {
+  margin-top: 14px; border-top: 1px solid var(--line-soft); padding-top: 12px;
+  animation: fadeIn .2s var(--ease);
+}
+.exam-oral-a .k {
+  font-size: 9.5px; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--accent); font-weight: 750;
+}
+.exam-oral-a p { margin: 5px 0 0; color: var(--txt); font-size: 15px; line-height: 1.6; }
+
+/* fiche d'UE : courbe des récitations */
+.ue-spark-wrap { margin: 4px 0 12px; }
+.ue-spark { width: 100%; max-width: 320px; height: auto; display: block; margin-bottom: 4px; }
+
+/* le raisonnement d'un cas reste dans le DOM même replié, pour l'impression */
+.ue-cas-r.collapsed { display: none; }
+
+@media print {
+  .ue-cas-r.collapsed { display: block !important; }
+  .ue-spark-wrap, .ue-detail { display: none; }
+  .ue-tab, .ue-cas-s, .ue-cas-r, .ue-rep, .ue-mnemo { break-inside: avoid; page-break-inside: avoid; }
+  .ue-mnemo-row .m { color: #000 !important; }
+  .ue-cas-r .k, .ue-tab h4 { color: #000 !important; }
+}
