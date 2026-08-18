@@ -1224,3 +1224,10 @@ kbd {
 .ue-mnemo-row .m { font-weight: 650; color: var(--accent); }
 .ue-mnemo-row .d { color: var(--txt-2); line-height: 1.55; }
 @media (max-width: 760px) { .ue-mnemo-row { grid-template-columns: 1fr; gap: 2px; } }
+
+/* récitation : en-tête d'un item de tableau */
+.rc-tab {
+  display: block; font-size: 10px; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--txt-3); font-weight: 750; margin-bottom: 10px;
+}
+.rc-arrow { color: var(--accent); margin: 0 8px; }
