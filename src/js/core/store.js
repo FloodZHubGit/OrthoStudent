@@ -26,7 +26,8 @@
     studies: {             // suivi du referentiel de formation
       examDates: {},       // 'S3' -> 'AAAA-MM-JJ' (date des partiels)
       ueDone: {},          // 'S3:UE25' -> horodatage de la revision
-      planDone: {}         // 'S3:w2:UE25:qcm' -> true
+      planDone: {},        // 'S3:w2:UE25:qcm' -> true
+      recite: {}           // 'S3:UE25' -> { pct, n, at } derniere recitation
     },
     favorites: []
   };
@@ -298,12 +299,25 @@
     /* --- Suivi du programme des etudes --- */
 
     studies: function () {
-      if (!state.studies) state.studies = { examDates: {}, ueDone: {}, planDone: {} };
+      if (!state.studies) state.studies = { examDates: {}, ueDone: {}, planDone: {}, recite: {} };
       var s = state.studies;
       if (!s.examDates) s.examDates = {};
       if (!s.ueDone) s.ueDone = {};
       if (!s.planDone) s.planDone = {};
+      if (!s.recite) s.recite = {};
       return s;
+    },
+
+    /* Derniere recitation d'une UE : { pct, n, at }.
+       C'est le signal de maitrise le plus fiable dont on dispose,
+       parce qu'il vient d'un rappel actif et non d'une reconnaissance. */
+    recite: function (key, value) {
+      var s = Store.studies();
+      if (value === undefined) return s.recite[key] || null;
+      if (value === null) delete s.recite[key];
+      else s.recite[key] = { pct: value.pct, n: value.n, at: Date.now() };
+      save();
+      return s.recite[key] || null;
     },
 
     ueDone: function (key, value) {

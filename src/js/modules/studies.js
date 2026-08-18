@@ -15,6 +15,34 @@
 
   var C = window.CURRICULUM;
   var GUIDE = window.UE_GUIDE || {};
+  var EXTRA = window.UE_EXTRA || {};
+
+  /* Le graphe de prérequis se lit dans les deux sens. UE_EXTRA ne
+     déclare que « repose sur » ; on inverse une fois pour disposer
+     aussi de « prépare ». */
+  var OPENS = (function () {
+    var out = {};
+    Object.keys(EXTRA).forEach(function (code) {
+      (EXTRA[code].prereq || []).forEach(function (p) {
+        (out[p] = out[p] || []).push(code);
+      });
+    });
+    return out;
+  })();
+
+  /* Où trouver une UE dans le référentiel — une UE peut revenir
+     dans plusieurs semestres (l'anglais), on garde la première. */
+  function locate(code) {
+    for (var i = 0; i < C.length; i++) {
+      var u = C[i].ues.filter(function (x) { return x.code === code; })[0];
+      if (u) return { sem: C[i], ue: u };
+    }
+    return null;
+  }
+
+  function norm(s) {
+    return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  }
 
   var CALC_NAMES = {
     acuity: 'Acuité visuelle', prism: 'Prismes & degrés', prentice: 'Loi de Prentice',
@@ -47,8 +75,22 @@
      ============================================================ */
   function mastery(sem, u) {
     var l = u.links || {};
-    var parts = [];
+    var parts = [], detail = [];
+    var key = ueKey(sem, u);
 
+    /* 1 — la récitation : rappel actif, donc le signal le plus fiable */
+    var rec = Store.recite(key);
+    var items = reciteItems(u).length;
+    if (items) {
+      parts.push({ w: 1.6, v: rec ? rec.pct / 100 : 0 });
+      detail.push({
+        k: 'Récitation', pct: rec ? rec.pct : 0, w: 1.6,
+        hint: rec ? rec.n + ' items récités, ' + rec.pct + ' % sus' : items + ' items à réciter, jamais fait',
+        act: 'recite'
+      });
+    }
+
+    /* 2 — les QCM : il faut du volume ET de la réussite */
     if (l.cats && l.cats.length) {
       var pool = (window.QUIZ || []).filter(function (q) { return l.cats.indexOf(q.cat) >= 0; });
       var seen = 0, ok = 0;
@@ -56,27 +98,57 @@
         var r = Store.state.quiz[q.id];
         if (r) { seen += r.seen; ok += r.ok; }
       });
-      // il faut du volume ET de la réussite : voir chaque question une fois vaut couverture 1
       var cov = Math.min(1, seen / Math.max(1, pool.length));
       var rate = seen ? ok / seen : 0;
       parts.push({ w: 1.2, v: cov * rate });
+      detail.push({
+        k: 'QCM', pct: Math.round(cov * rate * 100), w: 1.2,
+        hint: seen ? seen + ' réponses sur ' + pool.length + ' questions, ' + Math.round(rate * 100) + ' % de réussite'
+                   : pool.length + ' questions disponibles, aucune tentée',
+        act: 'qcm'
+      });
     }
 
+    /* 3 — la pratique dans les simulateurs liés */
     if (l.mod && l.mod.length) {
       var scored = l.mod.map(function (id) {
         var sc = Store.score(id);
         return sc ? Math.min(100, sc.avg) / 100 : 0;
       });
-      parts.push({ w: 1, v: scored.reduce(function (a, b) { return a + b; }, 0) / scored.length });
+      var v = scored.reduce(function (a, b) { return a + b; }, 0) / scored.length;
+      parts.push({ w: 1, v: v });
+      detail.push({
+        k: 'Pratique', pct: Math.round(v * 100), w: 1,
+        hint: l.mod.filter(function (id) { return Store.score(id); }).length + ' module(s) pratiqué(s) sur ' + l.mod.length,
+        act: 'mod'
+      });
     }
 
-    var revised = Store.ueDone(ueKey(sem, u));
-    if (!parts.length) return { pct: revised ? 100 : null, revised: revised };
+    var revised = Store.ueDone(key);
+    if (!parts.length) return { pct: revised ? 100 : null, revised: revised, detail: [], rec: rec };
 
     var tot = parts.reduce(function (a, p) { return a + p.w; }, 0);
     var val = parts.reduce(function (a, p) { return a + p.w * p.v; }, 0) / tot;
-    var pct = Math.round(Math.min(1, val + (revised ? 0.18 : 0)) * 100);
-    return { pct: pct, revised: revised };
+    var pct = Math.round(Math.min(1, val + (revised ? 0.15 : 0)) * 100);
+    return { pct: pct, revised: revised, detail: detail, rec: rec };
+  }
+
+  /* Ce sur quoi on peut s'interroger : les chiffres à connaître par cœur
+     et les questions d'auto-interrogation de l'UE. */
+  function reciteItems(u) {
+    var g = GUIDE[u.code], e = EXTRA[u.code];
+    var out = [];
+    if (g && g.chiffres) {
+      g.chiffres.forEach(function (c) {
+        out.push({ q: c[0], a: c[1], kind: 'chiffre' });
+      });
+    }
+    if (e && e.qr) {
+      e.qr.forEach(function (p) {
+        out.push({ q: p[0], a: p[1], kind: 'question' });
+      });
+    }
+    return out;
   }
 
   function masteryLabel(pct) {
@@ -164,9 +236,15 @@
   /* ============================================================
      Plan de révision
      ============================================================ */
-  function actionsFor(sem, u, openSheet) {
+  function actionsFor(sem, u, openSheet, recite) {
     var l = u.links || {};
     var acts = [];
+    /* la récitation passe devant : c'est le geste au meilleur rapport
+       temps / rétention, et il conditionne le reste */
+    if (recite && reciteItems(u).length) {
+      acts.push({ id: 'recite', label: 'Se faire interroger — ' + reciteItems(u).length + ' items',
+        run: function () { recite(u); } });
+    }
     if (l.cats && l.cats.length) {
       acts.push({ id: 'qcm', label: 'Série de 15 QCM — ' + l.cats.join(', '),
         run: function () { App.go('quiz', { cats: l.cats, n: 15 }); } });
@@ -191,7 +269,7 @@
     return acts.slice(0, 3);
   }
 
-  function buildPlan(sem, weeks, openSheet) {
+  function buildPlan(sem, weeks, openSheet, recite) {
     // priorité : ce qui pèse lourd en ECTS et qui n'est pas maîtrisé
     var ranked = sem.ues.map(function (u) {
       var m = mastery(sem, u);
@@ -211,7 +289,7 @@
       for (var j = 0; j < n && ranked.length; j++) { picks.push(ranked[k % ranked.length]); k++; }
       plan.push({
         week: w, last: last,
-        items: picks.map(function (p) { return { ue: p.u, m: p.m, acts: actionsFor(sem, p.u, openSheet) }; })
+        items: picks.map(function (p) { return { ue: p.u, m: p.m, acts: actionsFor(sem, p.u, openSheet, recite) }; })
       });
     }
     return plan;
@@ -248,6 +326,147 @@
       var stageEcts = C.reduce(function (a, sem) { return a + sem.stage.ects; }, 0);
 
       var body = el('div');
+
+      /* ============================================================
+         Mode Réciter — interrogation active sur une UE
+         ------------------------------------------------------------
+         Se relire donne le sentiment de savoir ; se faire interroger
+         dit ce qu'on sait vraiment. La réponse est masquée, l'étudiant
+         s'auto-note, et le résultat pèse plus lourd que tout le reste
+         dans le calcul de maîtrise.
+         ============================================================ */
+      function reciteMode(sem, u, opts) {
+        opts = opts || {};
+        var all = reciteItems(u);
+        if (!all.length) { UI.toast('Rien à réciter pour cette UE.'); return; }
+
+        var pool = all.slice();
+        if (opts.only) pool = pool.filter(function (x) { return x.kind === opts.only; });
+        if (opts.shuffle !== false) {
+          for (var i = pool.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var t = pool[i]; pool[i] = pool[j]; pool[j] = t;
+          }
+        }
+
+        var st = { i: 0, shown: false, ok: 0, ko: 0, missed: [] };
+        var box = el('div');
+
+        function finish() {
+          var total = st.ok + st.ko;
+          var pct = total ? Math.round((st.ok / total) * 100) : 0;
+          Store.recite(ueKey(sem, u), { pct: pct, n: total });
+          Store.logActivity('ue:' + u.code, pct, { n: total });
+
+          UI.clear(box);
+          box.appendChild(UI.card('Récitation terminée — ' + u.code, [
+            el('div', { class: 'grid g3' }, [
+              UI.stat(st.ok, 'Sus', 'var(--green)'),
+              UI.stat(st.ko, 'À revoir', 'var(--amber)'),
+              UI.stat(pct + ' %', 'Score', masteryColor(pct))
+            ]),
+            st.missed.length
+              ? el('div', {}, [
+                  el('h3', { text: 'Ce qui n’est pas acquis' }),
+                  el('div', { class: 'ue-figures selectable' }, st.missed.map(function (m) {
+                    return el('div', { class: 'ue-figure' }, [
+                      el('span', { class: 'k', html: m.q }),
+                      el('span', { class: 'v', html: m.a })
+                    ]);
+                  }))
+                ])
+              : UI.note('Tout est su. La maîtrise de cette UE vient de monter.'),
+            el('div', { class: 'btn-row' }, [
+              st.missed.length ? UI.btn('↻ Reprendre les ' + st.missed.length + ' ratés', function () {
+                var again = st.missed.slice();
+                pool = again; st.i = 0; st.shown = false; st.ok = 0; st.ko = 0; st.missed = [];
+                draw();
+              }, 'primary') : null,
+              UI.btn('Recommencer tout', function () {
+                st.i = 0; st.shown = false; st.ok = 0; st.ko = 0; st.missed = [];
+                draw();
+              }),
+              UI.btn('← Retour à la fiche', function () { ueSheet(sem, u); })
+            ].filter(Boolean))
+          ]));
+        }
+
+        function answer(good) {
+          var it = pool[st.i];
+          if (good) st.ok++; else { st.ko++; st.missed.push(it); }
+          st.i++; st.shown = false;
+          draw();
+        }
+
+        function draw() {
+          UI.clear(box);
+          if (st.i >= pool.length) { finish(); return; }
+          var it = pool[st.i];
+
+          var card = el('div', {
+            class: 'recite-card', onClick: function () { st.shown = !st.shown; draw(); }
+          }, [
+            el('span', { class: 'side-label', text: it.kind === 'chiffre' ? 'Chiffre à connaître' : 'Question' }),
+            el('div', { class: 'recite-q selectable', html: it.q }),
+            st.shown
+              ? el('div', { class: 'recite-a selectable', html: it.a })
+              : el('div', { class: 'recite-hidden', text: 'Répondez à voix haute, puis cliquez pour vérifier.' })
+          ]);
+
+          box.appendChild(UI.card(null, [
+            el('div', { class: 'flex wrap' }, [
+              UI.chip(u.code, 'blue'),
+              UI.chip(it.kind === 'chiffre' ? '🔢 chiffre' : '💬 question'),
+              el('span', { class: 'spacer' }),
+              st.ok ? el('span', { class: 'small', style: { color: 'var(--green)' }, text: '✓ ' + st.ok }) : null,
+              st.ko ? el('span', { class: 'small', style: { color: 'var(--amber)' }, text: '↻ ' + st.ko }) : null,
+              el('span', { class: 'muted small', text: (st.i + 1) + ' / ' + pool.length })
+            ].filter(Boolean)),
+            UI.bar((st.i / pool.length) * 100),
+            el('div', { class: 'mt16' }, card),
+            st.shown
+              ? el('div', { class: 'btn-row mt16', style: { justifyContent: 'center' } }, [
+                  UI.btn('↻ Pas su', function () { answer(false); }, 'danger'),
+                  UI.btn('✓ Su', function () { answer(true); }, 'primary')
+                ])
+              : el('p', { class: 'muted center mt16', text: 'Formulez la réponse avant de la découvrir — c’est tout l’intérêt.' })
+          ]));
+
+          box.appendChild(el('div', { class: 'btn-row' }, [
+            UI.btn('← Quitter la récitation', function () { ueSheet(sem, u); }),
+            UI.btn('Passer', function () { st.i++; st.shown = false; draw(); })
+          ]));
+
+          box.appendChild(UI.keyhint([
+            ['Espace', 'révéler'], ['1', 'pas su'], ['2', 'su'], ['→', 'passer']
+          ]));
+        }
+
+        UI.hotkeys(box, {
+          ' ': function () { if (st.i < pool.length) { st.shown = !st.shown; draw(); } },
+          'Enter': function () { if (st.i < pool.length) { st.shown = !st.shown; draw(); } },
+          '1': function () { if (st.shown) answer(false); },
+          '2': function () { if (st.shown) answer(true); },
+          'ArrowRight': function () { if (st.i < pool.length) { st.i++; st.shown = false; draw(); } }
+        });
+
+        draw();
+        UI.clear(body);
+        body.appendChild(el('div', {}, [
+          UI.card(null, [
+            el('div', { class: 'flex wrap' }, [
+              el('h2', { style: { margin: 0 }, text: '🎤 Réciter — ' + u.code },),
+              el('span', { class: 'spacer' }),
+              UI.chip(sem.label, 'blue'),
+              UI.chip(pool.length + ' items')
+            ]),
+            el('p', { class: 'muted small', style: { margin: '6px 0 0' },
+              text: u.title })
+          ]),
+          box
+        ]));
+        document.getElementById('main').scrollTop = 0;
+      }
 
       /* ---------------- fiche d'UE ---------------- */
       function ueSheet(sem, u) {
@@ -305,8 +524,73 @@
                 }, m.revised ? 'primary' : '');
                 return b;
               })()
-            ])
-          ]),
+            ]),
+
+            /* le détail : ce qui manque exactement pour monter */
+            m.detail && m.detail.length ? el('div', { class: 'ue-detail' }, m.detail.map(function (d) {
+              return el('div', { class: 'ue-detail-row' }, [
+                el('span', { class: 'k', text: d.k }),
+                el('span', { class: 'b' }, UI.bar(d.pct, masteryColor(d.pct))),
+                el('span', { class: 'p', style: { color: masteryColor(d.pct) }, text: d.pct + ' %' }),
+                el('span', { class: 'h', text: d.hint })
+              ]);
+            })) : null
+          ].filter(Boolean)),
+
+          /* --- réciter : mis en tête, c'est le geste le plus rentable --- */
+          reciteItems(u).length ? UI.card('Se faire interroger', [
+            el('p', { class: 'muted small', style: { marginTop: 0 },
+              html: 'Se relire donne le sentiment de savoir ; se faire interroger dit ce qu’on sait vraiment. ' +
+                '<b>' + reciteItems(u).length + ' items</b> : les chiffres à connaître par cœur et les questions types de l’UE.' +
+                (m.rec ? ' Dernière récitation : <b>' + m.rec.pct + ' %</b> sur ' + m.rec.n + ' items.' : '') }),
+            el('div', { class: 'btn-row' }, [
+              UI.btn('🎤 Réciter toute l’UE', function () { reciteMode(sem, u); }, 'primary'),
+              (GUIDE[u.code] && GUIDE[u.code].chiffres || []).length
+                ? UI.btn('🔢 Seulement les chiffres', function () { reciteMode(sem, u, { only: 'chiffre' }); }) : null,
+              (EXTRA[u.code] && EXTRA[u.code].qr || []).length
+                ? UI.btn('💬 Seulement les questions', function () { reciteMode(sem, u, { only: 'question' }); }) : null
+            ].filter(Boolean))
+          ]) : null,
+
+          /* --- place dans le cursus --- */
+          (function () {
+            var e = EXTRA[u.code];
+            var before = (e && e.prereq || []).map(function (c) { return locate(c); }).filter(Boolean);
+            var after = (OPENS[u.code] || []).map(function (c) { return locate(c); }).filter(Boolean);
+            if (!before.length && !after.length) return null;
+
+            function chipsFor(list, cls) {
+              return list.map(function (x) {
+                var mm = mastery(x.sem, x.ue);
+                return el('span', {
+                  class: 'chip ' + cls, title: x.sem.label + ' — ' + x.ue.title,
+                  onClick: function () { ueSheet(x.sem, x.ue); }
+                }, [
+                  el('i', { class: 'cst-dot', style: { background: masteryColor(mm.pct) } }),
+                  el('span', { text: x.ue.code })
+                ]);
+              });
+            }
+
+            var weak = before.filter(function (x) {
+              var mm = mastery(x.sem, x.ue);
+              return mm.pct !== null && mm.pct < 40;
+            });
+
+            return UI.card('Sa place dans le cursus', [
+              before.length ? el('div', { class: 'flex wrap ue-chain' }, [
+                el('span', { class: 'ue-chain-k', text: 'Repose sur' })
+              ].concat(chipsFor(before, ''))) : null,
+              after.length ? el('div', { class: 'flex wrap ue-chain' }, [
+                el('span', { class: 'ue-chain-k', text: 'Prépare' })
+              ].concat(chipsFor(after, ''))) : null,
+              weak.length
+                ? UI.note('<b>Attention à l’ordre.</b> ' + weak.map(function (x) { return x.ue.code; }).join(', ') +
+                    ' n’est pas encore solide, et cette UE s’appuie dessus. Reprendre le prérequis d’abord coûte ' +
+                    'moins cher que de buter dessus à chaque chapitre.', 'warn')
+                : null
+            ].filter(Boolean));
+          })(),
 
           g && g.resume ? UI.note('<b>En une phrase.</b> ' + g.resume) : null,
 
@@ -353,12 +637,36 @@
             UI.card('Ce qui tombe', el('ul', {}, g.tombe.map(function (t) { return el('li', { html: t }); })))
           ]) : null,
 
+          /* --- le vocabulaire, relié au glossaire --- */
+          (function () {
+            var e = EXTRA[u.code];
+            if (!e || !e.mots || !e.mots.length) return null;
+            var known = {};
+            (window.GLOSSARY || []).forEach(function (x) { known[x.t] = x; });
+            var mots = e.mots.filter(function (t) { return known[t]; });
+            if (!mots.length) return null;
+            return UI.card('Le vocabulaire à maîtriser', [
+              el('p', { class: 'muted small', style: { marginTop: 0 },
+                text: mots.length + ' termes du glossaire sont indispensables sur cette UE. ' +
+                  'Un mot que vous ne savez pas définir est une question que vous ne saurez pas traiter.' }),
+              el('div', { class: 'flex wrap', style: { gap: '6px' } }, mots.map(function (t) {
+                return el('span', {
+                  class: 'chip', text: t, title: known[t].d.slice(0, 120) + '…',
+                  onClick: function () { App.go('glossary', { term: t }); }
+                });
+              }))
+            ], { right: UI.btn('🌌 Voir en constellation', function () {
+              App.go('constellation', { term: mots[0] });
+            }, 'sm') });
+          })(),
+
           g ? UI.card('Comment travailler cette UE', UI.note(g.methode)) : null,
 
           UI.card('Travailler maintenant', [
             chips.length ? el('div', { class: 'flex wrap', style: { gap: '7px', marginBottom: '14px' } }, chips) : null,
             el('div', { class: 'btn-row' }, [
-              l.cats && l.cats.length ? UI.btn('❓ Série de QCM sur cette UE', function () { App.go('quiz', { cats: l.cats, n: 15 }); }, 'primary') : null,
+              reciteItems(u).length ? UI.btn('🎤 Réciter cette UE', function () { reciteMode(sem, u); }, 'primary') : null,
+              l.cats && l.cats.length ? UI.btn('❓ Série de QCM sur cette UE', function () { App.go('quiz', { cats: l.cats, n: 15 }); }) : null,
               l.cats && l.cats.length ? UI.btn('⏱ Examen blanc de cette UE', function () {
                 App.go('exam', { cats: l.cats, label: u.code + ' — ' + u.title });
               }) : null,
@@ -390,7 +698,9 @@
             planBox.appendChild(UI.note('La date indiquée est passée. Mettez-la à jour pour régénérer un plan.', 'warn'));
             return;
           }
-          var plan = buildPlan(sem, weeks, function (u) { ueSheet(sem, u); });
+          var plan = buildPlan(sem, weeks,
+            function (u) { ueSheet(sem, u); },
+            function (u) { reciteMode(sem, u); });
           if (!plan.length) {
             planBox.appendChild(UI.empty('🎉', 'Toutes les UE de ce semestre sont au vert.<br>Entretenez avec un examen blanc de temps en temps.'));
             return;
@@ -528,6 +838,134 @@
         document.getElementById('main').scrollTop = 0;
       }
 
+      /* ============================================================
+         Vue transversale — les 6 semestres d'un coup
+         ------------------------------------------------------------
+         « Où est traitée l'amblyopie ? » ne devrait pas obliger à
+         ouvrir six onglets. La recherche porte sur le code, le titre,
+         le résumé, les objectifs et le vocabulaire de chaque UE.
+         ============================================================ */
+      function drawAll() {
+        var stA = { q: '', sort: 'sem', filter: 'all' };
+        var list = el('div');
+
+        var rows = [];
+        C.forEach(function (sem) {
+          sem.ues.forEach(function (u) {
+            var e = EXTRA[u.code], g = GUIDE[u.code];
+            rows.push({
+              sem: sem, ue: u,
+              blob: norm([
+                u.code, u.title,
+                g ? g.resume : '',
+                g ? (g.objectifs || []).join(' ') : '',
+                g ? (g.notions || []).join(' ') : '',
+                e ? (e.mots || []).join(' ') : '',
+                (u.links && u.links.cats || []).join(' ')
+              ].join(' ').replace(/<[^>]+>/g, ' '))
+            });
+          });
+        });
+
+        var searchA = el('input', { type: 'text', class: 'inp',
+          placeholder: 'Chercher dans les 6 semestres…  (amblyopie, prisme, champ visuel, Panum)' });
+        var count = el('span', { class: 'small muted' });
+
+        var sortA = UI.select([
+          { value: 'sem', label: 'Ordre du cursus' },
+          { value: 'weak', label: 'Les moins maîtrisées d’abord' },
+          { value: 'ects', label: 'Les plus lourdes en ECTS' }
+        ], 'sem', function (v) { stA.sort = v; draw(); });
+
+        var filters = el('div', { class: 'flex wrap' });
+        [
+          { id: 'all', label: 'Toutes' },
+          { id: 'todo', label: 'Non travaillées' },
+          { id: 'wip', label: 'En cours' },
+          { id: 'done', label: 'Maîtrisées' }
+        ].forEach(function (f) {
+          filters.appendChild(el('span', {
+            class: 'chip' + (f.id === 'all' ? ' on' : ''), text: f.label, dataset: { f: f.id },
+            onClick: function (e) {
+              stA.filter = f.id;
+              filters.querySelectorAll('.chip').forEach(function (c) { c.classList.remove('on'); });
+              e.currentTarget.classList.add('on');
+              draw();
+            }
+          }));
+        });
+
+        function draw() {
+          UI.clear(list);
+          var q = norm(stA.q);
+          var items = rows.filter(function (r) {
+            if (q && r.blob.indexOf(q) < 0) return false;
+            var m = mastery(r.sem, r.ue);
+            var p = m.pct === null ? (m.revised ? 100 : -1) : m.pct;
+            if (stA.filter === 'todo' && p > 5) return false;
+            if (stA.filter === 'wip' && (p <= 5 || p >= 80)) return false;
+            if (stA.filter === 'done' && p < 80) return false;
+            return true;
+          });
+
+          if (stA.sort === 'weak') {
+            items.sort(function (a, b) {
+              var pa = mastery(a.sem, a.ue).pct, pb = mastery(b.sem, b.ue).pct;
+              return (pa === null ? 999 : pa) - (pb === null ? 999 : pb);
+            });
+          } else if (stA.sort === 'ects') {
+            items.sort(function (a, b) { return b.ue.ects - a.ue.ects; });
+          }
+
+          count.textContent = items.length + ' UE sur ' + rows.length;
+          if (!items.length) {
+            list.appendChild(UI.empty('🔍', 'Aucune UE ne correspond.'));
+            return;
+          }
+
+          items.forEach(function (r) {
+            var m = mastery(r.sem, r.ue);
+            var g = GUIDE[r.ue.code];
+            list.appendChild(el('div', { class: 'ue-row', onClick: function () { ueSheet(r.sem, r.ue); } }, [
+              UI.ring(m.pct === null ? 0 : m.pct, { size: 40, width: 4, color: masteryColor(m.pct),
+                text: m.pct === null ? '—' : String(m.pct), fontSize: 11 }),
+              el('div', { style: { minWidth: 0, flex: 1 } }, [
+                el('div', { class: 'flex', style: { gap: '8px' } }, [
+                  el('b', { text: r.ue.code }),
+                  el('span', { class: 'ue-ects', text: r.ue.ects + ' ECTS' }),
+                  el('span', { class: 'chip static', text: r.sem.id })
+                ]),
+                el('div', { class: 'ue-title', text: r.ue.title }),
+                g ? el('div', { class: 'ue-row-resume', text: g.resume }) : null
+              ].filter(Boolean)),
+              reciteItems(r.ue).length ? el('span', {
+                class: 'chip', text: '🎤', title: 'Se faire interroger sur cette UE',
+                onClick: function (e) { e.stopPropagation(); reciteMode(r.sem, r.ue); }
+              }) : null,
+              el('span', { class: 'arrow', text: '›' })
+            ].filter(Boolean)));
+          });
+        }
+
+        searchA.addEventListener('input', function () { stA.q = searchA.value; draw(); });
+        draw();
+
+        UI.clear(body);
+        body.appendChild(el('div', {}, [
+          UI.card('Toutes les UE du cursus', [
+            searchA,
+            el('div', { class: 'btn-row', style: { marginTop: '12px' } }, [
+              count,
+              el('span', { class: 'spacer' }),
+              sortA
+            ]),
+            el('div', { style: { marginTop: '10px' } }, filters)
+          ]),
+          list
+        ]));
+        document.getElementById('main').scrollTop = 0;
+      }
+
       /* ---------------- bandeau « où en êtes-vous » ---------------- */
       var mineBox = el('div');
       function drawMine() {
@@ -568,7 +1006,11 @@
 
       var tabs = UI.tabs(C.map(function (sem) {
         return { id: sem.id, label: sem.id + (currentSemester() === sem.id ? ' ★' : '') };
-      }), function (id) { drawSemester(id); return null; }, wanted);
+      }).concat([{ id: '__all', label: '⌕ Toutes les UE' }]),
+        function (id) {
+          if (id === '__all') drawAll(); else drawSemester(id);
+          return null;
+        }, wanted);
 
       var page = UI.page({
         crumb: 'Mes études',

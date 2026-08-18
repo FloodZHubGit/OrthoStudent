@@ -946,6 +946,64 @@ kbd {
 .card.ue-trap { border-color: color-mix(in srgb, var(--amber) 35%, transparent); }
 .card.ue-trap h2 { color: var(--amber); }
 
+/* --- détail de la maîtrise d'une UE --- */
+.ue-detail { margin-top: 16px; border-top: 1px solid var(--line-soft); padding-top: 12px; }
+.ue-detail-row {
+  display: grid; grid-template-columns: 92px minmax(60px, 1fr) 46px 2fr;
+  gap: 12px; align-items: center; padding: 5px 0; font-size: 12.5px;
+}
+.ue-detail-row .k { color: var(--txt-2); font-weight: 600; }
+.ue-detail-row .p { font-family: var(--mono); font-size: 12px; text-align: right; }
+.ue-detail-row .h { color: var(--txt-3); font-size: 11.6px; }
+@media (max-width: 900px) {
+  .ue-detail-row { grid-template-columns: 84px 1fr 44px; }
+  .ue-detail-row .h { grid-column: 1 / -1; }
+}
+
+/* --- place de l'UE dans le cursus --- */
+.ue-chain { gap: 6px; margin-bottom: 9px; }
+.ue-chain-k {
+  font-size: 9.5px; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--txt-3); font-weight: 700; align-self: center; min-width: 74px;
+}
+.ue-chain .chip { gap: 6px; }
+
+/* --- récitation --- */
+.recite-card {
+  min-height: 210px; border-radius: var(--r); border: 1px solid var(--line-soft);
+  background: linear-gradient(150deg, var(--surface-3), var(--surface-2));
+  display: grid; place-items: center; align-content: center; gap: 14px;
+  padding: 34px 30px; text-align: center; cursor: pointer; position: relative;
+  transition: .18s var(--ease); box-shadow: var(--shadow-s);
+}
+.recite-card:hover { border-color: color-mix(in srgb, var(--accent) 35%, transparent); box-shadow: var(--shadow); }
+.recite-card .side-label {
+  position: absolute; top: 12px; left: 16px; font-size: 10px; color: var(--txt-3);
+  text-transform: uppercase; letter-spacing: .12em; font-weight: 700;
+}
+.recite-q { font-size: 17px; line-height: 1.5; font-weight: 550; }
+.recite-a {
+  font-size: 15.5px; line-height: 1.6; color: var(--accent);
+  border-top: 1px solid var(--line-soft); padding-top: 14px; max-width: 62ch;
+}
+.recite-hidden { font-size: 12.5px; color: var(--txt-3); font-style: italic; }
+
+/* --- vue transversale des UE --- */
+.ue-row {
+  display: flex; align-items: center; gap: 13px; cursor: pointer;
+  background: var(--surface); border: 1px solid var(--line-soft);
+  border-radius: var(--r); padding: 11px 15px; margin-bottom: 7px;
+  transition: .16s var(--ease);
+}
+.ue-row:hover { border-color: color-mix(in srgb, var(--accent) 40%, transparent); transform: translateX(3px); }
+.ue-row .ue-title { font-size: 13.2px; font-weight: 550; margin-top: 1px; }
+.ue-row .ue-row-resume {
+  font-size: 11.8px; color: var(--txt-3); margin-top: 2px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ue-row .arrow { color: var(--txt-3); font-size: 16px; }
+.ue-row:hover .arrow { color: var(--accent); }
+
 .plan-week { border: 1px solid var(--line-soft); border-radius: var(--r); padding: 13px 15px; margin-bottom: 12px; background: var(--surface-2); }
 .plan-week-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 13.5px; }
 .plan-ue { padding: 9px 0; border-top: 1px dashed var(--line-soft); }

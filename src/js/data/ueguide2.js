@@ -197,22 +197,36 @@
       { t: '3 · L’écrit et le suivi',
         p: 'Toute consigne à domicile est remise par écrit, en langage simple, avec le rythme et la durée. Un carnet de suivi (occlusion, exercices) sert autant au patient qu’au thérapeute : il transforme une impression en donnée.' },
       { t: '4 · Situations difficiles',
-        p: 'Parent en colère, adolescent qui refuse, patient qui n’adhère pas, annonce mal vécue : ne pas argumenter contre l’émotion, nommer ce qui se passe, revenir aux objectifs concrets et négociables. Savoir reporter une séance vaut mieux qu’une séance forcée.' }
+        p: 'Parent en colère, adolescent qui refuse, patient qui n’adhère pas, annonce mal vécue : ne pas argumenter contre l’émotion, nommer ce qui se passe, revenir aux objectifs concrets et négociables. Savoir reporter une séance vaut mieux qu’une séance forcée.' },
+      { t: '5 · Annoncer une mauvaise nouvelle',
+        p: 'Un cadre calme et sans interruption, on vérifie d’abord ce que la personne sait et ce qu’elle veut savoir, on annonce en mots simples, on <b>se tait</b> pour laisser la place au choc, puis on reformule et on donne une suite concrète et un rendez-vous. L’erreur la plus fréquente est de combler le silence par un flot d’informations que personne n’entendra. Ce qui est retenu d’une annonce, c’est l’attitude bien plus que le contenu.' },
+      { t: '6 · Adapter à l’âge et à la culture',
+        p: 'À l’enfant, on parle directement, avec des mots concrets et un rôle actif (« c’est ton œil paresseux qui va s’entraîner »). À l’adolescent, on négocie le cadre plutôt que le principe, en tenant compte du coût social immédiat. À la personne âgée, on ralentit, on écrit gros, on vérifie l’audition. Avec un allophone, on recourt à un interprète professionnel et non à un proche — surtout pas à un enfant de la famille.' }
     ],
     chiffres: [
       ['Ce que retient un patient après une consultation', '≈ 20 à 50 %'],
-      ['Étapes de l’ETP', '4 (diagnostic éducatif, objectifs, séances, évaluation)']
+      ['Étapes de l’ETP', '4 : diagnostic éducatif, objectifs, séances, évaluation'],
+      ['Les deux familles de compétences en ETP', 'auto-soins et adaptation'],
+      ['Vérification de la compréhension', 'par reformulation du patient'],
+      ['Interprétariat', 'professionnel, jamais un proche ni un enfant'],
+      ['Consigne à domicile', 'toujours remise par écrit']
     ],
     notions: [
       'Vérifier par la reformulation, pas par « vous avez compris ? ».',
-      'Ce qui n’est pas écrit n’est pas fait.'
+      'Ce qui n’est pas écrit n’est pas fait.',
+      'Dans une annonce, le silence fait partie du soin : le combler sert le soignant, pas le patient.'
     ],
     pieges: [
       'Donner une consigne irréalisable dans la vie du patient.',
-      'Confondre information et éducation thérapeutique.'
+      'Confondre information et éducation thérapeutique.',
+      'Faire traduire par un proche : perte de fidélité, et charge indue sur la famille.'
     ],
-    tombe: ['Construction d’une séance d’ETP', 'Analyse d’un entretien'],
-    methode: 'Rédigez les consignes que vous donneriez à un parent pour une occlusion : c’est exactement l’exercice attendu.'
+    tombe: [
+      'Construction d’une séance d’ETP',
+      'Analyse d’un entretien, repérage des maladresses',
+      'Rédaction de consignes d’occlusion pour un parent'
+    ],
+    methode: 'Rédigez les consignes que vous donneriez à un parent pour une occlusion : c’est exactement l’exercice attendu. Faites-les relire par quelqu’un hors du domaine — s’il ne peut pas les appliquer, elles sont à refaire.'
   };
 
   G.UE37 = {
@@ -230,22 +244,35 @@
       { t: '3 · Le projet de soins',
         p: 'Objectifs mesurables (PPC < 8 cm, disparition des céphalées de lecture), moyens (exercices, prismes, correction), rythme, durée prévisionnelle, critères de réévaluation et surtout critères d’<b>arrêt</b>. Sans critère d’arrêt, une rééducation s’éternise et perd son sens.' },
       { t: '4 · Traçabilité et transmission',
-        p: 'Compte rendu daté, chiffré, comparable au précédent, avec conclusion explicite. Adapté au destinataire : le prescripteur veut une conclusion et une proposition ; l’enseignant, des conséquences concrètes en classe ; le patient, ce qu’il doit faire.' }
+        p: 'Compte rendu daté, chiffré, comparable au précédent, avec conclusion explicite. Adapté au destinataire : le prescripteur veut une conclusion et une proposition ; l’enseignant, des conséquences concrètes en classe ; le patient, ce qu’il doit faire.' },
+      { t: '5 · Décider : rééduquer, corriger, surveiller ou adresser',
+        p: 'Quatre issues possibles, et le raisonnement doit dire laquelle et pourquoi. <b>Rééduquer</b> si le trouble est fonctionnel, rééducable et gênant. <b>Corriger</b> d’abord si une amétropie ou une presbytie non compensée explique la plainte — rééduquer sur une correction fausse ne mène nulle part. <b>Surveiller</b> si le trouble est infraclinique ou en cours de constitution. <b>Adresser</b> devant tout signe d’alarme : diplopie récente, déviation incomitante, baisse d’acuité inexpliquée, anomalie pupillaire, céphalées atypiques.' },
+      { t: '6 · Réévaluer et savoir arrêter',
+        p: 'On réévalue avec les mêmes mesures qu’au bilan initial, sinon la comparaison ne veut rien dire. Trois issues : objectifs atteints, on arrête et on prévoit un contrôle à distance ; progression insuffisante, on cherche pourquoi — observance, correction, diagnostic à revoir — avant de prolonger ; plateau confirmé malgré une prise en charge correcte, on arrête et on explique. Prolonger indéfiniment une rééducation qui ne produit plus rien coûte au patient et décrédibilise la profession.' }
     ],
     chiffres: [
-      ['Structure du projet', 'objectifs / moyens / rythme / réévaluation'],
-      ['Réévaluation d’une rééducation', 'toutes les 8 à 10 séances']
+      ['Structure du projet', 'objectifs / moyens / rythme / réévaluation / arrêt'],
+      ['Réévaluation d’une rééducation', 'toutes les 8 à 10 séances'],
+      ['Issues possibles d’un raisonnement', '4 : rééduquer, corriger, surveiller, adresser'],
+      ['Comparabilité d’un bilan', 'mêmes tests, mêmes conditions, mêmes unités'],
+      ['Contenu d’un diagnostic orthoptique', 'dysfonctionnement + retentissement']
     ],
     notions: [
-      'Le diagnostic orthoptique décrit un dysfonctionnement et son retentissement.',
-      'Pas de projet de soins sans critère d’arrêt.'
+      'Le diagnostic orthoptique décrit un dysfonctionnement et son retentissement — ce n’est pas un diagnostic médical.',
+      'Pas de projet de soins sans critère d’arrêt.',
+      'Une correction optique inadaptée invalide toute rééducation : elle se traite en premier.'
     ],
     pieges: [
       'Rédiger un diagnostic orthoptique qui n’est qu’une liste de chiffres.',
-      'Oublier de dater et de comparer.'
+      'Oublier de dater et de comparer — un bilan isolé ne dit presque rien.',
+      'Prolonger une rééducation sur un plateau, faute d’avoir posé un critère d’arrêt au départ.'
     ],
-    tombe: ['Rédaction d’un diagnostic orthoptique et d’un projet de soins sur dossier'],
-    methode: 'À chaque consultation simulée, rédigez les trois lignes : diagnostic orthoptique, retentissement, projet. C’est l’attendu exact de l’examen clinique.'
+    tombe: [
+      'Rédaction d’un diagnostic orthoptique et d’un projet de soins sur dossier',
+      'Justification d’une décision : rééduquer, corriger, surveiller ou adresser',
+      'Analyse d’une réévaluation à mi-parcours'
+    ],
+    methode: 'À chaque consultation simulée, rédigez les trois lignes : diagnostic orthoptique, retentissement, projet. C’est l’attendu exact de l’examen clinique. Entraînez-vous ensuite à justifier en une phrase pourquoi vous n’avez pas choisi les trois autres issues.'
   };
 
   /* ============================ SEMESTRE 4 ============================ */
@@ -626,20 +653,36 @@
       { t: '3 · Protocoles de coopération et travail aidé',
         p: 'L’orthoptiste réalise des examens préalables (acuité, réfraction, tonométrie, rétinophotographie, OCT) sous la responsabilité de l’ophtalmologiste, qui pose le diagnostic et prescrit. Ce modèle a considérablement réduit les délais d’accès aux soins. S’y ajoutent les extensions récentes : accès direct encadré, renouvellement et adaptation des corrections sous conditions.' },
       { t: '4 · Responsabilités et obligations',
-        p: 'Responsabilité civile professionnelle (assurance obligatoire), pénale, disciplinaire. Obligations : formation continue et développement professionnel continu, traçabilité des actes, mise à jour des connaissances, respect du secret et du consentement.' }
+        p: 'Responsabilité civile professionnelle (assurance obligatoire), pénale, disciplinaire. Obligations : formation continue et développement professionnel continu, traçabilité des actes, mise à jour des connaissances, respect du secret et du consentement. La responsabilité <b>pénale reste personnelle</b> : aucune assurance ni aucun employeur ne s’y substitue.' },
+      { t: '5 · Le décret d’actes, colonne vertébrale du métier',
+        p: 'C’est lui qui dit ce qu’un orthoptiste peut faire, et à quelles conditions : sur prescription médicale pour la rééducation, en autonomie encadrée pour certains dépistages et examens. Toute question d’exercice se ramène à trois vérifications : l’acte figure-t-il dans le décret ? sous quelle condition (prescription, protocole, autonomie) ? et suis-je compétent pour le poser aujourd’hui ? Sortir de ce cadre, c’est un exercice illégal, indépendamment de la qualité du geste.' },
+      { t: '6 · S’installer en libéral',
+        p: 'Enregistrement du diplôme et numéro RPPS, choix du statut et de la structure, conventionnement avec l’assurance maladie, assurance en responsabilité civile professionnelle, local accessible, comptabilité et déclarations. Les contrats — collaboration, remplacement, association — se lisent avant signature : les clauses de non-concurrence et de rétrocession sont ce qui pose problème après coup.' }
     ],
     chiffres: [
       ['Assurance responsabilité civile', 'obligatoire'],
       ['Compte rendu au prescripteur', 'systématique'],
-      ['DPC', 'obligation continue']
+      ['DPC', 'obligation triennale'],
+      ['Cadre de la rééducation', 'sur prescription médicale'],
+      ['Responsabilité pénale', 'personnelle, non assurable'],
+      ['Vérification d’un acte', 'décret / condition / compétence']
     ],
     notions: [
       'Le travail aidé se fait sous la responsabilité de l’ophtalmologiste.',
-      'L’accès direct est encadré par des conditions précises.'
+      'L’accès direct est encadré par des conditions précises : ce n’est pas une autonomie générale.',
+      'Le décret d’actes prime sur l’habitude du service : « on a toujours fait comme ça » n’est pas un cadre légal.'
     ],
-    pieges: ['Confondre accès direct et absence de cadre réglementaire.'],
-    tombe: ['Modes d’exercice et cotation', 'Place de l’orthoptiste dans le parcours de soins'],
-    methode: 'UE de fin de cursus, très concrète : elle prépare votre installation autant que l’examen.'
+    pieges: [
+      'Confondre accès direct et absence de cadre réglementaire.',
+      'Croire que l’assurance de l’employeur couvre la responsabilité pénale.',
+      'Poser un acte qu’on maîtrise mal parce qu’il figure au décret : la compétence effective est la troisième condition.'
+    ],
+    tombe: [
+      'Modes d’exercice et cotation',
+      'Place de l’orthoptiste dans le parcours de soins',
+      'Analyse d’une situation au regard du décret d’actes'
+    ],
+    methode: 'UE de fin de cursus, très concrète : elle prépare votre installation autant que l’examen. Prenez cinq actes que vous avez faits en stage et retrouvez pour chacun sa base réglementaire — c’est le meilleur entraînement.'
   };
 
   G.UE35 = {
@@ -770,16 +813,36 @@
       { t: '3 · Secret partagé et cadre',
         p: 'Le secret est partagé au sein de l’équipe de soins, limité à ce qui est nécessaire à la prise en charge. En dehors de l’équipe (école, employeur), l’information passe par le patient ou nécessite son accord explicite.' },
       { t: '4 · Organiser un relais',
-        p: 'Quand la situation dépasse le champ orthoptique : nommer ce qu’on a observé, indiquer vers qui on oriente et pourquoi, s’assurer que le relais a bien eu lieu. Un patient perdu entre deux professionnels est un échec de parcours.' }
+        p: 'Quand la situation dépasse le champ orthoptique : nommer ce qu’on a observé, indiquer vers qui on oriente et pourquoi, s’assurer que le relais a bien eu lieu. Un patient perdu entre deux professionnels est un échec de parcours.' },
+      { t: '5 · Le parcours de soins coordonné',
+        p: 'Une prise en charge se pense comme un parcours, pas comme une succession d’actes : un référent identifié, des rôles explicites, des points de synchronisation. Les deux pannes classiques sont la <b>rupture</b> (personne ne reprend la main après un examen) et la <b>redondance</b> (trois professionnels refont le même bilan sans le savoir). Un compte rendu daté et adressé règle les deux.' },
+      { t: '6 · Désaccords et situations sensibles',
+        p: 'Un désaccord professionnel se traite entre professionnels, sur les données du dossier — jamais devant le patient, qui perdrait confiance dans les deux. Devant une suspicion de maltraitance ou une situation de danger, on ne mène pas l’enquête : on trace factuellement ce qu’on a constaté et on transmet selon la procédure de l’établissement. Le doute se partage, il ne se garde pas.' }
     ],
     chiffres: [
       ['Éléments d’une transmission', '3 : trouvé / conséquence / attente'],
-      ['Secret partagé', 'limité à l’équipe de soins']
+      ['Secret partagé', 'limité à l’équipe de soins et au nécessaire'],
+      ['Information hors équipe de soins', 'accord explicite du patient'],
+      ['Les deux pannes du parcours', 'rupture et redondance'],
+      ['Traitement d’un désaccord', 'entre professionnels, sur le dossier'],
+      ['Délai raisonnable d’envoi d’un compte rendu', 'sous 8 jours']
     ],
-    notions: ['La transmission s’adapte au destinataire, pas au rédacteur.'],
-    pieges: ['Envoyer un compte rendu illisible pour son destinataire.'],
-    tombe: ['Cas de coordination pluriprofessionnelle'],
-    methode: 'Rédigez le même bilan pour deux destinataires — l’ophtalmologiste et l’enseignant : c’est l’exercice type.'
+    notions: [
+      'La transmission s’adapte au destinataire, pas au rédacteur.',
+      'Le secret partagé ne couvre que ce qui est <b>nécessaire</b> à la prise en charge — ce n’est pas un droit d’accès général pour l’équipe.',
+      'Un relais n’est fait que lorsqu’il est confirmé : orienter ne suffit pas.'
+    ],
+    pieges: [
+      'Envoyer un compte rendu illisible pour son destinataire — le vocabulaire technique ne prouve rien.',
+      'Transmettre à l’école ou à l’employeur sans l’accord du patient : ils ne font pas partie de l’équipe de soins.',
+      'Exprimer un désaccord avec un confrère devant le patient ou sa famille.'
+    ],
+    tombe: [
+      'Cas de coordination pluriprofessionnelle à organiser',
+      'Rédaction du même bilan pour deux destinataires différents',
+      'Question sur les limites du secret partagé'
+    ],
+    methode: 'Rédigez le même bilan pour deux destinataires — l’ophtalmologiste et l’enseignant : c’est l’exercice type. Puis relisez-vous en vous demandant, ligne à ligne, ce que le destinataire va en faire.'
   };
 
   G.UE40 = {
@@ -797,15 +860,35 @@
       { t: '3 · Analyse de pratique',
         p: 'Décrire la situation, ce qui a été fait, ce qui a été ressenti, ce qui pourrait être fait autrement — sans jugement de valeur. Pratiquée en groupe, elle est un des meilleurs outils de progression et de prévention de l’épuisement professionnel.' },
       { t: '4 · Formation continue',
-        p: 'Développement professionnel continu, congrès, lecture d’articles, formations spécialisées (basse vision, neurovision, pédiatrie). Une pratique qui ne se met pas à jour se dégrade : les recommandations bougent, les techniques aussi.' }
+        p: 'Développement professionnel continu, obligatoire et triennal, congrès, lecture d’articles, formations spécialisées (basse vision, neurovision, pédiatrie). Une pratique qui ne se met pas à jour se dégrade : les recommandations bougent, les techniques aussi.' },
+      { t: '5 · Écrire un objectif de stage qui tienne',
+        p: 'Un objectif utilisable est un <b>comportement observable</b>, dans un <b>contexte</b> donné, avec un <b>critère de réussite</b> : « réaliser seul un cover test alterné chiffré aux prismes sur un patient coopérant, avec un écart inférieur à 4 Δ par rapport à l’évaluation du tuteur ». « Progresser en strabologie » n’est pas un objectif, c’est une intention : rien ne permet de dire s’il est atteint.' },
+      { t: '6 · Le stagiaire en difficulté',
+        p: 'Le pire service à rendre est d’attendre la fin du stage pour le dire. On nomme tôt et précisément le manque constaté, on le trace, on propose un plan de progression avec des échéances, et on alerte l’institut avant que l’échec soit acquis. Distinguer trois causes appelle trois réponses différentes : un manque de <b>connaissances</b> se comble, un manque de <b>geste</b> se répète, un problème de <b>posture</b> ou de sécurité du patient se signale sans délai.' }
     ],
     chiffres: [
-      ['Progression du stagiaire', 'observation → participation → autonomie'],
-      ['DPC', 'obligation continue']
+      ['Progression du stagiaire', 'observation → participation → autonomie supervisée'],
+      ['DPC', 'obligation triennale'],
+      ['Objectif bien écrit', 'comportement observable + contexte + critère'],
+      ['Retour utile', 'descriptif, précis, immédiat, suivi d’une proposition'],
+      ['Analyse de pratique', 'situation → agi → ressenti → autrement'],
+      ['Alerte sur un stagiaire en difficulté', 'avant l’échec, pas au bilan final']
     ],
-    notions: ['Formative ≠ sommative : ne pas transformer un accompagnement en sanction.'],
-    pieges: ['Évaluer la personne au lieu de la compétence.'],
-    tombe: ['Situation d’encadrement à analyser'],
-    methode: 'Repensez à vos propres stages : ce qui vous a fait progresser, et pourquoi. L’UE se travaille par l’expérience.'
+    notions: [
+      'Formative ≠ sommative : ne pas transformer un accompagnement en sanction.',
+      'On évalue un <b>comportement observable</b>, jamais une personne ni une impression.',
+      'Un objectif sans critère de réussite ne peut être ni atteint ni raté : il ne sert à rien.'
+    ],
+    pieges: [
+      'Évaluer la personne au lieu de la compétence — « pas motivé » n’est pas une observation.',
+      'Garder pour le bilan final ce qui aurait dû être dit la première semaine.',
+      'Confondre autonomie et abandon : l’autonomie reste supervisée.'
+    ],
+    tombe: [
+      'Situation d’encadrement à analyser',
+      'Rédaction d’objectifs de stage et de critères d’évaluation',
+      'Formulation d’un retour à un stagiaire en difficulté'
+    ],
+    methode: 'Repensez à vos propres stages : ce qui vous a fait progresser, et pourquoi. Puis entraînez-vous à réécrire trois intentions vagues en objectifs observables — c’est l’attendu le plus fréquent.'
   };
 })();

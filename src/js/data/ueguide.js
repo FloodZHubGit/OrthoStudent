@@ -424,17 +424,25 @@ UE12: {
     { t: '3 · Devoirs et responsabilité',
       p: 'Consentement éclairé, information loyale et adaptée, non-discrimination, continuité des soins, obligation de moyens. Responsabilité civile (assurance obligatoire), pénale et disciplinaire. Le dossier patient doit être tenu, conservé et accessible au patient sur demande.' },
     { t: '4 · Histoire de la profession',
-      p: 'Née dans l’entre-deux-guerres autour du traitement du strabisme et de la rééducation de la vision binoculaire (travaux de Javal, développement du synoptophore), la profession est reconnue par le certificat de capacité en 1956. Le champ s’élargit ensuite à l’exploration fonctionnelle, la basse vision, la neurovision, puis au travail aidé en cabinet d’ophtalmologie, qui a transformé l’accès aux soins.' }
+      p: 'Née dans l’entre-deux-guerres autour du traitement du strabisme et de la rééducation de la vision binoculaire (travaux de Javal, développement du synoptophore), la profession est reconnue par le certificat de capacité en 1956. Le champ s’élargit ensuite à l’exploration fonctionnelle, la basse vision, la neurovision, puis au travail aidé en cabinet d’ophtalmologie, qui a transformé l’accès aux soins.' },
+    { t: '5 · Le consentement, en pratique',
+      p: 'Trois conditions : une information <b>loyale, claire et appropriée</b>, une capacité à décider, et l’absence de contrainte. Il se recueille avant l’acte, se vérifie pendant, et reste <b>révocable à tout moment</b> sans justification. Chez le mineur, l’autorité parentale décide, mais l’avis de l’enfant se recueille et se respecte d’autant plus qu’il grandit. Un refus de soin éclairé est un droit : on le trace, on ne le force pas.' },
+    { t: '6 · Les quatre grands principes de l’éthique',
+      p: '<b>Autonomie</b> (respecter la décision du patient), <b>bienfaisance</b> (agir pour son bien), <b>non-malfaisance</b> (d’abord ne pas nuire), <b>justice</b> (équité d’accès et de traitement). Un dilemme éthique naît quand deux principes s’opposent : un enfant qui refuse l’occlusion oppose son autonomie naissante à la bienfaisance. La réponse n’est pas de choisir un camp mais d’expliciter le conflit, d’associer la famille, et de tracer le raisonnement.' }
   ],
   chiffres: [
     ['Durée des études', '3 ans, 180 ECTS'],
     ['Certificat de capacité', 'créé en 1956'],
     ['Assurance responsabilité civile', 'obligatoire'],
-    ['Accès au dossier par le patient', 'de droit']
+    ['Accès au dossier par le patient', 'de droit'],
+    ['Conditions d’un consentement valable', '3 : information, capacité, liberté'],
+    ['Principes de l’éthique biomédicale', '4 : autonomie, bienfaisance, non-malfaisance, justice'],
+    ['Révocation du consentement', 'à tout moment, sans justification']
   ],
   notions: [
     'Les actes sont définis par décret ; l’accès direct est encadré, pas illimité.',
-    'Le secret professionnel n’est pas levé par la demande d’un proche.'
+    'Le secret professionnel n’est pas levé par la demande d’un proche.',
+    'Les informations du dossier appartiennent au patient ; le support appartient au professionnel.'
   ],
   pieges: [
     'Croire que l’accès direct dispense de tout cadre.',
@@ -611,18 +619,25 @@ UE13: {
     { t: '3 · Le risque adénovirus',
       p: 'La kérato-conjonctivite épidémique est extrêmement contagieuse, survit longtemps sur les surfaces et résiste à beaucoup d’antiseptiques usuels. Conduite : consultation en fin de programme si possible, désinfection renforcée du poste, matériel dédié, éviction, information du patient (durée de contagiosité, lavage des mains, linge personnel).' },
     { t: '4 · Accident d’exposition au sang',
-      p: 'Lavage immédiat à l’eau et au savon (ne pas faire saigner), antisepsie au dérivé chloré ou à l’alcool 70° pendant au moins 5 minutes ; pour une projection oculaire, rinçage abondant au sérum physiologique. Puis avis médical <b>dans les 4 heures</b> pour évaluer l’indication d’un traitement post-exposition, et déclaration d’accident du travail dans les 24 à 48 heures.' }
+      p: 'Lavage immédiat à l’eau et au savon (ne pas faire saigner), antisepsie au dérivé chloré ou à l’alcool 70° pendant au moins 5 minutes ; pour une projection oculaire, rinçage abondant au sérum physiologique. Puis avis médical <b>dans les 4 heures</b> pour évaluer l’indication d’un traitement post-exposition, et déclaration d’accident du travail dans les 24 à 48 heures.' },
+    { t: '5 · Collyres et consommables',
+      p: 'Une unidose sert à <b>un seul patient et une seule séance</b>, puis se jette — la rouvrir plus tard revient à inoculer ce qu’on y a laissé entrer. Les flacons multidoses ne se partagent jamais entre patients et se datent à l’ouverture. On ne touche jamais les cils ni la cornée avec l’embout. Les colorants, la fluorescéine en particulier, sont un vecteur classique de contamination croisée : bandelettes à usage unique de préférence.' },
+    { t: '6 · Gestion des risques et déclaration',
+      p: 'La démarche qualité repose sur le signalement : un <b>événement indésirable</b> est un fait inattendu, lié aux soins, qui aurait pu ou a nuisi au patient. On déclare aussi les <b>presque-accidents</b>, qui coûtent moins cher à analyser qu’un dommage. L’analyse cherche la cause systémique — organisation, matériel, formation — et non le coupable : une culture punitive fait disparaître les déclarations, pas les erreurs.' }
   ],
   chiffres: [
     ['Friction hydro-alcoolique', '20 à 30 s'],
     ['Antisepsie après AES', '≥ 5 min'],
     ['Avis médical après AES', '< 4 h'],
     ['Déclaration d’accident du travail', '24 à 48 h'],
-    ['Survie de l’adénovirus sur surface', 'plusieurs semaines']
+    ['Survie de l’adénovirus sur surface', 'plusieurs semaines'],
+    ['Unidose de collyre', '1 patient, 1 séance'],
+    ['Contagiosité d’une kérato-conjonctivite à adénovirus', '≈ 10 à 14 jours']
   ],
   notions: [
     'Les gants ne remplacent jamais l’hygiène des mains.',
-    'Mentonnière et appui-front font partie du matériel à désinfecter.'
+    'Mentonnière et appui-front font partie du matériel à désinfecter.',
+    'On déclare aussi les presque-accidents : ils s’analysent au même titre, sans dommage à réparer.'
   ],
   pieges: [
     'Oublier la désinfection entre deux patients sur les surfaces de contact.',
@@ -745,17 +760,24 @@ UE17: {
     { t: '3 · Diabète',
       p: 'Rétinophotographies grand champ pour le dépistage (lecture différée possible, télémédecine), OCT maculaire devant toute baisse d’acuité, angiographie si suspicion de néovaisseaux. Le rythme de suivi dépend du stade et de l’équilibre glycémique ; la grossesse et l’équilibration rapide de l’HbA1c aggravent transitoirement la rétinopathie.' },
     { t: '4 · Le compte rendu',
-      p: 'Conditions de l’examen (appareil, stratégie, correction, fiabilité), résultats chiffrés, comparaison à l’examen précédent, et une conclusion en une ou deux phrases. Ce que le médecin lit d’abord : « stable » ou « aggravation », et sur quel critère.' }
+      p: 'Conditions de l’examen (appareil, stratégie, correction, fiabilité), résultats chiffrés, comparaison à l’examen précédent, et une conclusion en une ou deux phrases. Ce que le médecin lit d’abord : « stable » ou « aggravation », et sur quel critère.' },
+    { t: '5 · Reconnaître un examen ininterprétable',
+      p: 'Savoir jeter un examen fait partie du métier. Au champ visuel : pertes de fixation au-delà de 20 %, faux positifs élevés, ou un aspect en « trou de serrure » qui signe une correction mal centrée plutôt qu’un déficit. À l’OCT : signal faible, artefacts de segmentation, décentrement — la courbe de progression devient alors un artefact qu’on suivra pendant des années. Un examen douteux se refait, il ne se commente pas.' },
+    { t: '6 · Le rythme de suivi, et pourquoi il varie',
+      p: 'Il se règle sur trois éléments : la <b>vitesse</b> de progression observée, l’<b>espérance de vie visuelle</b> du patient — un glaucome débutant à 45 ans est plus menaçant qu’à 85 — et la <b>marge</b> restante entre l’atteinte et la fonction utile. D’où le principe : beaucoup d’examens rapprochés au début pour établir une pente fiable, puis espacement si la pente est plate. Trois champs visuels la première année valent mieux qu’un par an pendant trois ans.' }
   ],
   chiffres: [
     ['Suivi glaucome débutant', '2 à 4 examens/an'],
     ['Dépistage rétinopathie diabétique', 'annuel (ou 2 ans si conditions réunies)'],
     ['Perte physiologique du RNFL', '≈ 1 µm/an'],
-    ['Autosurveillance Amsler', 'quotidienne, œil par œil']
+    ['Autosurveillance Amsler', 'quotidienne, œil par œil'],
+    ['Seuil d’alerte des pertes de fixation', '> 20 %'],
+    ['Champs visuels pour établir une pente fiable', '≈ 3 la première année']
   ],
   notions: [
     'Comparer deux examens exige les mêmes conditions.',
-    'Dans le glaucome, la structure bouge souvent avant la fonction.'
+    'Dans le glaucome, la structure bouge souvent avant la fonction.',
+    'Un examen non fiable se refait : l’interpréter quand même pollue toute la série de suivi.'
   ],
   pieges: [
     'Comparer deux champs visuels de stratégies différentes.',
