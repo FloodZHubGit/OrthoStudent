@@ -26,7 +26,9 @@
     studies: {             // suivi du referentiel de formation
       examDates: {},       // 'S3' -> 'AAAA-MM-JJ' (date des partiels)
       ueDone: {},          // 'S3:UE25' -> horodatage de la revision
-      planDone: {}         // 'S3:w2:UE25:qcm' -> true
+      planDone: {},        // 'S3:w2:UE25:qcm' -> true
+      recite: {},          // 'S3:UE25' -> { pct, n, at } derniere recitation
+      reciteLog: {}        // 'S3:UE25' -> [{ pct, n, at }] historique borne
     },
     favorites: []
   };
@@ -166,6 +168,10 @@
       return c;
     },
 
+    reciteHistory: function (key) {
+      return Store.studies().reciteLog[key] || [];
+    },
+
     dueCards: function (allIds) {
       var now = Date.now();
       return allIds.filter(function (id) {
@@ -298,12 +304,32 @@
     /* --- Suivi du programme des etudes --- */
 
     studies: function () {
-      if (!state.studies) state.studies = { examDates: {}, ueDone: {}, planDone: {} };
+      if (!state.studies) state.studies = { examDates: {}, ueDone: {}, planDone: {}, recite: {} };
       var s = state.studies;
       if (!s.examDates) s.examDates = {};
       if (!s.ueDone) s.ueDone = {};
       if (!s.planDone) s.planDone = {};
+      if (!s.recite) s.recite = {};
+      if (!s.reciteLog) s.reciteLog = {};
       return s;
+    },
+
+    /* Derniere recitation d'une UE : { pct, n, at }.
+       C'est le signal de maitrise le plus fiable dont on dispose,
+       parce qu'il vient d'un rappel actif et non d'une reconnaissance. */
+    recite: function (key, value) {
+      var s = Store.studies();
+      if (value === undefined) return s.recite[key] || null;
+      if (value === null) { delete s.recite[key]; delete s.reciteLog[key]; save(); return null; }
+      var entry = { pct: value.pct, n: value.n, at: Date.now() };
+      s.recite[key] = entry;
+      // l'historique dit la progression ; un score isole ne dit rien
+      var log = s.reciteLog[key] || [];
+      log.push(entry);
+      if (log.length > 24) log = log.slice(log.length - 24);
+      s.reciteLog[key] = log;
+      save();
+      return entry;
     },
 
     ueDone: function (key, value) {

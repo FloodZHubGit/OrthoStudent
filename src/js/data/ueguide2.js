@@ -96,7 +96,8 @@
     ],
     tombe: [
       'Protocole complet à rédiger avec doses et délais',
-      'Conduite devant une amblyopie qui ne progresse plus'
+      'Conduite devant une amblyopie qui ne progresse plus',
+      'Analyse d’un échec de traitement d’amblyopie et conduite à tenir'
     ],
     methode: 'Le patient « Lucas M. » du module Rééducation reproduit ce protocole : correction déjà portée, puis occlusion et anti-suppression, avec suivi de l’acuité.'
   };
@@ -142,7 +143,8 @@
     ],
     tombe: [
       'Calcul du grossissement et de l’addition (Kestenbaum)',
-      'Choix d’aides selon le profil de déficit'
+      'Choix d’aides selon le profil de déficit',
+      'Choix argumenté d’une aide optique à partir d’un besoin exprimé'
     ],
     methode: 'Travaillez par profils : pour chaque étiologie, la gêne dominante et les deux aides les plus adaptées. La calculatrice « Distance de sommet & basse vision » fait les calculs.'
   };
@@ -162,23 +164,32 @@
       { t: '3 · Équation et tri',
         p: 'Mots-clés combinés par ET / OU, troncatures, filtres (date, type d’étude, langue). Notez vos équations : elles font partie de la méthode et devront figurer dans le mémoire. Tri en trois passes : titre, résumé, texte intégral, avec critères d’inclusion et d’exclusion écrits à l’avance.' },
       { t: '4 · Niveaux de preuve et citation',
-        p: 'Revue systématique et méta-analyse > essai randomisé > cohorte > cas-témoins > série de cas > avis d’expert. Un style de citation unique tenu du début à la fin (Vancouver le plus souvent en santé), avec un gestionnaire de références alimenté dès la première lecture.' }
+        p: 'Revue systématique et méta-analyse > essai randomisé > cohorte > cas-témoins > série de cas > avis d’expert. Un style de citation unique tenu du début à la fin (Vancouver le plus souvent en santé), avec un gestionnaire de références alimenté dès la première lecture.' },
+      { t: '5 · Construire une équation de recherche',
+        p: 'On part de la question PICO, on en extrait les concepts, puis pour chacun on cherche les synonymes et le terme MeSH correspondant. On combine avec les opérateurs booléens : <b>OU</b> à l’intérieur d’un concept pour élargir, <b>ET</b> entre concepts pour restreindre, <b>SAUF</b> avec parcimonie car il élimine aussi ce qu’on n’avait pas prévu. On documente l’équation, la base et la date d’interrogation : sans cela la recherche n’est pas reproductible, donc pas scientifique.' },
+      { t: '6 · Où chercher, et ce que valent les sources',
+        p: 'PubMed et Cochrane pour la littérature médicale, LiSSa pour le français, les moteurs académiques généralistes comme filet — jamais comme source unique. Recommandations de la HAS et des sociétés savantes pour la pratique. Les mémoires d’étudiants et les sites d’associations informent mais ne font pas preuve. Une intelligence artificielle générative peut aider à formuler ou reformuler, mais elle invente des références plausibles : toute citation se vérifie à la source, sans exception.' }
     ],
     chiffres: [
       ['Format de question', 'PICO'],
       ['Niveau de preuve le plus élevé', 'méta-analyse'],
       ['Passes de tri', '3 (titre / résumé / texte)'],
-      ['Style de citation usuel', 'Vancouver']
+      ['Style de citation usuel', 'Vancouver'],
+      ['Opérateurs booléens', 'ET restreint, OU élargit, SAUF exclut'],
+      ['À tracer pour toute recherche', 'base, équation, date, nombre de résultats']
     ],
     notions: [
       'La question se formule avant de chercher.',
-      'Une équation de recherche se note et se justifie.'
+      'Une équation de recherche se note et se justifie.',
+      'Une recherche documentaire non reproductible n’a aucune valeur : on note la base, l’équation et la date.'
     ],
     pieges: [
       'Chercher en vrac et garder ce qui arrange.',
-      'Reprendre la bibliographie à la fin de la rédaction.'
+      'Reprendre la bibliographie à la fin de la rédaction.',
+      'Citer une référence produite par une IA sans l’avoir vérifiée à la source — elles sont fréquemment inventées.'
     ],
-    tombe: ['Construction d’une équation de recherche', 'Classement de sources par niveau de preuve'],
+    tombe: ['Construction d’une équation de recherche', 'Classement de sources par niveau de preuve',
+      'Construction d’une équation de recherche à partir d’une question clinique'],
     methode: 'Une dizaine d’heures qui conditionnent 8 ECTS de mémoire : c’est probablement l’UE la plus rentable du cursus.'
   };
 
@@ -197,22 +208,36 @@
       { t: '3 · L’écrit et le suivi',
         p: 'Toute consigne à domicile est remise par écrit, en langage simple, avec le rythme et la durée. Un carnet de suivi (occlusion, exercices) sert autant au patient qu’au thérapeute : il transforme une impression en donnée.' },
       { t: '4 · Situations difficiles',
-        p: 'Parent en colère, adolescent qui refuse, patient qui n’adhère pas, annonce mal vécue : ne pas argumenter contre l’émotion, nommer ce qui se passe, revenir aux objectifs concrets et négociables. Savoir reporter une séance vaut mieux qu’une séance forcée.' }
+        p: 'Parent en colère, adolescent qui refuse, patient qui n’adhère pas, annonce mal vécue : ne pas argumenter contre l’émotion, nommer ce qui se passe, revenir aux objectifs concrets et négociables. Savoir reporter une séance vaut mieux qu’une séance forcée.' },
+      { t: '5 · Annoncer une mauvaise nouvelle',
+        p: 'Un cadre calme et sans interruption, on vérifie d’abord ce que la personne sait et ce qu’elle veut savoir, on annonce en mots simples, on <b>se tait</b> pour laisser la place au choc, puis on reformule et on donne une suite concrète et un rendez-vous. L’erreur la plus fréquente est de combler le silence par un flot d’informations que personne n’entendra. Ce qui est retenu d’une annonce, c’est l’attitude bien plus que le contenu.' },
+      { t: '6 · Adapter à l’âge et à la culture',
+        p: 'À l’enfant, on parle directement, avec des mots concrets et un rôle actif (« c’est ton œil paresseux qui va s’entraîner »). À l’adolescent, on négocie le cadre plutôt que le principe, en tenant compte du coût social immédiat. À la personne âgée, on ralentit, on écrit gros, on vérifie l’audition. Avec un allophone, on recourt à un interprète professionnel et non à un proche — surtout pas à un enfant de la famille.' }
     ],
     chiffres: [
       ['Ce que retient un patient après une consultation', '≈ 20 à 50 %'],
-      ['Étapes de l’ETP', '4 (diagnostic éducatif, objectifs, séances, évaluation)']
+      ['Étapes de l’ETP', '4 : diagnostic éducatif, objectifs, séances, évaluation'],
+      ['Les deux familles de compétences en ETP', 'auto-soins et adaptation'],
+      ['Vérification de la compréhension', 'par reformulation du patient'],
+      ['Interprétariat', 'professionnel, jamais un proche ni un enfant'],
+      ['Consigne à domicile', 'toujours remise par écrit']
     ],
     notions: [
       'Vérifier par la reformulation, pas par « vous avez compris ? ».',
-      'Ce qui n’est pas écrit n’est pas fait.'
+      'Ce qui n’est pas écrit n’est pas fait.',
+      'Dans une annonce, le silence fait partie du soin : le combler sert le soignant, pas le patient.'
     ],
     pieges: [
       'Donner une consigne irréalisable dans la vie du patient.',
-      'Confondre information et éducation thérapeutique.'
+      'Confondre information et éducation thérapeutique.',
+      'Faire traduire par un proche : perte de fidélité, et charge indue sur la famille.'
     ],
-    tombe: ['Construction d’une séance d’ETP', 'Analyse d’un entretien'],
-    methode: 'Rédigez les consignes que vous donneriez à un parent pour une occlusion : c’est exactement l’exercice attendu.'
+    tombe: [
+      'Construction d’une séance d’ETP',
+      'Analyse d’un entretien, repérage des maladresses',
+      'Rédaction de consignes d’occlusion pour un parent'
+    ],
+    methode: 'Rédigez les consignes que vous donneriez à un parent pour une occlusion : c’est exactement l’exercice attendu. Faites-les relire par quelqu’un hors du domaine — s’il ne peut pas les appliquer, elles sont à refaire.'
   };
 
   G.UE37 = {
@@ -230,22 +255,36 @@
       { t: '3 · Le projet de soins',
         p: 'Objectifs mesurables (PPC < 8 cm, disparition des céphalées de lecture), moyens (exercices, prismes, correction), rythme, durée prévisionnelle, critères de réévaluation et surtout critères d’<b>arrêt</b>. Sans critère d’arrêt, une rééducation s’éternise et perd son sens.' },
       { t: '4 · Traçabilité et transmission',
-        p: 'Compte rendu daté, chiffré, comparable au précédent, avec conclusion explicite. Adapté au destinataire : le prescripteur veut une conclusion et une proposition ; l’enseignant, des conséquences concrètes en classe ; le patient, ce qu’il doit faire.' }
+        p: 'Compte rendu daté, chiffré, comparable au précédent, avec conclusion explicite. Adapté au destinataire : le prescripteur veut une conclusion et une proposition ; l’enseignant, des conséquences concrètes en classe ; le patient, ce qu’il doit faire.' },
+      { t: '5 · Décider : rééduquer, corriger, surveiller ou adresser',
+        p: 'Quatre issues possibles, et le raisonnement doit dire laquelle et pourquoi. <b>Rééduquer</b> si le trouble est fonctionnel, rééducable et gênant. <b>Corriger</b> d’abord si une amétropie ou une presbytie non compensée explique la plainte — rééduquer sur une correction fausse ne mène nulle part. <b>Surveiller</b> si le trouble est infraclinique ou en cours de constitution. <b>Adresser</b> devant tout signe d’alarme : diplopie récente, déviation incomitante, baisse d’acuité inexpliquée, anomalie pupillaire, céphalées atypiques.' },
+      { t: '6 · Réévaluer et savoir arrêter',
+        p: 'On réévalue avec les mêmes mesures qu’au bilan initial, sinon la comparaison ne veut rien dire. Trois issues : objectifs atteints, on arrête et on prévoit un contrôle à distance ; progression insuffisante, on cherche pourquoi — observance, correction, diagnostic à revoir — avant de prolonger ; plateau confirmé malgré une prise en charge correcte, on arrête et on explique. Prolonger indéfiniment une rééducation qui ne produit plus rien coûte au patient et décrédibilise la profession.' }
     ],
     chiffres: [
-      ['Structure du projet', 'objectifs / moyens / rythme / réévaluation'],
-      ['Réévaluation d’une rééducation', 'toutes les 8 à 10 séances']
+      ['Structure du projet', 'objectifs / moyens / rythme / réévaluation / arrêt'],
+      ['Réévaluation d’une rééducation', 'toutes les 8 à 10 séances'],
+      ['Issues possibles d’un raisonnement', '4 : rééduquer, corriger, surveiller, adresser'],
+      ['Comparabilité d’un bilan', 'mêmes tests, mêmes conditions, mêmes unités'],
+      ['Contenu d’un diagnostic orthoptique', 'dysfonctionnement + retentissement'],
+      ['Contenu d’un compte rendu', 'conditions, chiffres, comparaison, conclusion']
     ],
     notions: [
-      'Le diagnostic orthoptique décrit un dysfonctionnement et son retentissement.',
-      'Pas de projet de soins sans critère d’arrêt.'
+      'Le diagnostic orthoptique décrit un dysfonctionnement et son retentissement — ce n’est pas un diagnostic médical.',
+      'Pas de projet de soins sans critère d’arrêt.',
+      'Une correction optique inadaptée invalide toute rééducation : elle se traite en premier.'
     ],
     pieges: [
       'Rédiger un diagnostic orthoptique qui n’est qu’une liste de chiffres.',
-      'Oublier de dater et de comparer.'
+      'Oublier de dater et de comparer — un bilan isolé ne dit presque rien.',
+      'Prolonger une rééducation sur un plateau, faute d’avoir posé un critère d’arrêt au départ.'
     ],
-    tombe: ['Rédaction d’un diagnostic orthoptique et d’un projet de soins sur dossier'],
-    methode: 'À chaque consultation simulée, rédigez les trois lignes : diagnostic orthoptique, retentissement, projet. C’est l’attendu exact de l’examen clinique.'
+    tombe: [
+      'Rédaction d’un diagnostic orthoptique et d’un projet de soins sur dossier',
+      'Justification d’une décision : rééduquer, corriger, surveiller ou adresser',
+      'Analyse d’une réévaluation à mi-parcours'
+    ],
+    methode: 'À chaque consultation simulée, rédigez les trois lignes : diagnostic orthoptique, retentissement, projet. C’est l’attendu exact de l’examen clinique. Entraînez-vous ensuite à justifier en une phrase pourquoi vous n’avez pas choisi les trois autres issues.'
   };
 
   /* ============================ SEMESTRE 4 ============================ */
@@ -267,25 +306,30 @@
       { t: '4 · Statistiques utiles',
         p: 'Décrire avant de tester : moyenne et écart-type si distribution normale, médiane et interquartiles sinon. Comparaison de deux moyennes indépendantes : t de Student (ou Mann-Whitney), appariées : t apparié (ou Wilcoxon) — c’est le cas d’un avant/après rééducation. Variables qualitatives : khi-deux ou Fisher. Corrélation : Pearson ou Spearman.' },
       { t: '5 · Interpréter un p et un intervalle',
-        p: 'p < 0,05 signifie « peu probable si l’hypothèse nulle est vraie », pas « important ». Un p non significatif dans un petit échantillon signifie souvent un manque de <b>puissance</b>, pas une absence d’effet. Regardez toujours la taille d’effet et l’intervalle de confiance à 95 %, qui donnent l’amplitude et la précision.' }
+        p: 'p < 0,05 signifie « peu probable si l’hypothèse nulle est vraie », pas « important ». Un p non significatif dans un petit échantillon signifie souvent un manque de <b>puissance</b>, pas une absence d’effet. Regardez toujours la taille d’effet et l’intervalle de confiance à 95 %, qui donnent l’amplitude et la précision.' },
+      { t: '6 · Lire un tableau de résultats sans se faire avoir',
+        p: 'Trois réflexes. Regarder d’abord l’<b>effectif</b> et les perdus de vue : une différence spectaculaire sur douze patients ne vaut rien. Distinguer ensuite <b>significativité</b> et <b>pertinence clinique</b> : sur 5 000 patients, un gain de 0,02 logMAR sera significatif et sans intérêt pour le patient. Vérifier enfin que le <b>critère de jugement principal</b> annoncé dans la méthode est bien celui des conclusions : un critère principal manqué, rattrapé par un critère secondaire mis en avant dans le résumé, est le signe le plus fréquent d’un article à lire avec méfiance.' }
     ],
     chiffres: [
       ['Seuil usuel de significativité', 'p < 0,05'],
       ['Intervalle de confiance usuel', '95 %'],
       ['Puissance visée', '80 %'],
       ['SnNout / SpPin', 'sensible → éliminer / spécifique → confirmer'],
-      ['Niveau de preuve maximal', 'méta-analyse d’essais randomisés']
+      ['Niveau de preuve maximal', 'méta-analyse d’essais randomisés'],
+      ['Intervalle de confiance usuel', '95 %']
     ],
     notions: [
       'Les valeurs prédictives dépendent de la prévalence, pas la sensibilité ni la spécificité.',
-      'Un p non significatif ne prouve pas l’absence de différence.'
+      'Un p non significatif ne prouve pas l’absence de différence.',
+      'Significatif ne veut pas dire important : la taille de l’effet et l’intervalle de confiance disent la pertinence clinique.'
     ],
     pieges: [
       'Confondre corrélation et causalité.',
       'Confondre prévalence et incidence.',
       'Oublier l’appariement dans une comparaison avant/après.'
     ],
-    tombe: ['Lecture critique d’un abstract', 'Calcul et interprétation de sensibilité / spécificité'],
+    tombe: ['Lecture critique d’un abstract', 'Calcul et interprétation de sensibilité / spécificité',
+      'Lecture critique du résumé d’un article'],
     methode: 'Cette UE se travaille sur des articles, pas sur le cours : prenez trois abstracts d’orthoptie et répondez à cinq questions critiques sur chacun.'
   };
 
@@ -361,7 +405,9 @@
       ['Stabilisation d’une diplopie', '≈ 6 mois'],
       ['Occlusion alternée', 'jamais unilatérale prolongée chez l’enfant'],
       ['HLH : première cause', 'AVC occipital'],
-      ['Récupération spontanée d’une HLH', 'surtout les 3 premiers mois']
+      ['Récupération spontanée d’une HLH', 'surtout les 3 premiers mois'],
+      ['Délai avant chirurgie d’une paralysie', '6 à 12 mois de stabilité'],
+      ['Récupération spontanée d’une paralysie du VI', 'majoritaire à 6 mois']
     ],
     notions: [
       'On ne fige rien avant stabilisation.',
@@ -373,7 +419,8 @@
       'Traiter une héminégligence comme une hémianopsie.',
       'Négliger le bilan orthoptique après traumatisme crânien.'
     ],
-    tombe: ['Projet de rééducation après AVC occipital', 'Prise en charge d’une diplopie post-traumatique'],
+    tombe: ['Projet de rééducation après AVC occipital', 'Prise en charge d’une diplopie post-traumatique',
+      'Conduite à tenir devant une diplopie récente, du confort à la chirurgie'],
     methode: 'Reliez chaque tableau à un objectif fonctionnel et à un moyen concret : les cas d’examen sont presque toujours AVC, traumatisme crânien ou paralysie oculomotrice.'
   };
 
@@ -402,7 +449,9 @@
       ['Vitesse de lecture confortable', '> 80 mots/min'],
       ['Locus rétinien préférentiel', 'plutôt en dessous / à gauche du scotome'],
       ['Séances', 'courtes et rapprochées'],
-      ['Essai des aides', 'systématique avant prescription']
+      ['Essai des aides', 'systématique avant prescription'],
+      ['Grossissement nécessaire', 'taille visée / taille lue, + marge de confort'],
+      ['Éclairage utile en basse vision', '3 à 5 × l’éclairage standard']
     ],
     notions: [
       'On rééduque une stratégie, pas une acuité.',
@@ -414,7 +463,8 @@
       'Prescrire une aide sans essai en conditions réelles.',
       'Négliger la fatigue et le retentissement psychologique.'
     ],
-    tombe: ['Bilan de basse vision sur un cas de DMLA', 'Projet de rééducation avec objectifs et aides'],
+    tombe: ['Bilan de basse vision sur un cas de DMLA', 'Projet de rééducation avec objectifs et aides',
+      'Construction d’un projet de rééducation en basse vision'],
     methode: 'Prenez trois patients types — DMLA, glaucome évolué, rétinopathie pigmentaire — et rédigez pour chacun bilan, objectifs, aides et déroulé des séances.'
   };
 
@@ -437,24 +487,30 @@
       { t: '4 · Ce qu’il ne traite pas',
         p: 'La dyslexie est un trouble spécifique du langage écrit, d’origine phonologique : elle relève de l’orthophoniste. L’orthoptiste ne pose pas ce diagnostic et ne doit pas laisser croire qu’il le traite. Les méthodes prétendant guérir la dyslexie par des exercices visuels ou des filtres colorés n’ont pas de niveau de preuve suffisant.' },
       { t: '5 · Le compte rendu et le réseau',
-        p: 'Chiffres, interprétation, retentissement, proposition, et ce qui relève d’un autre professionnel. Le destinataire est souvent l’orthophoniste, l’enseignant, le médecin scolaire ou le neuropédiatre : le document doit être lisible par eux. Aménagements possibles en classe : place, taille de police, temps, photocopies contrastées.' }
+        p: 'Chiffres, interprétation, retentissement, proposition, et ce qui relève d’un autre professionnel. Le destinataire est souvent l’orthophoniste, l’enseignant, le médecin scolaire ou le neuropédiatre : le document doit être lisible par eux. Aménagements possibles en classe : place, taille de police, temps, photocopies contrastées.' },
+      { t: '6 · Rédiger pour l’école',
+        p: 'Le compte rendu destiné à l’enseignant ne contient ni chiffres ni jargon : il dit ce que l’élève ne parvient pas à faire, dans quelles conditions, et ce qui l’aide. « Perd sa ligne en lecture continue au-delà de dix minutes ; aidé par un texte agrandi, un cache-ligne et une pause toutes les quinze minutes. » Les aménagements se demandent en termes concrets — place dans la classe, supports agrandis, temps majoré si les épreuves sont chronométrées — et se justifient par le retentissement observé, jamais par le seul diagnostic.' }
     ],
     chiffres: [
       ['Durée d’une fixation en lecture', '200 à 250 ms'],
       ['Amplitude d’une saccade de lecture', '7 à 9 caractères'],
       ['Régressions du bon lecteur', '10 à 15 %'],
       ['Souplesse accommodative (enfant)', '≥ 5 cycles/min'],
-      ['PPC normal', '≤ 6 à 8 cm']
+      ['PPC normal', '≤ 6 à 8 cm'],
+      ['Vitesse de lecture attendue en fin de primaire', '≈ 120 mots/min']
     ],
     notions: [
       'L’orthoptiste traite le confort visuel de lecture, pas le décodage.',
-      'La dyslexie est un trouble phonologique : diagnostic orthophonique.'
+      'La dyslexie est un trouble phonologique : diagnostic orthophonique.',
+      'Un bilan orthoptique n’explique pas une dyslexie : il décrit une gêne visuelle qui peut s’y ajouter.'
     ],
     pieges: [
       'Laisser croire qu’une rééducation orthoptique traite la dyslexie.',
-      'Conclure sur un seul PPC sans tester la fatigabilité.'
+      'Conclure sur un seul PPC sans tester la fatigabilité.',
+      'Rédiger pour l’enseignant le même compte rendu chiffré que pour le prescripteur.'
     ],
-    tombe: ['Bilan à proposer devant une plainte de lecture', 'Limites du champ orthoptique à expliciter'],
+    tombe: ['Bilan à proposer devant une plainte de lecture', 'Limites du champ orthoptique à expliciter',
+      'Rédaction d’aménagements scolaires à partir d’un bilan'],
     methode: 'Retenez la frontière : ce que l’orthoptiste explore, ce qu’il traite, ce qu’il transmet. C’est la question centrale de l’UE.'
   };
 
@@ -475,23 +531,30 @@
       { t: '4 · Rééducation neurovisuelle',
         p: 'Elle vise des <b>stratégies compensatoires</b> en situation écologique : exploration organisée, ancrage, ralentissement volontaire, double tâche progressive. Séances courtes (fatigabilité majeure), objectifs très concrets, transfert au quotidien travaillé explicitement — un progrès en cabinet qui ne se transfère pas ne sert à rien.' },
       { t: '5 · Personne âgée et chutes',
-        p: 'La vision intervient dans la moitié des chutes du sujet âgé. À vérifier : correction adaptée et à jour, cataracte, champ visuel, sensibilité aux contrastes, adaptation aux progressifs, éclairage du domicile, contraste des marches. Un conseil simple peut éviter une fracture.' }
+        p: 'La vision intervient dans la moitié des chutes du sujet âgé. À vérifier : correction adaptée et à jour, cataracte, champ visuel, sensibilité aux contrastes, adaptation aux progressifs, éclairage du domicile, contraste des marches. Un conseil simple peut éviter une fracture.' },
+      { t: '6 · Évaluer sans sur-interpréter',
+        p: 'Le bilan neurovisuel repose largement sur l’observation, donc sur le jugement : le risque est d’attribuer à la vision ce qui relève de l’attention, de la fatigue ou de l’anxiété. Trois garde-fous : varier les conditions (avec et sans distracteurs, à des moments différents), croiser avec les autres professionnels et l’entourage, et distinguer dans le compte rendu ce qui est <b>mesuré</b> de ce qui est <b>observé</b>. Devant un tableau fluctuant chez l’adulte, penser aussi à la iatrogénie médicamenteuse et au syndrome post-commotionnel.' }
     ],
     chiffres: [
       ['Entrées de l’équilibre', '3 (visuelle, vestibulaire, proprioceptive)'],
       ['Nystagmus congénital', 'pas d’oscillopsie'],
       ['Nystagmus acquis', 'oscillopsies → bilan neurologique'],
-      ['Part de la vision dans les chutes', 'importante chez le sujet âgé']
+      ['Part de la vision dans les chutes', 'importante chez le sujet âgé'],
+      ['Entrées de l’équilibre postural', '3 : visuelle, vestibulaire, proprioceptive'],
+      ['Latence d’une saccade volontaire', '≈ 200 ms']
     ],
     notions: [
       'Un trouble neurovisuel n’est pas une baisse d’acuité.',
-      'Oscillopsies = nystagmus acquis jusqu’à preuve du contraire.'
+      'Oscillopsies = nystagmus acquis jusqu’à preuve du contraire.',
+      'Un trouble neurovisuel se décrit par ce que la personne ne peut plus faire, pas par un score isolé.'
     ],
     pieges: [
       'Confondre trouble neurovisuel et déficit sensoriel.',
-      'Négliger le risque de chute lors d’un changement de correction chez le sujet âgé.'
+      'Négliger le risque de chute lors d’un changement de correction chez le sujet âgé.',
+      'Attribuer à la vision une désorganisation qui relève de l’attention ou de la fatigue.'
     ],
-    tombe: ['Analyse d’un tableau post-AVC', 'Rôle de la vision dans l’équilibre'],
+    tombe: ['Analyse d’un tableau post-AVC', 'Rôle de la vision dans l’équilibre',
+      'Analyse d’un bilan neurovisuel chez un enfant né grand prématuré'],
     methode: 'Chaque trouble se retient par la scène quotidienne qu’il rend impossible : c’est la meilleure accroche mnésique pour cette UE.'
   };
 
@@ -512,7 +575,9 @@
       { t: '4 · Hygiène visuelle',
         p: 'Règle 20-20-20 : toutes les 20 minutes, regarder à 20 pieds (6 m) pendant 20 secondes — elle relâche accommodation et convergence. La <b>sécheresse</b> est la première cause de plainte sur écran : la fréquence de clignement chute de moitié en fixation attentive. Le rôle de la lumière bleue dans la fatigue visuelle est très surestimé — cherchez d’abord sécheresse, réfraction et binocularité.' },
       { t: '5 · Myopie de l’enfant : prévention',
-        p: 'Progression fortement liée au travail de près prolongé et au manque d’extérieur. Recommandation solide : au moins 2 heures d’extérieur par jour, pauses régulières, distance de lecture supérieure à 30 cm. En freination : atropine faible dose, verres et lentilles à défocalisation périphérique, orthokératologie.' }
+        p: 'Progression fortement liée au travail de près prolongé et au manque d’extérieur. Recommandation solide : au moins 2 heures d’extérieur par jour, pauses régulières, distance de lecture supérieure à 30 cm. En freination : atropine faible dose, verres et lentilles à défocalisation périphérique, orthokératologie.' },
+      { t: '6 · Organiser une action de dépistage',
+        p: 'Un dépistage utile se prépare : population et tranche d’âge visées, tests choisis pour leur sensibilité et leur faisabilité, seuils d’adressage écrits <b>avant</b> de commencer, matériel calibré, conditions d’éclairage et de distance constantes, et surtout un circuit d’aval organisé. Dépister sans avoir prévu qui reçoit les enfants repérés est pire que ne rien faire : on inquiète les familles sans rien résoudre. On informe les parents par écrit, en termes non alarmistes, et on trace ce qui a été fait.' }
     ],
     chiffres: [
       ['Examens obligatoires du nourrisson', '4, 9 et 24 mois'],
@@ -529,9 +594,11 @@
     ],
     pieges: [
       'Tout attribuer à la lumière bleue.',
-      'Dépister sans standardiser les conditions.'
+      'Dépister sans standardiser les conditions.',
+      'Lancer un dépistage sans circuit d’aval : on repère sans pouvoir orienter.'
     ],
-    tombe: ['Calendrier de dépistage à restituer', 'Analyse d’un poste de travail avec conseils'],
+    tombe: ['Calendrier de dépistage à restituer', 'Analyse d’un poste de travail avec conseils',
+      'Organisation d’une action de dépistage en milieu scolaire'],
     methode: 'Deux fiches suffisent : le calendrier par âge, et la check-list d’ergonomie du poste.'
   };
 
@@ -552,24 +619,30 @@
       { t: '4 · Biométrie et rétinophotographie',
         p: 'Biométrie optique pour le calcul d’implant avant cataracte (longueur axiale, kératométrie, profondeur de chambre). Rétinophotographie couleur et grand champ pour le dépistage et la télémédecine, avec lecture différée par un lecteur formé.' },
       { t: '5 · Qualité, artefacts et données',
-        p: 'Toujours vérifier : indice de qualité du signal, centrage, mouvements, segmentation automatique parfois fausse en cas d’œdème ou de forte myopie. Ne jamais comparer deux examens d’appareils différents. Côté numérique : dossier patient informatisé, RGPD, sauvegarde, transmission sécurisée des images.' }
+        p: 'Toujours vérifier : indice de qualité du signal, centrage, mouvements, segmentation automatique parfois fausse en cas d’œdème ou de forte myopie. Ne jamais comparer deux examens d’appareils différents. Côté numérique : dossier patient informatisé, RGPD, sauvegarde, transmission sécurisée des images.' },
+      { t: '6 · Données de santé et cadre numérique',
+        p: 'Une image de fond d’œil est une donnée de santé : elle relève du RGPD, se conserve dans le dossier, se transmet par messagerie sécurisée de santé et jamais par messagerie personnelle ou application grand public. Le patient dispose d’un droit d’accès, de rectification et d’opposition. Toute utilisation pédagogique ou publication exige une anonymisation réelle — retirer le nom ne suffit pas si la date et le numéro d’examen restent lisibles — et un consentement écrit. Le partage au sein de l’équipe de soins reste limité au nécessaire.' }
     ],
     chiffres: [
       ['Résolution axiale de l’OCT', '≈ 5 µm'],
       ['RNFL moyen normal', '≈ 90 à 100 µm'],
       ['Épaisseur maculaire centrale', '≈ 250 à 280 µm'],
       ['Pachymétrie normale', '≈ 540 µm'],
-      ['Densité endothéliale à 20 ans', '≈ 3 000 cell/mm²']
+      ['Densité endothéliale à 20 ans', '≈ 3 000 cell/mm²'],
+      ['Cadre des données de santé', 'RGPD + secret professionnel']
     ],
     notions: [
       'Les cartes OCT comparent à une base normative : le rouge n’est pas un diagnostic.',
-      'Angiographie et angio-OCT sont complémentaires, pas interchangeables.'
+      'Angiographie et angio-OCT sont complémentaires, pas interchangeables.',
+      'Une image d’examen est une donnée de santé : messagerie sécurisée, anonymisation réelle, consentement pour toute publication.'
     ],
     pieges: [
       'Interpréter une carte sans regarder les coupes brutes.',
-      'Comparer des examens réalisés sur deux appareils différents.'
+      'Comparer des examens réalisés sur deux appareils différents.',
+      'Envoyer un cliché par messagerie personnelle ou application grand public.'
     ],
-    tombe: ['Reconnaissance d’images OCT typiques', 'Indications comparées des examens d’imagerie'],
+    tombe: ['Reconnaissance d’images OCT typiques', 'Indications comparées des examens d’imagerie',
+      'Choix de l’examen d’imagerie adapté à une situation clinique'],
     methode: 'Regardez beaucoup d’images normales : c’est le seul moyen de repérer ce qui ne l’est pas.'
   };
 
@@ -588,24 +661,32 @@
       { t: '3 · Les urgences oculaires',
         p: '<b>Brûlure chimique</b> : rinçage abondant immédiat au sérum physiologique ou à l’eau, au moins 15 à 20 minutes, <b>avant</b> tout examen — c’est le seul cas où l’on ne mesure pas l’acuité d’abord ; les bases sont plus graves que les acides. <b>Traumatisme perforant</b> : ne jamais comprimer, protéger par une coque, à jeun, avis immédiat. <b>Occlusion de l’artère centrale</b> et <b>glaucome aigu</b> : orientation en urgence.' },
       { t: '4 · Cadre',
-        p: 'L’attestation AFGSU de niveau 2 est requise et se renouvelle tous les 4 ans. Connaître l’emplacement du DAE, la trousse d’urgence et le protocole d’alerte de sa structure fait partie du minimum professionnel.' }
+        p: 'L’attestation AFGSU de niveau 2 est requise et se renouvelle tous les 4 ans. Connaître l’emplacement du DAE, la trousse d’urgence et le protocole d’alerte de sa structure fait partie du minimum professionnel.' },
+      { t: '5 · L’urgence oculaire en pratique orthoptique',
+        p: 'Trois situations imposent d’interrompre l’examen et d’alerter. La <b>brûlure chimique</b> : rinçage immédiat, abondant et prolongé, au moins 15 minutes, avant tout transfert — le temps de rinçage fait le pronostic, et les bases sont plus graves que les acides. Le <b>traumatisme perforant</b> : on ne rince pas, on ne retire rien, on protège par une coque sans aucune compression et on adresse en urgence, patient à jeun. La <b>baisse brutale indolore</b> : occlusion artérielle, décollement, hémorragie — l’urgence se compte en heures.' },
+      { t: '6 · Le malaise au cabinet',
+        p: 'Un malaise vagal après une mesure de PIO, une instillation ou une longue attente est fréquent : allonger, jambes surélevées, desserrer, aérer, surveiller. Ce qui doit inquiéter et faire appeler le 15 : perte de connaissance qui se prolonge, respiration anormale, déficit neurologique, douleur thoracique, convulsions. On note l’heure, ce qu’on a observé et ce qu’on a fait — pour la transmission autant que pour la traçabilité.' }
     ],
     chiffres: [
       ['Compressions thoraciques', '100 à 120/min, 5-6 cm'],
       ['Cycle', '30 compressions / 2 insufflations'],
       ['Rinçage d’une brûlure chimique', '≥ 15 à 20 min'],
       ['Numéros', '15 (SAMU) · 112 (Europe)'],
-      ['Validité AFGSU', '4 ans']
+      ['Validité AFGSU', '4 ans'],
+      ['Rinçage d’une brûlure chimique', '≥ 15 min, immédiat']
     ],
     notions: [
       'Brûlure chimique : on rince d’abord, longuement, on examine ensuite.',
-      'Traumatisme perforant : jamais de compression.'
+      'Traumatisme perforant : jamais de compression.',
+      'Devant un traumatisme perforant, on ne rince pas et on ne retire rien : coque de protection et transfert en urgence.'
     ],
     pieges: [
       'Mesurer l’acuité avant de rincer une brûlure chimique.',
-      'Interrompre longuement le massage cardiaque.'
+      'Interrompre longuement le massage cardiaque.',
+      'Retarder le rinçage d’une brûlure chimique pour mesurer l’acuité ou remplir un dossier.'
     ],
-    tombe: ['Conduite devant une brûlure chimique', 'Chaîne de survie'],
+    tombe: ['Conduite devant une brûlure chimique', 'Chaîne de survie',
+      'Conduite à tenir devant une urgence oculaire au cabinet'],
     methode: 'UE validée en présentiel : retenez surtout les trois urgences oculaires où la minute compte, et la conduite du massage.'
   };
 
@@ -626,20 +707,36 @@
       { t: '3 · Protocoles de coopération et travail aidé',
         p: 'L’orthoptiste réalise des examens préalables (acuité, réfraction, tonométrie, rétinophotographie, OCT) sous la responsabilité de l’ophtalmologiste, qui pose le diagnostic et prescrit. Ce modèle a considérablement réduit les délais d’accès aux soins. S’y ajoutent les extensions récentes : accès direct encadré, renouvellement et adaptation des corrections sous conditions.' },
       { t: '4 · Responsabilités et obligations',
-        p: 'Responsabilité civile professionnelle (assurance obligatoire), pénale, disciplinaire. Obligations : formation continue et développement professionnel continu, traçabilité des actes, mise à jour des connaissances, respect du secret et du consentement.' }
+        p: 'Responsabilité civile professionnelle (assurance obligatoire), pénale, disciplinaire. Obligations : formation continue et développement professionnel continu, traçabilité des actes, mise à jour des connaissances, respect du secret et du consentement. La responsabilité <b>pénale reste personnelle</b> : aucune assurance ni aucun employeur ne s’y substitue.' },
+      { t: '5 · Le décret d’actes, colonne vertébrale du métier',
+        p: 'C’est lui qui dit ce qu’un orthoptiste peut faire, et à quelles conditions : sur prescription médicale pour la rééducation, en autonomie encadrée pour certains dépistages et examens. Toute question d’exercice se ramène à trois vérifications : l’acte figure-t-il dans le décret ? sous quelle condition (prescription, protocole, autonomie) ? et suis-je compétent pour le poser aujourd’hui ? Sortir de ce cadre, c’est un exercice illégal, indépendamment de la qualité du geste.' },
+      { t: '6 · S’installer en libéral',
+        p: 'Enregistrement du diplôme et numéro RPPS, choix du statut et de la structure, conventionnement avec l’assurance maladie, assurance en responsabilité civile professionnelle, local accessible, comptabilité et déclarations. Les contrats — collaboration, remplacement, association — se lisent avant signature : les clauses de non-concurrence et de rétrocession sont ce qui pose problème après coup.' }
     ],
     chiffres: [
       ['Assurance responsabilité civile', 'obligatoire'],
       ['Compte rendu au prescripteur', 'systématique'],
-      ['DPC', 'obligation continue']
+      ['DPC', 'obligation triennale'],
+      ['Cadre de la rééducation', 'sur prescription médicale'],
+      ['Responsabilité pénale', 'personnelle, non assurable'],
+      ['Vérification d’un acte', 'décret / condition / compétence']
     ],
     notions: [
       'Le travail aidé se fait sous la responsabilité de l’ophtalmologiste.',
-      'L’accès direct est encadré par des conditions précises.'
+      'L’accès direct est encadré par des conditions précises : ce n’est pas une autonomie générale.',
+      'Le décret d’actes prime sur l’habitude du service : « on a toujours fait comme ça » n’est pas un cadre légal.'
     ],
-    pieges: ['Confondre accès direct et absence de cadre réglementaire.'],
-    tombe: ['Modes d’exercice et cotation', 'Place de l’orthoptiste dans le parcours de soins'],
-    methode: 'UE de fin de cursus, très concrète : elle prépare votre installation autant que l’examen.'
+    pieges: [
+      'Confondre accès direct et absence de cadre réglementaire.',
+      'Croire que l’assurance de l’employeur couvre la responsabilité pénale.',
+      'Poser un acte qu’on maîtrise mal parce qu’il figure au décret : la compétence effective est la troisième condition.'
+    ],
+    tombe: [
+      'Modes d’exercice et cotation',
+      'Place de l’orthoptiste dans le parcours de soins',
+      'Analyse d’une situation au regard du décret d’actes'
+    ],
+    methode: 'UE de fin de cursus, très concrète : elle prépare votre installation autant que l’examen. Prenez cinq actes que vous avez faits en stage et retrouvez pour chacun sa base réglementaire — c’est le meilleur entraînement.'
   };
 
   G.UE35 = {
@@ -659,23 +756,30 @@
       { t: '4 · Prévention et éducation',
         p: 'Hygiène visuelle sur écran, freination de la myopie chez l’enfant, protection solaire (UV, cataracte, DMLA), sevrage tabagique (facteur de risque majeur de DMLA), équilibre tensionnel et glycémique. La prévention fait partie du soin.' },
       { t: '5 · Les signaux d’alerte',
-        p: 'Baisse d’acuité inexpliquée ou brutale, déficit campimétrique nouveau, diplopie récente, métamorphopsies récentes, œil rouge douloureux, mydriase avec ptosis, œdème papillaire. Chacun impose un avis médical, parfois le jour même.' }
+        p: 'Baisse d’acuité inexpliquée ou brutale, déficit campimétrique nouveau, diplopie récente, métamorphopsies récentes, œil rouge douloureux, mydriase avec ptosis, œdème papillaire. Chacun impose un avis médical, parfois le jour même.' },
+      { t: '6 · La place de l’orthoptiste dans le parcours de dépistage',
+        p: 'En cabinet, l’orthoptiste réalise le recueil et les mesures — interrogatoire, acuités, réfraction, PIO, rétinophotographie, OCT, champ visuel — et prépare un dossier lisible ; le diagnostic et la prescription restent médicaux. Son apport est double : le <b>volume</b>, puisqu’il permet de voir plus de patients dans les mêmes délais, et la <b>qualité</b>, des mesures faites dans des conditions constantes donc comparables d’une fois sur l’autre. Il doit savoir ce qui impose d’interrompre le circuit et d’appeler le médecin sans attendre : baisse brutale, douleur, mydriase aréactive, amputation du champ.' }
     ],
     chiffres: [
       ['Dépistage rétinopathie diabétique', 'annuel (2 ans si conditions réunies)'],
       ['Dépistage glaucome ciblé', 'dès 40 ans si facteurs de risque'],
       ['Amsler', 'autosurveillance quotidienne, œil par œil'],
-      ['Tabac et DMLA', 'facteur de risque majeur']
+      ['Tabac et DMLA', 'facteur de risque majeur'],
+      ['Dépistage du glaucome', 'après 40 ans, plus tôt si antécédents familiaux'],
+      ['Contrôle après chirurgie de cataracte', '≈ 1 mois, puis annuel']
     ],
     notions: [
       'Le renouvellement par l’orthoptiste est possible mais conditionné.',
-      'Métamorphopsies récentes : avis rapide.'
+      'Métamorphopsies récentes : avis rapide.',
+      'L’orthoptiste mesure et prépare le dossier ; le diagnostic et la prescription restent médicaux.'
     ],
     pieges: [
       'Renouveler une correction hors des conditions prévues.',
-      'Rassurer devant une déformation des lignes récente.'
+      'Rassurer devant une déformation des lignes récente.',
+      'Poursuivre le circuit d’examens devant un signe d’alarme au lieu d’appeler le médecin.'
     ],
-    tombe: ['Organisation d’un dépistage', 'Conditions de renouvellement des corrections'],
+    tombe: ['Organisation d’un dépistage', 'Conditions de renouvellement des corrections',
+      'Organisation d’un dépistage et critères d’alerte'],
     methode: 'Faites une fiche « quand j’appelle le médecin » : elle vaut pour l’examen comme pour le stage.'
   };
 
@@ -696,13 +800,17 @@
       { t: '4 · Suites et complications',
         p: 'Rougeur et gêne plusieurs semaines, diplopie transitoire fréquente chez l’adulte, hypo ou hypercorrection, réintervention non exceptionnelle (10 à 30 % selon les séries et les tableaux). Complications rares mais graves : perforation sclérale, muscle perdu, infection. Le bilan post-opératoire précoce puis à distance juge du résultat, qui ne se stabilise qu’après plusieurs semaines.' },
       { t: '5 · Ce qu’on annonce au patient',
-        p: 'La chirurgie corrige un <b>angle</b> : elle améliore l’esthétique, parfois le torticolis, parfois la diplopie. Elle ne restaure pas une vision binoculaire absente depuis l’enfance, ni l’acuité d’un œil amblyope. Cette information, donnée avant, évite la déception après.' }
+        p: 'La chirurgie corrige un <b>angle</b> : elle améliore l’esthétique, parfois le torticolis, parfois la diplopie. Elle ne restaure pas une vision binoculaire absente depuis l’enfance, ni l’acuité d’un œil amblyope. Cette information, donnée avant, évite la déception après.' },
+      { t: '6 · Avant et après le bloc',
+        p: 'En préopératoire, on fournit un dossier complet et daté : angle mesuré à plusieurs reprises de loin et de près, motilité cotée, torticolis, état sensoriel, acuités et correction portée. En postopératoire immédiat, l’œdème et l’inflammation faussent tout : on ne conclut pas avant plusieurs semaines. Le suivi cherche un angle résiduel, une déviation induite, une modification du torticolis, et surtout la <b>restauration ou non d’une union binoculaire</b>, qui est le vrai critère de succès — l’alignement esthétique seul ne dit pas si le patient a gagné en fonction.' }
     ],
     chiffres: [
       ['Effet par mm (droits horizontaux)', '≈ 2 à 3 Δ'],
       ['Angle requis', 'stable sur plusieurs mesures'],
       ['Réintervention', '10 à 30 % selon les séries'],
-      ['Stabilisation du résultat', 'plusieurs semaines']
+      ['Stabilisation du résultat', 'plusieurs semaines'],
+      ['Délai avant bilan postopératoire fiable', '≈ 4 à 6 semaines'],
+      ['Succès chirurgical usuel', 'angle résiduel < 10 Δ']
     ],
     notions: [
       'On opère un angle stable, avec correction optique optimale.',
@@ -711,9 +819,11 @@
     ],
     pieges: [
       'Opérer sur un angle non stabilisé.',
-      'Promettre une vision binoculaire à un strabisme congénital opéré tardivement.'
+      'Promettre une vision binoculaire à un strabisme congénital opéré tardivement.',
+      'Conclure sur un angle mesuré en postopératoire immédiat, encore faussé par l’œdème.'
     ],
-    tombe: ['Bilan pré-opératoire à conduire', 'Principe des techniques et suites'],
+    tombe: ['Bilan pré-opératoire à conduire', 'Principe des techniques et suites',
+      'Analyse d’un bilan pré et postopératoire de strabisme'],
     methode: 'Reliez chaque technique au geste (affaiblir / renforcer) et à son indication : c’est ce qui est demandé.'
   };
 
@@ -734,24 +844,31 @@
       { t: '4 · Calendrier réaliste',
         p: 'Semestre 5 : sujet, bibliographie, méthode. Début du semestre 6 : recueil. Puis analyse, rédaction, relectures, dépôt. Écrire au fil de l’eau (introduction et méthode dès le recueil) évite le mur de février. La bibliographie se tient depuis le premier jour, avec un gestionnaire de références.' },
       { t: '5 · La soutenance',
-        p: 'Dix minutes, trois messages, un plan clair : pourquoi cette question, comment j’y ai répondu, ce que j’ai trouvé et ce que ça change. Assumer une limite plutôt que la cacher : le jury la verra de toute façon, et l’assumer est un signe de maturité scientifique.' }
+        p: 'Dix minutes, trois messages, un plan clair : pourquoi cette question, comment j’y ai répondu, ce que j’ai trouvé et ce que ça change. Assumer une limite plutôt que la cacher : le jury la verra de toute façon, et l’assumer est un signe de maturité scientifique.' },
+      { t: '6 · Tenir le calendrier',
+        p: 'Le mémoire échoue rarement sur le fond, presque toujours sur le temps. Un rétroplanning réaliste part de la date de soutenance et remonte : rendu du document, relecture, rédaction, analyse, recueil, autorisations, protocole, revue de littérature, question. Les deux postes systématiquement sous-estimés sont les <b>autorisations</b> et le <b>recueil</b>, parce qu’ils dépendent d’autres personnes. On garde des points d’étape réguliers avec le directeur de mémoire, et on écrit dès le début : rédiger la méthode pendant qu’on la conçoit évite d’avoir à la reconstituer de mémoire six mois plus tard.' }
     ],
     chiffres: [
       ['Poids du mémoire', '8 ECTS'],
       ['Volume UE38', '132 h dont 120 de travail personnel'],
       ['Soutenance', '≈ 10 min de présentation'],
-      ['Début conseillé', 'semestre 5']
+      ['Début conseillé', 'semestre 5'],
+      ['Structure d’un mémoire', 'IMRaD'],
+      ['Postes les plus sous-estimés', 'autorisations et recueil']
     ],
     notions: [
       'Le critère de jugement principal se définit avant le recueil.',
-      'Les résultats ne s’interprètent pas dans la partie résultats.'
+      'Les résultats ne s’interprètent pas dans la partie résultats.',
+      'On rédige la méthode pendant qu’on la conçoit, pas après le recueil.'
     ],
     pieges: [
       'Choisir un sujet trop large.',
       'Commencer la rédaction sans méthode figée.',
       'Reprendre la bibliographie à la fin.'
     ],
-    tombe: ['Le mémoire lui-même, et sa soutenance'],
+    tombe: ['Le mémoire lui-même, et sa soutenance',
+      'Formulation d’une problématique et d’une question de recherche',
+      'Critique de la méthode d’une étude présentée'],
     methode: 'Commencez au semestre 5, pas en janvier du semestre 6 : question en octobre, méthode en novembre, écriture au fil de l’eau.'
   };
 
@@ -770,16 +887,36 @@
       { t: '3 · Secret partagé et cadre',
         p: 'Le secret est partagé au sein de l’équipe de soins, limité à ce qui est nécessaire à la prise en charge. En dehors de l’équipe (école, employeur), l’information passe par le patient ou nécessite son accord explicite.' },
       { t: '4 · Organiser un relais',
-        p: 'Quand la situation dépasse le champ orthoptique : nommer ce qu’on a observé, indiquer vers qui on oriente et pourquoi, s’assurer que le relais a bien eu lieu. Un patient perdu entre deux professionnels est un échec de parcours.' }
+        p: 'Quand la situation dépasse le champ orthoptique : nommer ce qu’on a observé, indiquer vers qui on oriente et pourquoi, s’assurer que le relais a bien eu lieu. Un patient perdu entre deux professionnels est un échec de parcours.' },
+      { t: '5 · Le parcours de soins coordonné',
+        p: 'Une prise en charge se pense comme un parcours, pas comme une succession d’actes : un référent identifié, des rôles explicites, des points de synchronisation. Les deux pannes classiques sont la <b>rupture</b> (personne ne reprend la main après un examen) et la <b>redondance</b> (trois professionnels refont le même bilan sans le savoir). Un compte rendu daté et adressé règle les deux.' },
+      { t: '6 · Désaccords et situations sensibles',
+        p: 'Un désaccord professionnel se traite entre professionnels, sur les données du dossier — jamais devant le patient, qui perdrait confiance dans les deux. Devant une suspicion de maltraitance ou une situation de danger, on ne mène pas l’enquête : on trace factuellement ce qu’on a constaté et on transmet selon la procédure de l’établissement. Le doute se partage, il ne se garde pas.' }
     ],
     chiffres: [
       ['Éléments d’une transmission', '3 : trouvé / conséquence / attente'],
-      ['Secret partagé', 'limité à l’équipe de soins']
+      ['Secret partagé', 'limité à l’équipe de soins et au nécessaire'],
+      ['Information hors équipe de soins', 'accord explicite du patient'],
+      ['Les deux pannes du parcours', 'rupture et redondance'],
+      ['Traitement d’un désaccord', 'entre professionnels, sur le dossier'],
+      ['Délai raisonnable d’envoi d’un compte rendu', 'sous 8 jours']
     ],
-    notions: ['La transmission s’adapte au destinataire, pas au rédacteur.'],
-    pieges: ['Envoyer un compte rendu illisible pour son destinataire.'],
-    tombe: ['Cas de coordination pluriprofessionnelle'],
-    methode: 'Rédigez le même bilan pour deux destinataires — l’ophtalmologiste et l’enseignant : c’est l’exercice type.'
+    notions: [
+      'La transmission s’adapte au destinataire, pas au rédacteur.',
+      'Le secret partagé ne couvre que ce qui est <b>nécessaire</b> à la prise en charge — ce n’est pas un droit d’accès général pour l’équipe.',
+      'Un relais n’est fait que lorsqu’il est confirmé : orienter ne suffit pas.'
+    ],
+    pieges: [
+      'Envoyer un compte rendu illisible pour son destinataire — le vocabulaire technique ne prouve rien.',
+      'Transmettre à l’école ou à l’employeur sans l’accord du patient : ils ne font pas partie de l’équipe de soins.',
+      'Exprimer un désaccord avec un confrère devant le patient ou sa famille.'
+    ],
+    tombe: [
+      'Cas de coordination pluriprofessionnelle à organiser',
+      'Rédaction du même bilan pour deux destinataires différents',
+      'Question sur les limites du secret partagé'
+    ],
+    methode: 'Rédigez le même bilan pour deux destinataires — l’ophtalmologiste et l’enseignant : c’est l’exercice type. Puis relisez-vous en vous demandant, ligne à ligne, ce que le destinataire va en faire.'
   };
 
   G.UE40 = {
@@ -797,15 +934,35 @@
       { t: '3 · Analyse de pratique',
         p: 'Décrire la situation, ce qui a été fait, ce qui a été ressenti, ce qui pourrait être fait autrement — sans jugement de valeur. Pratiquée en groupe, elle est un des meilleurs outils de progression et de prévention de l’épuisement professionnel.' },
       { t: '4 · Formation continue',
-        p: 'Développement professionnel continu, congrès, lecture d’articles, formations spécialisées (basse vision, neurovision, pédiatrie). Une pratique qui ne se met pas à jour se dégrade : les recommandations bougent, les techniques aussi.' }
+        p: 'Développement professionnel continu, obligatoire et triennal, congrès, lecture d’articles, formations spécialisées (basse vision, neurovision, pédiatrie). Une pratique qui ne se met pas à jour se dégrade : les recommandations bougent, les techniques aussi.' },
+      { t: '5 · Écrire un objectif de stage qui tienne',
+        p: 'Un objectif utilisable est un <b>comportement observable</b>, dans un <b>contexte</b> donné, avec un <b>critère de réussite</b> : « réaliser seul un cover test alterné chiffré aux prismes sur un patient coopérant, avec un écart inférieur à 4 Δ par rapport à l’évaluation du tuteur ». « Progresser en strabologie » n’est pas un objectif, c’est une intention : rien ne permet de dire s’il est atteint.' },
+      { t: '6 · Le stagiaire en difficulté',
+        p: 'Le pire service à rendre est d’attendre la fin du stage pour le dire. On nomme tôt et précisément le manque constaté, on le trace, on propose un plan de progression avec des échéances, et on alerte l’institut avant que l’échec soit acquis. Distinguer trois causes appelle trois réponses différentes : un manque de <b>connaissances</b> se comble, un manque de <b>geste</b> se répète, un problème de <b>posture</b> ou de sécurité du patient se signale sans délai.' }
     ],
     chiffres: [
-      ['Progression du stagiaire', 'observation → participation → autonomie'],
-      ['DPC', 'obligation continue']
+      ['Progression du stagiaire', 'observation → participation → autonomie supervisée'],
+      ['DPC', 'obligation triennale'],
+      ['Objectif bien écrit', 'comportement observable + contexte + critère'],
+      ['Retour utile', 'descriptif, précis, immédiat, suivi d’une proposition'],
+      ['Analyse de pratique', 'situation → agi → ressenti → autrement'],
+      ['Alerte sur un stagiaire en difficulté', 'avant l’échec, pas au bilan final']
     ],
-    notions: ['Formative ≠ sommative : ne pas transformer un accompagnement en sanction.'],
-    pieges: ['Évaluer la personne au lieu de la compétence.'],
-    tombe: ['Situation d’encadrement à analyser'],
-    methode: 'Repensez à vos propres stages : ce qui vous a fait progresser, et pourquoi. L’UE se travaille par l’expérience.'
+    notions: [
+      'Formative ≠ sommative : ne pas transformer un accompagnement en sanction.',
+      'On évalue un <b>comportement observable</b>, jamais une personne ni une impression.',
+      'Un objectif sans critère de réussite ne peut être ni atteint ni raté : il ne sert à rien.'
+    ],
+    pieges: [
+      'Évaluer la personne au lieu de la compétence — « pas motivé » n’est pas une observation.',
+      'Garder pour le bilan final ce qui aurait dû être dit la première semaine.',
+      'Confondre autonomie et abandon : l’autonomie reste supervisée.'
+    ],
+    tombe: [
+      'Situation d’encadrement à analyser',
+      'Rédaction d’objectifs de stage et de critères d’évaluation',
+      'Formulation d’un retour à un stagiaire en difficulté'
+    ],
+    methode: 'Repensez à vos propres stages : ce qui vous a fait progresser, et pourquoi. Puis entraînez-vous à réécrire trois intentions vagues en objectifs observables — c’est l’attendu le plus fréquent.'
   };
 })();

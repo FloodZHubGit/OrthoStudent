@@ -117,10 +117,6 @@
           title,
           g.a ? el('span', { class: 'gl-syn selectable', text: g.a }) : null,
           el('span', { class: 'spacer' }),
-          g.v && g.v.length ? el('span', {
-            class: 'chip gl-copy', text: '🌌', title: 'Voir ce terme dans la constellation',
-            onClick: function (e) { e.stopPropagation(); App.go('constellation', { term: g.t }); }
-          }) : null,
           el('span', {
             class: 'chip gl-copy', text: '⧉', title: 'Copier la définition',
             onClick: function (e) {

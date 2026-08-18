@@ -424,21 +424,30 @@ UE12: {
     { t: '3 · Devoirs et responsabilité',
       p: 'Consentement éclairé, information loyale et adaptée, non-discrimination, continuité des soins, obligation de moyens. Responsabilité civile (assurance obligatoire), pénale et disciplinaire. Le dossier patient doit être tenu, conservé et accessible au patient sur demande.' },
     { t: '4 · Histoire de la profession',
-      p: 'Née dans l’entre-deux-guerres autour du traitement du strabisme et de la rééducation de la vision binoculaire (travaux de Javal, développement du synoptophore), la profession est reconnue par le certificat de capacité en 1956. Le champ s’élargit ensuite à l’exploration fonctionnelle, la basse vision, la neurovision, puis au travail aidé en cabinet d’ophtalmologie, qui a transformé l’accès aux soins.' }
+      p: 'Née dans l’entre-deux-guerres autour du traitement du strabisme et de la rééducation de la vision binoculaire (travaux de Javal, développement du synoptophore), la profession est reconnue par le certificat de capacité en 1956. Le champ s’élargit ensuite à l’exploration fonctionnelle, la basse vision, la neurovision, puis au travail aidé en cabinet d’ophtalmologie, qui a transformé l’accès aux soins.' },
+    { t: '5 · Le consentement, en pratique',
+      p: 'Trois conditions : une information <b>loyale, claire et appropriée</b>, une capacité à décider, et l’absence de contrainte. Il se recueille avant l’acte, se vérifie pendant, et reste <b>révocable à tout moment</b> sans justification. Chez le mineur, l’autorité parentale décide, mais l’avis de l’enfant se recueille et se respecte d’autant plus qu’il grandit. Un refus de soin éclairé est un droit : on le trace, on ne le force pas.' },
+    { t: '6 · Les quatre grands principes de l’éthique',
+      p: '<b>Autonomie</b> (respecter la décision du patient), <b>bienfaisance</b> (agir pour son bien), <b>non-malfaisance</b> (d’abord ne pas nuire), <b>justice</b> (équité d’accès et de traitement). Un dilemme éthique naît quand deux principes s’opposent : un enfant qui refuse l’occlusion oppose son autonomie naissante à la bienfaisance. La réponse n’est pas de choisir un camp mais d’expliciter le conflit, d’associer la famille, et de tracer le raisonnement.' }
   ],
   chiffres: [
     ['Durée des études', '3 ans, 180 ECTS'],
     ['Certificat de capacité', 'créé en 1956'],
     ['Assurance responsabilité civile', 'obligatoire'],
-    ['Accès au dossier par le patient', 'de droit']
+    ['Accès au dossier par le patient', 'de droit'],
+    ['Conditions d’un consentement valable', '3 : information, capacité, liberté'],
+    ['Principes de l’éthique biomédicale', '4 : autonomie, bienfaisance, non-malfaisance, justice'],
+    ['Révocation du consentement', 'à tout moment, sans justification']
   ],
   notions: [
     'Les actes sont définis par décret ; l’accès direct est encadré, pas illimité.',
-    'Le secret professionnel n’est pas levé par la demande d’un proche.'
+    'Le secret professionnel n’est pas levé par la demande d’un proche.',
+    'Les informations du dossier appartiennent au patient ; le support appartient au professionnel.'
   ],
   pieges: [
     'Croire que l’accès direct dispense de tout cadre.',
-    'Confondre secret professionnel (obligation légale) et discrétion.'
+    'Confondre secret professionnel (obligation légale) et discrétion.',
+    'Croire que le secret professionnel tombe devant un mineur : il s’adapte à l’autorité parentale, il ne disparaît pas.'
   ],
   tombe: [
     'Question sur le champ des actes et la prescription',
@@ -611,22 +620,30 @@ UE13: {
     { t: '3 · Le risque adénovirus',
       p: 'La kérato-conjonctivite épidémique est extrêmement contagieuse, survit longtemps sur les surfaces et résiste à beaucoup d’antiseptiques usuels. Conduite : consultation en fin de programme si possible, désinfection renforcée du poste, matériel dédié, éviction, information du patient (durée de contagiosité, lavage des mains, linge personnel).' },
     { t: '4 · Accident d’exposition au sang',
-      p: 'Lavage immédiat à l’eau et au savon (ne pas faire saigner), antisepsie au dérivé chloré ou à l’alcool 70° pendant au moins 5 minutes ; pour une projection oculaire, rinçage abondant au sérum physiologique. Puis avis médical <b>dans les 4 heures</b> pour évaluer l’indication d’un traitement post-exposition, et déclaration d’accident du travail dans les 24 à 48 heures.' }
+      p: 'Lavage immédiat à l’eau et au savon (ne pas faire saigner), antisepsie au dérivé chloré ou à l’alcool 70° pendant au moins 5 minutes ; pour une projection oculaire, rinçage abondant au sérum physiologique. Puis avis médical <b>dans les 4 heures</b> pour évaluer l’indication d’un traitement post-exposition, et déclaration d’accident du travail dans les 24 à 48 heures.' },
+    { t: '5 · Collyres et consommables',
+      p: 'Une unidose sert à <b>un seul patient et une seule séance</b>, puis se jette — la rouvrir plus tard revient à inoculer ce qu’on y a laissé entrer. Les flacons multidoses ne se partagent jamais entre patients et se datent à l’ouverture. On ne touche jamais les cils ni la cornée avec l’embout. Les colorants, la fluorescéine en particulier, sont un vecteur classique de contamination croisée : bandelettes à usage unique de préférence.' },
+    { t: '6 · Gestion des risques et déclaration',
+      p: 'La démarche qualité repose sur le signalement : un <b>événement indésirable</b> est un fait inattendu, lié aux soins, qui aurait pu ou a nuisi au patient. On déclare aussi les <b>presque-accidents</b>, qui coûtent moins cher à analyser qu’un dommage. L’analyse cherche la cause systémique — organisation, matériel, formation — et non le coupable : une culture punitive fait disparaître les déclarations, pas les erreurs.' }
   ],
   chiffres: [
     ['Friction hydro-alcoolique', '20 à 30 s'],
     ['Antisepsie après AES', '≥ 5 min'],
     ['Avis médical après AES', '< 4 h'],
     ['Déclaration d’accident du travail', '24 à 48 h'],
-    ['Survie de l’adénovirus sur surface', 'plusieurs semaines']
+    ['Survie de l’adénovirus sur surface', 'plusieurs semaines'],
+    ['Unidose de collyre', '1 patient, 1 séance'],
+    ['Contagiosité d’une kérato-conjonctivite à adénovirus', '≈ 10 à 14 jours']
   ],
   notions: [
     'Les gants ne remplacent jamais l’hygiène des mains.',
-    'Mentonnière et appui-front font partie du matériel à désinfecter.'
+    'Mentonnière et appui-front font partie du matériel à désinfecter.',
+    'On déclare aussi les presque-accidents : ils s’analysent au même titre, sans dommage à réparer.'
   ],
   pieges: [
     'Oublier la désinfection entre deux patients sur les surfaces de contact.',
-    'Retarder l’avis médical après une exposition.'
+    'Retarder l’avis médical après une exposition.',
+    'Réutiliser une unidose de collyre pour un second patient, même le même jour et même si elle paraît pleine.'
   ],
   tombe: [
     'Conduite devant une conjonctivite épidémique au cabinet',
@@ -745,25 +762,34 @@ UE17: {
     { t: '3 · Diabète',
       p: 'Rétinophotographies grand champ pour le dépistage (lecture différée possible, télémédecine), OCT maculaire devant toute baisse d’acuité, angiographie si suspicion de néovaisseaux. Le rythme de suivi dépend du stade et de l’équilibre glycémique ; la grossesse et l’équilibration rapide de l’HbA1c aggravent transitoirement la rétinopathie.' },
     { t: '4 · Le compte rendu',
-      p: 'Conditions de l’examen (appareil, stratégie, correction, fiabilité), résultats chiffrés, comparaison à l’examen précédent, et une conclusion en une ou deux phrases. Ce que le médecin lit d’abord : « stable » ou « aggravation », et sur quel critère.' }
+      p: 'Conditions de l’examen (appareil, stratégie, correction, fiabilité), résultats chiffrés, comparaison à l’examen précédent, et une conclusion en une ou deux phrases. Ce que le médecin lit d’abord : « stable » ou « aggravation », et sur quel critère.' },
+    { t: '5 · Reconnaître un examen ininterprétable',
+      p: 'Savoir jeter un examen fait partie du métier. Au champ visuel : pertes de fixation au-delà de 20 %, faux positifs élevés, ou un aspect en « trou de serrure » qui signe une correction mal centrée plutôt qu’un déficit. À l’OCT : signal faible, artefacts de segmentation, décentrement — la courbe de progression devient alors un artefact qu’on suivra pendant des années. Un examen douteux se refait, il ne se commente pas.' },
+    { t: '6 · Le rythme de suivi, et pourquoi il varie',
+      p: 'Il se règle sur trois éléments : la <b>vitesse</b> de progression observée, l’<b>espérance de vie visuelle</b> du patient — un glaucome débutant à 45 ans est plus menaçant qu’à 85 — et la <b>marge</b> restante entre l’atteinte et la fonction utile. D’où le principe : beaucoup d’examens rapprochés au début pour établir une pente fiable, puis espacement si la pente est plate. Trois champs visuels la première année valent mieux qu’un par an pendant trois ans.' }
   ],
   chiffres: [
     ['Suivi glaucome débutant', '2 à 4 examens/an'],
     ['Dépistage rétinopathie diabétique', 'annuel (ou 2 ans si conditions réunies)'],
     ['Perte physiologique du RNFL', '≈ 1 µm/an'],
-    ['Autosurveillance Amsler', 'quotidienne, œil par œil']
+    ['Autosurveillance Amsler', 'quotidienne, œil par œil'],
+    ['Seuil d’alerte des pertes de fixation', '> 20 %'],
+    ['Champs visuels pour établir une pente fiable', '≈ 3 la première année']
   ],
   notions: [
     'Comparer deux examens exige les mêmes conditions.',
-    'Dans le glaucome, la structure bouge souvent avant la fonction.'
+    'Dans le glaucome, la structure bouge souvent avant la fonction.',
+    'Un examen non fiable se refait : l’interpréter quand même pollue toute la série de suivi.'
   ],
   pieges: [
     'Comparer deux champs visuels de stratégies différentes.',
-    'Conclure sur un OCT sans vérifier la segmentation et la qualité du signal.'
+    'Conclure sur un OCT sans vérifier la segmentation et la qualité du signal.',
+    'Construire une pente de progression sur des examens de qualité inégale : la pente devient un artefact qu’on suivra des années.'
   ],
   tombe: [
     'Dossier de suivi à interpréter dans le temps',
-    'Rédaction d’un compte rendu'
+    'Rédaction d’un compte rendu',
+    'Interprétation d’une série de champs visuels avec ses indices de fiabilité'
   ],
   methode: 'Travaillez sur des séries : le même patient à trois dates. C’est ce qu’on vous demandera en stage comme en examen clinique.'
 },
@@ -785,25 +811,32 @@ UE18: {
     { t: '4 · Enfant, adolescent, personne âgée',
       p: 'Avec l’enfant : parler à lui, pas seulement au parent, jeu et durée courte. Avec l’adolescent : négocier, expliquer l’intérêt, respecter l’image de soi (rejet de l’occlusion ou des lunettes). Avec la personne âgée : rythme, fatigue, audition, troubles cognitifs éventuels, présence de l’aidant.' },
     { t: '5 · Savoir passer la main',
-      p: 'Troubles des apprentissages, souffrance psychique, suspicion de maltraitance, troubles du comportement : l’orthoptiste repère et oriente. Connaître ses limites fait partie de la compétence.' }
+      p: 'Troubles des apprentissages, souffrance psychique, suspicion de maltraitance, troubles du comportement : l’orthoptiste repère et oriente. Connaître ses limites fait partie de la compétence.' },
+    { t: '6 · Repérer ce qui n’est pas de notre ressort',
+        p: 'Un orthoptiste n’est ni psychologue ni psychiatre, mais il voit les patients longtemps et de près : il repère. Signes qui imposent d’en parler et d’orienter : tristesse persistante et perte d’intérêt, propos de dévalorisation ou idées noires, régression ou refus scolaire chez l’enfant, signes de maltraitance, troubles du comportement alimentaire. On ne fait pas d’interprétation psychologique : on décrit factuellement ce qu’on observe, on en parle au prescripteur et on oriente. Le silence par gêne est l’erreur la plus coûteuse.' }
   ],
   chiffres: [
     ['Poursuite oculaire', 'dès quelques semaines'],
     ['Coordination œil-main', '4 à 5 mois'],
     ['Acuité proche de l’adulte', '3 à 5 ans'],
-    ['Période sensible de l’amblyopie', 'jusqu’à 6-8 ans']
+    ['Période sensible de l’amblyopie', 'jusqu’à 6-8 ans'],
+    ['Étapes du travail de deuil', '5, non linéaires et réversibles'],
+    ['Poursuite oculaire et sourire réponse', '≈ 2 à 3 mois']
   ],
   notions: [
     'Après une annonce, le patient retient peu : reformuler et écrire.',
-    'La non-observance a presque toujours une cause concrète.'
+    'La non-observance a presque toujours une cause concrète.',
+    'L’orthoptiste repère et oriente ; il n’interprète pas et ne pose pas de diagnostic psychologique.'
   ],
   pieges: [
     'Parler au parent en ignorant l’enfant.',
-    'Confondre non-observance et mauvaise volonté.'
+    'Confondre non-observance et mauvaise volonté.',
+    'Interpréter un comportement d’enfant comme un « manque de motivation » sans chercher ce qui le sous-tend.'
   ],
   tombe: [
     'Analyse d’une situation de communication difficile',
-    'Périodes sensibles du développement visuel'
+    'Périodes sensibles du développement visuel',
+    'Analyse d’une situation d’annonce ou de refus de soin'
   ],
   methode: 'Retenez trois situations types — annonce, enfant non coopérant, non-observance — et ce que vous feriez concrètement dans chacune.'
 },
@@ -825,7 +858,9 @@ UE19: {
     { t: '4 · Traitements du glaucome',
       p: 'Analogues des prostaglandines (première intention : hyperhémie, allongement et pigmentation des cils, creusement palpébral), bêtabloquants (contre-indiqués en asthme, BPCO, bradycardie et bloc), inhibiteurs de l’anhydrase carbonique, alpha-2 agonistes. Beaucoup d’effets généraux passent par la voie lacrymo-nasale : l’occlusion des points en réduit l’absorption.' },
     { t: '5 · Autres et information au patient',
-      p: 'Colorants (fluorescéine pour le BUT et les lésions épithéliales), lubrifiants, anti-inflammatoires, toxine botulique en injection. Après cycloplégie ou mydriase : photophobie, flou de près pendant plusieurs heures (plusieurs jours pour l’atropine), <b>pas de conduite automobile</b>, lunettes de soleil. L’information doit être donnée avant l’instillation, pas après.' }
+      p: 'Colorants (fluorescéine pour le BUT et les lésions épithéliales), lubrifiants, anti-inflammatoires, toxine botulique en injection. Après cycloplégie ou mydriase : photophobie, flou de près pendant plusieurs heures (plusieurs jours pour l’atropine), <b>pas de conduite automobile</b>, lunettes de soleil. L’information doit être donnée avant l’instillation, pas après.' },
+    { t: '6 · Ce que l’orthoptiste instille, et sous quelles conditions',
+        p: 'L’instillation se fait sur prescription ou dans le cadre d’un protocole écrit, jamais d’initiative. Avant toute goutte : identité du patient, allergie connue, port de lentilles, antécédent de glaucome par fermeture de l’angle, grossesse. Technique : lavage des mains, patient tête en arrière, goutte dans le cul-de-sac inférieur sans toucher les cils, puis occlusion palpébrale et compression du canthus interne une minute pour limiter le passage systémique — geste particulièrement important chez le nourrisson et la personne âgée. On note le produit, la concentration et l’heure.' }
   ],
   chiffres: [
     ['Tropicamide : délai / durée', '20-30 min / 4-6 h'],
@@ -842,11 +877,13 @@ UE19: {
   ],
   pieges: [
     'Instiller un mydriatique sans avoir vérifié la profondeur de chambre antérieure.',
-    'Oublier l’occlusion des points lacrymaux chez l’enfant.'
+    'Oublier l’occlusion des points lacrymaux chez l’enfant.',
+    'Instiller sans avoir demandé le port de lentilles ni les antécédents d’angle étroit.'
   ],
   tombe: [
     'Choix du cycloplégique selon l’âge et l’indication',
-    'Effets indésirables des collyres du glaucome'
+    'Effets indésirables des collyres du glaucome',
+    'Choix argumenté d’un cycloplégique selon l’âge et le contexte'
   ],
   methode: 'Une fiche par famille : molécule, indication, délai, durée, contre-indication, information au patient. Quatre fiches suffisent pour l’UE entière.'
 }

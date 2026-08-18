@@ -946,6 +946,64 @@ kbd {
 .card.ue-trap { border-color: color-mix(in srgb, var(--amber) 35%, transparent); }
 .card.ue-trap h2 { color: var(--amber); }
 
+/* --- détail de la maîtrise d'une UE --- */
+.ue-detail { margin-top: 16px; border-top: 1px solid var(--line-soft); padding-top: 12px; }
+.ue-detail-row {
+  display: grid; grid-template-columns: 92px minmax(60px, 1fr) 46px 2fr;
+  gap: 12px; align-items: center; padding: 5px 0; font-size: 12.5px;
+}
+.ue-detail-row .k { color: var(--txt-2); font-weight: 600; }
+.ue-detail-row .p { font-family: var(--mono); font-size: 12px; text-align: right; }
+.ue-detail-row .h { color: var(--txt-3); font-size: 11.6px; }
+@media (max-width: 900px) {
+  .ue-detail-row { grid-template-columns: 84px 1fr 44px; }
+  .ue-detail-row .h { grid-column: 1 / -1; }
+}
+
+/* --- place de l'UE dans le cursus --- */
+.ue-chain { gap: 6px; margin-bottom: 9px; }
+.ue-chain-k {
+  font-size: 9.5px; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--txt-3); font-weight: 700; align-self: center; min-width: 74px;
+}
+.ue-chain .chip { gap: 6px; }
+
+/* --- récitation --- */
+.recite-card {
+  min-height: 210px; border-radius: var(--r); border: 1px solid var(--line-soft);
+  background: linear-gradient(150deg, var(--surface-3), var(--surface-2));
+  display: grid; place-items: center; align-content: center; gap: 14px;
+  padding: 34px 30px; text-align: center; cursor: pointer; position: relative;
+  transition: .18s var(--ease); box-shadow: var(--shadow-s);
+}
+.recite-card:hover { border-color: color-mix(in srgb, var(--accent) 35%, transparent); box-shadow: var(--shadow); }
+.recite-card .side-label {
+  position: absolute; top: 12px; left: 16px; font-size: 10px; color: var(--txt-3);
+  text-transform: uppercase; letter-spacing: .12em; font-weight: 700;
+}
+.recite-q { font-size: 17px; line-height: 1.5; font-weight: 550; }
+.recite-a {
+  font-size: 15.5px; line-height: 1.6; color: var(--accent);
+  border-top: 1px solid var(--line-soft); padding-top: 14px; max-width: 62ch;
+}
+.recite-hidden { font-size: 12.5px; color: var(--txt-3); font-style: italic; }
+
+/* --- vue transversale des UE --- */
+.ue-row {
+  display: flex; align-items: center; gap: 13px; cursor: pointer;
+  background: var(--surface); border: 1px solid var(--line-soft);
+  border-radius: var(--r); padding: 11px 15px; margin-bottom: 7px;
+  transition: .16s var(--ease);
+}
+.ue-row:hover { border-color: color-mix(in srgb, var(--accent) 40%, transparent); transform: translateX(3px); }
+.ue-row .ue-title { font-size: 13.2px; font-weight: 550; margin-top: 1px; }
+.ue-row .ue-row-resume {
+  font-size: 11.8px; color: var(--txt-3); margin-top: 2px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ue-row .arrow { color: var(--txt-3); font-size: 16px; }
+.ue-row:hover .arrow { color: var(--accent); }
+
 .plan-week { border: 1px solid var(--line-soft); border-radius: var(--r); padding: 13px 15px; margin-bottom: 12px; background: var(--surface-2); }
 .plan-week-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 13.5px; }
 .plan-ue { padding: 9px 0; border-top: 1px dashed var(--line-soft); }
@@ -1055,54 +1113,10 @@ kbd {
 }
 .gl-see .chip { font-size: 11px; }
 
-/* ============================================================
-   Constellation du vocabulaire
-   ============================================================ */
-
-.cst-wrap {
-  position: relative; height: 66vh; min-height: 460px;
-  border: 1px solid var(--line-soft); border-radius: var(--r);
-  overflow: hidden; cursor: grab; box-shadow: var(--shadow);
-}
-.cst-wrap.dragging { cursor: grabbing; }
-.cst-wrap canvas { display: block; width: 100%; height: 100%; touch-action: none; }
-
-/* infobulle de survol, alimentée par data-tip */
-.cst-wrap[data-tip]::after {
-  content: attr(data-tip);
-  position: absolute; left: 12px; bottom: 12px; max-width: calc(100% - 24px);
-  background: color-mix(in srgb, var(--surface) 88%, transparent);
-  border: 1px solid var(--line); border-radius: var(--r-s);
-  padding: 6px 11px; font-size: 12px; color: var(--txt);
-  pointer-events: none; backdrop-filter: blur(6px);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-
-.cst-dot {
+/* pastille de couleur : etat de maitrise d’une UE */
+.ue-dot {
   width: 9px; height: 9px; border-radius: 50%;
   display: inline-block; flex: none;
-}
-.cst-legend .chip { font-size: 11px; gap: 6px; opacity: .45; }
-.cst-legend .chip.on { opacity: 1; }
-
-.cst-k {
-  font-size: 9.5px; text-transform: uppercase; letter-spacing: .12em;
-  color: var(--txt-3); font-weight: 700; align-self: center;
-}
-.cst-arrow { color: var(--accent); align-self: center; font-size: 12px; }
-.cst-path { margin-top: 10px; }
-.cst-path .chip { font-size: 11px; }
-
-.cst-top { display: flex; flex-direction: column; gap: 2px; }
-.cst-top-row {
-  display: flex; align-items: center; gap: 9px; cursor: pointer;
-  padding: 5px 8px; border-radius: var(--r-s); transition: .14s var(--ease);
-}
-.cst-top-row:hover { background: var(--surface-3); }
-.cst-top-t { font-size: 12.8px; }
-.cst-deg {
-  font-family: var(--mono); font-size: 11px; color: var(--accent);
-  background: var(--accent-soft); border-radius: 20px; padding: 1px 8px;
 }
 
 /* ============================================================
@@ -1174,4 +1188,78 @@ kbd {
     transition-duration: .01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* --- fiche d'UE : couche examen --- */
+.ue-tab + .ue-tab { margin-top: 20px; }
+.ue-tab h4 { margin: 0 0 8px; font-size: 13.4px; font-weight: 700; color: var(--accent); }
+
+.ue-cas-s {
+  background: var(--surface-2); border-left: 3px solid var(--blue);
+  border-radius: 0 var(--r-s) var(--r-s) 0; padding: 11px 14px;
+  margin: 0 0 12px; color: var(--txt); line-height: 1.6;
+}
+.ue-cas-q { margin: 0 0 12px; padding-left: 20px; color: var(--txt-2); }
+.ue-cas-q li { margin-bottom: 5px; }
+.ue-cas-r {
+  margin-top: 14px; border-top: 1px solid var(--line-soft); padding-top: 12px;
+  animation: fadeIn .2s var(--ease);
+}
+.ue-cas-r .k {
+  font-size: 9.5px; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--accent); font-weight: 750; margin-top: 10px;
+}
+.ue-cas-r p { margin: 4px 0 0; color: var(--txt-2); line-height: 1.62; }
+
+.ue-rep-q { font-size: 14px; font-style: italic; color: var(--txt); margin: 0 0 12px; }
+.ue-rep { padding-left: 20px; color: var(--txt-2); counter-reset: none; }
+.ue-rep li { margin-bottom: 7px; line-height: 1.6; }
+
+.ue-mnemo { display: flex; flex-direction: column; gap: 2px; }
+.ue-mnemo-row {
+  display: grid; grid-template-columns: minmax(160px, 34%) 1fr; gap: 14px;
+  padding: 8px 0; border-bottom: 1px solid var(--line-soft); font-size: 13px;
+}
+.ue-mnemo-row:last-child { border-bottom: 0; }
+.ue-mnemo-row .m { font-weight: 650; color: var(--accent); }
+.ue-mnemo-row .d { color: var(--txt-2); line-height: 1.55; }
+@media (max-width: 760px) { .ue-mnemo-row { grid-template-columns: 1fr; gap: 2px; } }
+
+/* récitation : en-tête d'un item de tableau */
+.rc-tab {
+  display: block; font-size: 10px; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--txt-3); font-weight: 750; margin-bottom: 10px;
+}
+.rc-arrow { color: var(--accent); margin: 0 8px; }
+
+/* examen blanc : postes oraux */
+.exam-oral-q {
+  font-size: 16px; line-height: 1.55; font-weight: 550;
+  padding: 22px 20px; text-align: center;
+  background: linear-gradient(150deg, var(--surface-3), var(--surface-2));
+  border: 1px solid var(--line-soft); border-radius: var(--r);
+}
+.exam-oral-a {
+  margin-top: 14px; border-top: 1px solid var(--line-soft); padding-top: 12px;
+  animation: fadeIn .2s var(--ease);
+}
+.exam-oral-a .k {
+  font-size: 9.5px; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--accent); font-weight: 750;
+}
+.exam-oral-a p { margin: 5px 0 0; color: var(--txt); font-size: 15px; line-height: 1.6; }
+
+/* fiche d'UE : courbe des récitations */
+.ue-spark-wrap { margin: 4px 0 12px; }
+.ue-spark { width: 100%; max-width: 320px; height: auto; display: block; margin-bottom: 4px; }
+
+/* le raisonnement d'un cas reste dans le DOM même replié, pour l'impression */
+.ue-cas-r.collapsed { display: none; }
+
+@media print {
+  .ue-cas-r.collapsed { display: block !important; }
+  .ue-spark-wrap, .ue-detail { display: none; }
+  .ue-tab, .ue-cas-s, .ue-cas-r, .ue-rep, .ue-mnemo { break-inside: avoid; page-break-inside: avoid; }
+  .ue-mnemo-row .m { color: #000 !important; }
+  .ue-cas-r .k, .ue-tab h4 { color: #000 !important; }
 }
