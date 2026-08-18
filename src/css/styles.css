@@ -1113,54 +1113,10 @@ kbd {
 }
 .gl-see .chip { font-size: 11px; }
 
-/* ============================================================
-   Constellation du vocabulaire
-   ============================================================ */
-
-.cst-wrap {
-  position: relative; height: 66vh; min-height: 460px;
-  border: 1px solid var(--line-soft); border-radius: var(--r);
-  overflow: hidden; cursor: grab; box-shadow: var(--shadow);
-}
-.cst-wrap.dragging { cursor: grabbing; }
-.cst-wrap canvas { display: block; width: 100%; height: 100%; touch-action: none; }
-
-/* infobulle de survol, alimentée par data-tip */
-.cst-wrap[data-tip]::after {
-  content: attr(data-tip);
-  position: absolute; left: 12px; bottom: 12px; max-width: calc(100% - 24px);
-  background: color-mix(in srgb, var(--surface) 88%, transparent);
-  border: 1px solid var(--line); border-radius: var(--r-s);
-  padding: 6px 11px; font-size: 12px; color: var(--txt);
-  pointer-events: none; backdrop-filter: blur(6px);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-
-.cst-dot {
+/* pastille de couleur : etat de maitrise d’une UE */
+.ue-dot {
   width: 9px; height: 9px; border-radius: 50%;
   display: inline-block; flex: none;
-}
-.cst-legend .chip { font-size: 11px; gap: 6px; opacity: .45; }
-.cst-legend .chip.on { opacity: 1; }
-
-.cst-k {
-  font-size: 9.5px; text-transform: uppercase; letter-spacing: .12em;
-  color: var(--txt-3); font-weight: 700; align-self: center;
-}
-.cst-arrow { color: var(--accent); align-self: center; font-size: 12px; }
-.cst-path { margin-top: 10px; }
-.cst-path .chip { font-size: 11px; }
-
-.cst-top { display: flex; flex-direction: column; gap: 2px; }
-.cst-top-row {
-  display: flex; align-items: center; gap: 9px; cursor: pointer;
-  padding: 5px 8px; border-radius: var(--r-s); transition: .14s var(--ease);
-}
-.cst-top-row:hover { background: var(--surface-3); }
-.cst-top-t { font-size: 12.8px; }
-.cst-deg {
-  font-family: var(--mono); font-size: 11px; color: var(--accent);
-  background: var(--accent-soft); border-radius: 20px; padding: 1px 8px;
 }
 
 /* ============================================================

@@ -446,7 +446,8 @@ UE12: {
   ],
   pieges: [
     'Croire que l’accès direct dispense de tout cadre.',
-    'Confondre secret professionnel (obligation légale) et discrétion.'
+    'Confondre secret professionnel (obligation légale) et discrétion.',
+    'Croire que le secret professionnel tombe devant un mineur : il s’adapte à l’autorité parentale, il ne disparaît pas.'
   ],
   tombe: [
     'Question sur le champ des actes et la prescription',
@@ -641,7 +642,8 @@ UE13: {
   ],
   pieges: [
     'Oublier la désinfection entre deux patients sur les surfaces de contact.',
-    'Retarder l’avis médical après une exposition.'
+    'Retarder l’avis médical après une exposition.',
+    'Réutiliser une unidose de collyre pour un second patient, même le même jour et même si elle paraît pleine.'
   ],
   tombe: [
     'Conduite devant une conjonctivite épidémique au cabinet',
@@ -781,11 +783,13 @@ UE17: {
   ],
   pieges: [
     'Comparer deux champs visuels de stratégies différentes.',
-    'Conclure sur un OCT sans vérifier la segmentation et la qualité du signal.'
+    'Conclure sur un OCT sans vérifier la segmentation et la qualité du signal.',
+    'Construire une pente de progression sur des examens de qualité inégale : la pente devient un artefact qu’on suivra des années.'
   ],
   tombe: [
     'Dossier de suivi à interpréter dans le temps',
-    'Rédaction d’un compte rendu'
+    'Rédaction d’un compte rendu',
+    'Interprétation d’une série de champs visuels avec ses indices de fiabilité'
   ],
   methode: 'Travaillez sur des séries : le même patient à trois dates. C’est ce qu’on vous demandera en stage comme en examen clinique.'
 },
@@ -807,25 +811,32 @@ UE18: {
     { t: '4 · Enfant, adolescent, personne âgée',
       p: 'Avec l’enfant : parler à lui, pas seulement au parent, jeu et durée courte. Avec l’adolescent : négocier, expliquer l’intérêt, respecter l’image de soi (rejet de l’occlusion ou des lunettes). Avec la personne âgée : rythme, fatigue, audition, troubles cognitifs éventuels, présence de l’aidant.' },
     { t: '5 · Savoir passer la main',
-      p: 'Troubles des apprentissages, souffrance psychique, suspicion de maltraitance, troubles du comportement : l’orthoptiste repère et oriente. Connaître ses limites fait partie de la compétence.' }
+      p: 'Troubles des apprentissages, souffrance psychique, suspicion de maltraitance, troubles du comportement : l’orthoptiste repère et oriente. Connaître ses limites fait partie de la compétence.' },
+    { t: '6 · Repérer ce qui n’est pas de notre ressort',
+        p: 'Un orthoptiste n’est ni psychologue ni psychiatre, mais il voit les patients longtemps et de près : il repère. Signes qui imposent d’en parler et d’orienter : tristesse persistante et perte d’intérêt, propos de dévalorisation ou idées noires, régression ou refus scolaire chez l’enfant, signes de maltraitance, troubles du comportement alimentaire. On ne fait pas d’interprétation psychologique : on décrit factuellement ce qu’on observe, on en parle au prescripteur et on oriente. Le silence par gêne est l’erreur la plus coûteuse.' }
   ],
   chiffres: [
     ['Poursuite oculaire', 'dès quelques semaines'],
     ['Coordination œil-main', '4 à 5 mois'],
     ['Acuité proche de l’adulte', '3 à 5 ans'],
-    ['Période sensible de l’amblyopie', 'jusqu’à 6-8 ans']
+    ['Période sensible de l’amblyopie', 'jusqu’à 6-8 ans'],
+    ['Étapes du travail de deuil', '5, non linéaires et réversibles'],
+    ['Poursuite oculaire et sourire réponse', '≈ 2 à 3 mois']
   ],
   notions: [
     'Après une annonce, le patient retient peu : reformuler et écrire.',
-    'La non-observance a presque toujours une cause concrète.'
+    'La non-observance a presque toujours une cause concrète.',
+    'L’orthoptiste repère et oriente ; il n’interprète pas et ne pose pas de diagnostic psychologique.'
   ],
   pieges: [
     'Parler au parent en ignorant l’enfant.',
-    'Confondre non-observance et mauvaise volonté.'
+    'Confondre non-observance et mauvaise volonté.',
+    'Interpréter un comportement d’enfant comme un « manque de motivation » sans chercher ce qui le sous-tend.'
   ],
   tombe: [
     'Analyse d’une situation de communication difficile',
-    'Périodes sensibles du développement visuel'
+    'Périodes sensibles du développement visuel',
+    'Analyse d’une situation d’annonce ou de refus de soin'
   ],
   methode: 'Retenez trois situations types — annonce, enfant non coopérant, non-observance — et ce que vous feriez concrètement dans chacune.'
 },
@@ -847,7 +858,9 @@ UE19: {
     { t: '4 · Traitements du glaucome',
       p: 'Analogues des prostaglandines (première intention : hyperhémie, allongement et pigmentation des cils, creusement palpébral), bêtabloquants (contre-indiqués en asthme, BPCO, bradycardie et bloc), inhibiteurs de l’anhydrase carbonique, alpha-2 agonistes. Beaucoup d’effets généraux passent par la voie lacrymo-nasale : l’occlusion des points en réduit l’absorption.' },
     { t: '5 · Autres et information au patient',
-      p: 'Colorants (fluorescéine pour le BUT et les lésions épithéliales), lubrifiants, anti-inflammatoires, toxine botulique en injection. Après cycloplégie ou mydriase : photophobie, flou de près pendant plusieurs heures (plusieurs jours pour l’atropine), <b>pas de conduite automobile</b>, lunettes de soleil. L’information doit être donnée avant l’instillation, pas après.' }
+      p: 'Colorants (fluorescéine pour le BUT et les lésions épithéliales), lubrifiants, anti-inflammatoires, toxine botulique en injection. Après cycloplégie ou mydriase : photophobie, flou de près pendant plusieurs heures (plusieurs jours pour l’atropine), <b>pas de conduite automobile</b>, lunettes de soleil. L’information doit être donnée avant l’instillation, pas après.' },
+    { t: '6 · Ce que l’orthoptiste instille, et sous quelles conditions',
+        p: 'L’instillation se fait sur prescription ou dans le cadre d’un protocole écrit, jamais d’initiative. Avant toute goutte : identité du patient, allergie connue, port de lentilles, antécédent de glaucome par fermeture de l’angle, grossesse. Technique : lavage des mains, patient tête en arrière, goutte dans le cul-de-sac inférieur sans toucher les cils, puis occlusion palpébrale et compression du canthus interne une minute pour limiter le passage systémique — geste particulièrement important chez le nourrisson et la personne âgée. On note le produit, la concentration et l’heure.' }
   ],
   chiffres: [
     ['Tropicamide : délai / durée', '20-30 min / 4-6 h'],
@@ -864,11 +877,13 @@ UE19: {
   ],
   pieges: [
     'Instiller un mydriatique sans avoir vérifié la profondeur de chambre antérieure.',
-    'Oublier l’occlusion des points lacrymaux chez l’enfant.'
+    'Oublier l’occlusion des points lacrymaux chez l’enfant.',
+    'Instiller sans avoir demandé le port de lentilles ni les antécédents d’angle étroit.'
   ],
   tombe: [
     'Choix du cycloplégique selon l’âge et l’indication',
-    'Effets indésirables des collyres du glaucome'
+    'Effets indésirables des collyres du glaucome',
+    'Choix argumenté d’un cycloplégique selon l’âge et le contexte'
   ],
   methode: 'Une fiche par famille : molécule, indication, délai, durée, contre-indication, information au patient. Quatre fiches suffisent pour l’UE entière.'
 }

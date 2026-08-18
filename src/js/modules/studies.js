@@ -566,7 +566,7 @@
                   class: 'chip ' + cls, title: x.sem.label + ' — ' + x.ue.title,
                   onClick: function () { ueSheet(x.sem, x.ue); }
                 }, [
-                  el('i', { class: 'cst-dot', style: { background: masteryColor(mm.pct) } }),
+                  el('i', { class: 'ue-dot', style: { background: masteryColor(mm.pct) } }),
                   el('span', { text: x.ue.code })
                 ]);
               });
@@ -655,9 +655,7 @@
                   onClick: function () { App.go('glossary', { term: t }); }
                 });
               }))
-            ], { right: UI.btn('🌌 Voir en constellation', function () {
-              App.go('constellation', { term: mots[0] });
-            }, 'sm') });
+            ]);
           })(),
 
           g ? UI.card('Comment travailler cette UE', UI.note(g.methode)) : null,
