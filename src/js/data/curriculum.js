@@ -48,14 +48,14 @@ window.CURRICULUM = [
       { code: 'UE11', title: 'Bilan orthoptique', h: 112, cm: 40, td: 72, tp: 0, ects: 6,
         links: { formulas: ['convergence', 'sheard', 'aca_gradient', 'aca_hetero', 'hofstetter', 'hirschberg'], mod: ['patient', 'reading'], calc: ['aca', 'converg'], chap: ['binoculaire'], cats: ['Mesures', 'Vision binoculaire'] } },
       { code: 'UE13', title: 'Hygiène et gestion des risques', h: 15, cm: 10, td: 5, tp: 0, ects: 1,
-        links: { chap: ['metier'] } },
+        links: { chap: ['metier'], cats: ['Hygiène'] } },
       { code: 'UE14', title: 'Pathologies sensorimotrices', h: 40, cm: 30, td: 10, tp: 0, ects: 2,
         links: { mod: ['reading'], chap: ['strabismes'], cats: ['Métier'] } },
       { code: 'UE15', title: 'Prise en charge des pathologies sensorimotrices', h: 90, cm: 30, td: 60, tp: 0, ects: 6,
         links: { formulas: ['sheard', 'convergence'], mod: ['rehab', 'patient', 'reading'], chap: ['strabismes', 'binoculaire'], cats: ['Rééducation', 'Strabologie'] } },
       { code: 'UE17', title: 'Explorations fonctionnelles et pathologies ophtalmologiques', h: 70, cm: 30, td: 40, tp: 0, ects: 4,
         links: { mod: ['reading'], chap: ['pathologies'], cats: ['Explorations', 'Pathologies'] } },
-      { code: 'UE18', title: 'Psychologie, psychopathologie, neurophysiologie', h: 30, cm: 30, td: 0, tp: 0, ects: 2, links: {} },
+      { code: 'UE18', title: 'Psychologie, psychopathologie, neurophysiologie', h: 30, cm: 30, td: 0, tp: 0, ects: 2, links: { cats: ['Psychologie & développement'] } },
       { code: 'UE19', title: 'Pharmacologie et thérapeutique', h: 15, cm: 15, td: 0, tp: 0, ects: 1,
         links: { chap: ['pathologies'], cats: ['Pharmacologie', 'Pathologies'] } }
     ],
@@ -71,9 +71,9 @@ window.CURRICULUM = [
         links: { mod: ['rehab', 'patient'], chap: ['strabismes'], cats: ['Amblyopie', 'Rééducation'] } },
       { code: 'UE26', title: 'Basse vision', h: 90, cm: 60, td: 30, tp: 0, ects: 6,
         links: { formulas: ['kestenbaum', 'vergence'], mod: ['reading'], calc: ['vertex', 'acuity'], chap: ['pathologies'], cats: ['Basse vision', 'Pathologies'] } },
-      { code: 'UE28', title: 'Méthodologie, documentation et bibliographie scientifique', h: 10, cm: 2, td: 8, tp: 0, ects: 1, links: {} },
+      { code: 'UE28', title: 'Méthodologie, documentation et bibliographie scientifique', h: 10, cm: 2, td: 8, tp: 0, ects: 1, links: { cats: ['Méthodologie'] } },
       { code: 'UE32', title: 'Communication, éducation thérapeutique', h: 30, cm: 10, td: 20, tp: 0, ects: 2,
-        links: { mod: ['patient'], chap: ['metier'] } },
+        links: { mod: ['patient'], chap: ['metier'], cats: ['Communication'] } },
       { code: 'UE37', title: 'Diagnostic orthoptique et projets de soins', h: 38, cm: 8, td: 30, tp: 0, ects: 3,
         links: { mod: ['patient', 'rehab'], cats: ['Strabologie', 'Mesures'] } },
       { code: 'UE6', title: 'Anglais S3', h: 12, cm: 0, td: 12, tp: 0, ects: 1, links: {} }
@@ -84,7 +84,7 @@ window.CURRICULUM = [
   {
     id: 'S4', year: 2, label: 'Semestre 4', ects: 30,
     ues: [
-      { code: 'UE21', title: 'Statistiques, épidémiologie, santé publique, informatique', h: 60, cm: 30, td: 30, tp: 0, ects: 4, links: {} },
+      { code: 'UE21', title: 'Statistiques, épidémiologie, santé publique, informatique', h: 60, cm: 30, td: 30, tp: 0, ects: 4, links: { cats: ['Statistiques'] } },
       { code: 'UE22', title: 'Pathologies neuro-ophtalmologiques', h: 40, cm: 30, td: 10, tp: 0, ects: 3,
         links: { mod: ['reading'], chap: ['pathologies', 'oculomotricite'], cats: ['Neuro-ophtalmologie', 'Pathologies', 'Oculomotricité'] } },
       { code: 'UE23', title: 'Prise en charge orthoptique des pathologies neuro-ophtalmologiques', h: 90, cm: 30, td: 60, tp: 0, ects: 7,
@@ -107,8 +107,8 @@ window.CURRICULUM = [
       { code: 'UE31', title: 'Dépistage visuel et ergonomie visuelle', h: 40, cm: 20, td: 20, tp: 0, ects: 3,
         links: { mod: ['reading', 'patient'], cats: ['Mesures', 'Explorations'] } },
       { code: 'UE33', title: 'Imagerie et technologies de la communication', h: 30, cm: 10, td: 20, tp: 0, ects: 2,
-        links: { mod: ['reading'] } },
-      { code: 'UE41', title: 'Gestes et soins d’urgence', h: 0, cm: 0, td: 0, tp: 0, ects: 1, links: {} },
+        links: { mod: ['reading'], cats: ['Imagerie', 'Explorations'] } },
+      { code: 'UE41', title: 'Gestes et soins d’urgence', h: 0, cm: 0, td: 0, tp: 0, ects: 1, links: { cats: ['Urgences'] } },
       { code: 'UE libre', title: 'Enseignement libre', h: 0, cm: 0, td: 0, tp: 0, ects: 2, links: {} }
     ],
     stage: { ects: 10, label: 'Stage S5' }
@@ -124,11 +124,11 @@ window.CURRICULUM = [
         links: { mod: ['reading'], chap: ['pathologies'], cats: ['Explorations', 'Pathologies'] } },
       { code: 'UE36', title: 'Bilans orthoptiques, techniques chirurgicales', h: 40, cm: 10, td: 30, tp: 0, ects: 2,
         links: { formulas: ['hirschberg', 'krimsky'], mod: ['patient', 'reading'], chap: ['strabismes'], cats: ['Strabologie', 'Mesures'] } },
-      { code: 'UE38', title: 'Travail de fin d’études', h: 132, cm: 2, td: 10, tp: 120, ects: 8, links: {} },
+      { code: 'UE38', title: 'Travail de fin d’études', h: 132, cm: 2, td: 10, tp: 120, ects: 8, links: { cats: ['Méthodologie'] } },
       { code: 'UE39', title: 'Coopération et coordination avec les différents acteurs', h: 20, cm: 10, td: 10, tp: 0, ects: 1,
-        links: { chap: ['metier'] } },
+        links: { chap: ['metier'], cats: ['Coordination', 'Métier'] } },
       { code: 'UE40', title: 'Accompagnement des professionnels et futurs professionnels', h: 17, cm: 5, td: 12, tp: 0, ects: 1,
-        links: { chap: ['metier'] } },
+        links: { chap: ['metier'], cats: ['Coordination'] } },
       { code: 'UE libre', title: 'Enseignement libre', h: 0, cm: 0, td: 0, tp: 0, ects: 2, links: {} }
     ],
     stage: { ects: 10, label: 'Stage S6' }

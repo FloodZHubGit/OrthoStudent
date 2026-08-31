@@ -675,10 +675,25 @@ dernière remonte à deux jours. Chaque étape s'exécute dans son module habitu
 l'avancement se lit dans les compteurs du jour : rien n'est à cocher à la main. Le plan se reconstruit
 à minuit, ou dès que le semestre ou l'objectif quotidien change.
 
-QCM (**132 questions, 15 thèmes** alignés sur le référentiel — dont neuro-ophtalmologie, basse
-vision, amblyopie, explorations fonctionnelles, pharmacologie et rééducation — en mode entraînement
-/ examen blanc / points faibles) · **257 fiches mémo** en répétition espacée (Leitner 5 boîtes) ·
-tableau de progression avec courbe et analyse des points faibles.
+QCM (**216 questions, 23 thèmes** — en mode entraînement / examen blanc / points faibles) ·
+**268 fiches mémo** en répétition espacée (Leitner 5 boîtes) · tableau de progression avec courbe
+et analyse des points faibles.
+
+**Les trente-neuf UE peuvent désormais s’entraîner.** Dix d’entre elles n’étaient reliées à aucun
+thème de QCM : leur onglet « S’entraîner » était vide, et l’examen blanc ne pouvait pas les couvrir —
+l’hygiène, les urgences, la coordination, la méthodologie, la statistique. Huit thèmes ont été
+ouverts et quatre-vingt-quatre questions écrites à partir de ce que disent les fiches : chiffres,
+notions à retenir, pièges. Un QCM raté renvoie ainsi à un passage précis du cours.
+
+**Et la banque était biaisée.** Mesure faite sur les 216 questions : la bonne réponse était en **B**
+dans 150 cas, et **jamais en D**. Un étudiant qui coche toujours B obtenait 69 % sans rien savoir, et
+l’examen blanc devenait un exercice de reconnaissance de forme. Les propositions ont été **tournées**
+— une rotation, pas un brassage : elle conserve l’ordre relatif, donc la lisibilité d’une liste qui
+progresse. Les vingt-six listes de valeurs numériques déjà rangées ont été laissées telles quelles :
+les mélanger produirait « 24 mm / 20 mm / 28 mm », plus difficile à lire sans rien apprendre de plus.
+Répartition finale : **54 / 54 / 54 / 54**, sans qu’aucune bonne réponse ne change. Deux explications
+qui désignaient une proposition par son rang (« la 1re proposition décrit Sherrington ») ont été
+réécrites par leur contenu, ce qui les rend insensibles à tout réordonnancement futur.
 
 **Les chiffres des UE deviennent des fiches.** Les 207 valeurs à connaître par cœur des fiches d'UE
 sont converties en cartes de révision, rangées en un paquet par semestre (« Chiffres · Semestre 3 »),

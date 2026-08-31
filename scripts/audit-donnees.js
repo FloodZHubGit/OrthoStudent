@@ -1,7 +1,7 @@
 /* Audit des renvois entre les données : tout identifiant cité quelque part
    doit exister ailleurs. Rien n'est modifié, on ne fait que lister. */
 global.window = {};
-['glossary', 'theory', 'quizbank', 'quizbank2', 'flashbank', 'cases', 'formulas',
+['glossary', 'theory', 'quizbank', 'quizbank2', 'quizbank3', 'flashbank', 'cases', 'formulas',
   'curriculum', 'ueguide', 'ueguide2', 'uecours', 'uexpand', 'uedeep', 'uedeep2', 'uecas', 'uecas2']
   .forEach(n => require(require('path').join(__dirname, '../src/js/data/' + n + '.js')));
 
