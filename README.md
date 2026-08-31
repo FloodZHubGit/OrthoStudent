@@ -694,6 +694,19 @@ les mélanger produirait « 24 mm / 20 mm / 28 mm », plus difficile à lire san
 Répartition finale : **54 / 54 / 54 / 54**, sans qu’aucune bonne réponse ne change. Deux explications
 qui désignaient une proposition par son rang (« la 1re proposition décrit Sherrington ») ont été
 réécrites par leur contenu, ce qui les rend insensibles à tout réordonnancement futur.
+**Et un second biais, de la même famille.** La bonne réponse était aussi la plus longue dans 45 % des
+cas — le hasard en donnerait 25. La raison est toujours la même : la bonne réponse est complète, avec
+ses qualificatifs, et les distracteurs sont expédiés en trois mots. Le remède n’est pas de rembourrer,
+c’est de rendre les distracteurs **aussi précis** que la bonne réponse : un distracteur spécifique est
+plus plausible, donc moins facile à écarter par la forme — et il enseigne, parce qu’il nomme une
+erreur réelle. Quarante-neuf questions ont été retravaillées ainsi.
+
+Le chiffre qui compte n’est pas « la plus longue est la bonne » — un écart de deux caractères ne se
+voit pas — mais **« la bonne dépasse la deuxième plus longue d’au moins un quart »**, seul indice
+qu’un candidat puisse réellement exploiter : il passe de **25 % à 8 %**. Les listes de valeurs
+numériques sont exclues du traitement : allonger « 5 minutes » pour l’aligner sur « 15 à 20 minutes »
+n’aurait servi à rien.
+
 
 **Les chiffres des UE deviennent des fiches.** Les 207 valeurs à connaître par cœur des fiches d'UE
 sont converties en cartes de révision, rangées en un paquet par semestre (« Chiffres · Semestre 3 »),
