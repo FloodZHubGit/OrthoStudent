@@ -24,7 +24,7 @@
   }
 
   M.flashcards = {
-    id: 'flashcards', title: 'Fiches mémo', icon: '🗂', group: 'Révision',
+    id: 'flashcards', title: 'Fiches mémo', icon: '🗂', group: 'Réviser',
     desc: 'Répétition espacée, import de fiches (NotebookLM, cours…), export Anki',
     keywords: 'fiches flashcards revision memoire repetition espacee leitner import notebooklm anki export',
     render: function (ctx) {
@@ -43,6 +43,11 @@
 
       // fiche ouverte directement depuis la recherche rapide (Ctrl+K)
       var wantedCard = (ctx && ctx.params && ctx.params.cardId) || null;
+      // file lancée depuis la séance du jour : { auto: 'due', limit: n }
+      var autoRun = (ctx && ctx.params && ctx.params.auto) || null;
+      var autoLimit = (ctx && ctx.params && ctx.params.limit) || 0;
+      // lot de fiches précis, lancé depuis une fiche d'UE : { ids: [...] }
+      var autoIds = (ctx && ctx.params && ctx.params.ids) || null;
 
       /* ============================================================
          Onglet 1 — révision
@@ -327,6 +332,21 @@
         }
 
         if (wantedCard) { focusCard(wantedCard); wantedCard = null; }
+        else if (autoIds && autoIds.length) {
+          var byId = {};
+          Cards.all().forEach(function (c) { byId[c.id] = c; });
+          var lot = autoIds.map(function (id) { return byId[id]; }).filter(Boolean);
+          autoIds = null;
+          if (lot.length) { buildQueue(lot); draw(); return body; }
+        }
+        else if (autoRun === 'due') {
+          st.opts.dueOnly = true;
+          if (autoLimit) st.opts.limit = autoLimit;
+          st.opts.order = 'due';
+          autoRun = null;
+          start(null);
+          return body;
+        }
         draw();
         return body;
       }
@@ -1137,7 +1157,7 @@
       var mine = Cards.custom().length;
 
       return UI.page({
-        crumb: 'Révision',
+        crumb: 'Réviser',
         title: 'Fiches mémo',
         subtitle: total + ' fiches en répétition espacée' +
           (mine ? ' dont <b>' + mine + ' importée' + (mine > 1 ? 's' : '') + '</b>' : '') +

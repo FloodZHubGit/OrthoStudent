@@ -853,7 +853,7 @@
   }
 
   M.converters = {
-    id: 'converters', title: 'Calculatrices', icon: '🧮', group: 'Outils',
+    id: 'converters', title: 'Calculatrices', icon: '🧮', group: 'Références',
     quickCalc: quickCalc,
     desc: 'Conversions et calculs cliniques : acuité, prismes, réfraction, AC/A…',
     keywords: 'calcul conversion acuite logmar prisme prentice transposition hofstetter aca vergence sommet stereo kestenbaum',
@@ -882,7 +882,7 @@
       draw(current);
 
       return UI.page({
-        crumb: 'Outils',
+        crumb: 'Références',
         title: 'Calculatrices & conversions',
         subtitle: 'Onze outils couvrant l’essentiel des conversions rencontrées en TD, en TP et en clinique. ' +
           'Sous chaque résultat, <b>« Comment ce résultat est obtenu »</b> donne la formule, son application à vos chiffres, ' +

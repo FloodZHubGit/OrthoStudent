@@ -9,58 +9,12 @@
   var M = (window.Modules = window.Modules || {});
   var el = UI.el;
 
-  function norm(s) {
-    return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
-  }
+  /* comparaison et surlignage sans accents ni ligatures : core/text.js */
+  var norm = Txt.norm, tokens = Txt.tokens, highlight = Txt.highlight;
 
-  /* même chaîne normalisée, mais de longueur identique à l'originale :
-     indispensable pour reporter les positions trouvées sur le texte affiché */
-  function normKeepLength(s) {
-    s = String(s || '');
-    var out = '';
-    for (var i = 0; i < s.length; i++) {
-      var c = norm(s.charAt(i));
-      out += c.length === 1 ? c : (c.charAt(0) || ' ');
-    }
-    return out;
-  }
-
-  function tokens(q) {
-    return norm(q).split(/\s+/).filter(Boolean);
-  }
-
-  /* surligne les portions correspondant à la requête */
-  function highlight(text, toks) {
-    var frag = document.createDocumentFragment();
-    text = String(text || '');
-    if (!toks || !toks.length) { frag.appendChild(document.createTextNode(text)); return frag; }
-    var n = normKeepLength(text);
-    var marks = new Array(text.length);
-    toks.forEach(function (t) {
-      var from = 0, i;
-      while ((i = n.indexOf(t, from)) >= 0) {
-        for (var k = i; k < i + t.length; k++) marks[k] = true;
-        from = i + t.length;
-      }
-    });
-    var buf = '', on = false;
-    function flush() {
-      if (!buf) return;
-      frag.appendChild(on ? el('mark', { text: buf }) : document.createTextNode(buf));
-      buf = '';
-    }
-    for (var j = 0; j < text.length; j++) {
-      var m = !!marks[j];
-      if (m !== on) { flush(); on = m; }
-      buf += text.charAt(j);
-    }
-    flush();
-    return frag;
-  }
-
-  /* lettre de classement : É et E vont ensemble */
+  /* lettre de classement : É va avec E, Œ avec O */
   function letterOf(g) {
-    return normKeepLength(g.t).charAt(0).toUpperCase();
+    return Txt.initial(g.t);
   }
 
   function blob(g) {
@@ -68,7 +22,7 @@
   }
 
   M.glossary = {
-    id: 'glossary', title: 'Glossaire', icon: '📖', group: 'Savoir',
+    id: 'glossary', title: 'Glossaire', icon: '📖', group: 'Références',
     desc: 'Tous les termes du vocabulaire orthoptique, avec normes et renvois',
     keywords: 'glossaire definition vocabulaire terme lexique norme synonyme abreviation',
     render: function (ctx) {
@@ -270,7 +224,7 @@
       draw();
 
       var root = UI.page({
-        crumb: 'Savoir',
+        crumb: 'Références',
         title: 'Glossaire orthoptique',
         subtitle: GLOSSARY.length + ' termes définis dans ' + Object.keys(cats).length + ' catégories, ' +
           nNorms + ' avec la valeur normale à connaître. Les renvois <i>« voir aussi »</i> sont cliquables.'

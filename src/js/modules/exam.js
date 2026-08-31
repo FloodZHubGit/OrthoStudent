@@ -4,7 +4,7 @@
    Trois natures de postes s'enchaînent sous un même chronomètre :
      · QCM        — une question de la banque, sans correction avant la fin
      · Calcul     — un énoncé chiffré tiré au sort, réponse numérique tolérancée
-     · Simulation — un poste à réaliser dans le simulateur, noté par lui
+     · Lecture    — un compte rendu à interpréter, noté sur les items justes
    La session vit dans une variable de module : on peut quitter l'écran
    et y revenir, le chronomètre continue de tourner.
    ============================================================ */
@@ -90,32 +90,22 @@
     }
   ];
 
-  /* Chaque poste de simulation est une vraie situation clinique : on tire un
+  /* Chaque poste de lecture est une vraie situation clinique : on tire un
      dossier dans le générateur de cas, en choisissant un tableau qui a du
-     sens pour l'examen demandé, et le simulateur est réglé dessus. */
+     sens pour l'examen demandé, et on donne le compte rendu à interpréter. */
   var SIM_TASKS = [
-    { mod: 'phoropter', task: 'Faites la réfraction subjective des deux yeux, puis validez.',
-      cases: ['amblyopie', 'presbytie', 'ecran', 'esoaccom'] },
-    { mod: 'skiascopy', task: 'Skiascopie des deux yeux : neutralisez deux méridiens par œil, déduisez la réfraction et validez.',
-      cases: ['amblyopie', 'esoaccom', 'ecran'] },
-    { mod: 'covertest', task: 'Cover test unilatéral puis alterné, de loin et de près : nature et amplitude de la déviation.',
+    { test: 'covertest', task: 'Lisez le cover test et concluez : phorie ou tropie, sens, amplitude, comportement loin/près.',
       cases: ['ic', 'esoaccom', 'xt', 'vi'] },
-    { mod: 'prism', task: 'Neutralisez la déviation à la barre de prismes et donnez l’angle.',
-      cases: ['esoaccom', 'xt', 'vi', 'iv'] },
-    { mod: 'motility', task: 'Explorez les 9 positions du regard et identifiez le muscle déficitaire.',
-      cases: ['vi', 'iv'] },
-    { mod: 'lancaster', task: 'Relevez le schéma des deux yeux et concluez sur le muscle atteint.',
-      cases: ['vi', 'iv'] },
-    { mod: 'fundus', task: 'Examinez les deux fonds d’œil, estimez le C/D et posez votre diagnostic.',
-      cases: ['dmla', 'glaucome'] },
-    { mod: 'colorvision', task: 'Faites lire les planches et concluez sur l’axe de la dyschromatopsie.',
-      cases: ['dmla', 'ecran'] },
-    { mod: 'fields', task: 'Analysez le relevé des deux yeux et concluez.',
-      cases: ['glaucome', 'dmla'] },
-    { mod: 'ppc', task: 'Approchez la cible : point de rupture, puis de recouvrement.',
+    { test: 'ppc', task: 'Lisez le punctum proximum de convergence et situez-le par rapport aux normes.',
       cases: ['ic', 'xt'] },
-    { mod: 'binocular', task: 'Bilan sensoriel : Worth, Maddox, amplitudes de fusion, stéréoscopie.',
-      cases: ['ic', 'xt', 'esoaccom'] }
+    { test: 'motility', task: 'Lisez le relevé de motilité et désignez le muscle en cause.',
+      cases: ['vi', 'iv'] },
+    { test: 'binocular', task: 'Lisez le bilan sensoriel : Worth, stéréoscopie, réserves fusionnelles.',
+      cases: ['ic', 'xt', 'esoaccom'] },
+    { test: 'acuity', task: 'Lisez les acuités et dites s’il existe une différence significative entre les deux yeux.',
+      cases: ['amblyopie', 'esoaccom', 'ecran'] },
+    { test: 'fundus', task: 'Lisez le compte rendu du fond d’œil et dites ce qu’il apporte au dossier.',
+      cases: ['dmla', 'glaucome'] }
   ];
 
   /* ---------------- Construction de l'épreuve ---------------- */
@@ -170,10 +160,10 @@
     }
 
     shuffle(SIM_TASKS).slice(0, nSim).forEach(function (t) {
-      // un dossier complet par poste : le simulateur est réglé dessus,
+      // un dossier complet par poste : le compte rendu en est tiré,
       // exactement comme en mode patient
       var dossier = window.CaseGen.generate(pick(t.cases));
-      stations.push({ type: 'sim', mod: t.mod, task: t.task, dossier: dossier });
+      stations.push({ type: 'sim', test: t.test, task: t.task, dossier: dossier });
     });
 
     if (!stations.length) {
@@ -195,7 +185,7 @@
   }
 
   var STATION_LABEL = {
-    qcm: 'QCM', calc: 'Calcul clinique', sim: 'Simulation',
+    qcm: 'QCM', calc: 'Calcul clinique', sim: 'Lecture de bilan',
     oral: 'Poste oral', cas: 'Cas d’application'
   };
 
@@ -243,7 +233,7 @@
   }
 
   M.exam = {
-    id: 'exam', title: 'Examen blanc', icon: '⏱', group: 'Révision',
+    id: 'exam', title: 'Examen blanc', icon: '⏱', group: 'Réviser',
     desc: 'Épreuve chronométrée : QCM, calculs cliniques et postes de simulation',
     keywords: 'examen blanc partiel epreuve chronometre station poste ecos concours simulation calcul',
 
@@ -267,14 +257,14 @@
         }
         var oralChip = toggle('🎤 Avec postes oraux', 'oral');
         var casChip = toggle('🩺 Avec cas d’application', 'cas');
-        var simChip = el('span', { class: 'chip on', text: '🔦 Avec postes de simulation', onClick: function (e) {
+        var simChip = el('span', { class: 'chip on', text: '🩻 Avec lectures de bilan', onClick: function (e) {
           cfg.sims = !cfg.sims;
           e.currentTarget.classList.toggle('on', cfg.sims);
         } });
 
         return el('div', {}, [
           cfg.label ? UI.note('🎓 <b>Épreuve ciblée sur ' + cfg.label + '</b> — les QCM seront tirés dans les thèmes de cette UE. ' +
-            'Les postes de calcul et de simulation restent transversaux.') : null,
+            'Les postes de calcul et de lecture restent transversaux.') : null,
           UI.card('Régler l’épreuve', [
             el('div', { class: 'grid g3' }, [
               UI.field('Nombre de postes', UI.select([
@@ -298,14 +288,14 @@
                 App.go('exam');
               }, 'primary')
             ]),
-            UI.note('Le chronomètre tourne <b>en continu</b>, y compris pendant les postes de simulation. ' +
+            UI.note('Le chronomètre tourne <b>en continu</b>, y compris pendant les postes de lecture. ' +
               'Vous pouvez circuler librement entre les postes, revenir en arrière, et terminer avant la fin du temps. ' +
               'Aucune correction n’est affichée avant la fin — comme en épreuve.')
           ]),
           UI.card('Comment sont notés les postes', UI.table(['Nature du poste', 'Notation'], [
             ['<b>QCM</b>', 'Tout ou rien : 100 ou 0'],
             ['<b>Calcul clinique</b>', 'Énoncé chiffré tiré au sort. Réponse dans la tolérance : 100. Approchante : 55. Sinon 0.'],
-            ['<b>Poste de simulation</b>', 'Le simulateur donne sa propre note. Un poste ouvert mais <b>non validé</b> compte 0.']
+            ['<b>Lecture de bilan</b>', 'La part des items du compte rendu correctement interprétés. Un poste ouvert mais <b>non validé</b> compte 0.']
           ])),
           sc ? UI.card('Vos épreuves passées', [
             el('div', { class: 'grid g3' }, [
@@ -412,40 +402,70 @@
             ]));
 
           } else if (s.type === 'sim') {
-            /* branche explicite : un else fourre-tout traiterait aussi les
-               postes oraux et les cas comme des simulations */
+            /* Poste de lecture : le compte rendu est donné, l'interprétation
+               est notée. Branche explicite — un else fourre-tout traiterait
+               aussi les postes oraux et les cas comme des lectures. */
             var d = s.dossier;
+            var t = Reading.testById(s.test);
+            var info = (d.tests && d.tests[s.test]) || {};
+            var items = Reading.forTest(d, s.test);
+            var ans = (a && a.answers) || {};
+            var locked = !!(a && a.validated);
+
+            var qbox = el('div', {}, items.map(function (it) {
+              var w = el('div', { class: 'read-item' });
+              w.appendChild(el('div', { class: 'ri-q', html: it.label }));
+              if (it.type === 'choice') {
+                var opts = el('div', { class: 'ri-opts' });
+                it.options.forEach(function (o, i) {
+                  var chosen = ans[it.id] === i;
+                  var cls = 'q-opt';
+                  if (locked) {
+                    if (i === it.answer) cls += ' right';
+                    else if (chosen) cls += ' wrong';
+                    cls += ' locked';
+                  } else if (chosen) cls += ' sel';
+                  opts.appendChild(el('div', {
+                    class: cls,
+                    onClick: locked ? null : function () {
+                      ans[it.id] = i;
+                      opts.querySelectorAll('.q-opt').forEach(function (n, j) { n.classList.toggle('sel', j === i); });
+                    }
+                  }, [el('span', { class: 'mark', text: String.fromCharCode(65 + i) }), el('span', { text: o })]));
+                });
+                w.appendChild(opts);
+              } else {
+                var inp = UI.num(ans[it.id] === undefined ? '' : ans[it.id],
+                  function (v) { ans[it.id] = v; }, { step: 1, disabled: locked || null });
+                inp.style.maxWidth = '150px';
+                w.appendChild(el('div', { class: 'flex', style: { gap: '9px' } }, [
+                  inp, el('span', { class: 'muted small', text: it.unit || '' }),
+                  locked ? el('span', { class: 'chip static ' + (Reading.check(it, ans[it.id]).ok ? 'green' : 'red'),
+                    text: Reading.check(it, ans[it.id]).ok ? '✔' : '✘ ' + it.answer + ' ' + (it.unit || '') }) : null
+                ].filter(Boolean)));
+              }
+              return w;
+            }));
+
             body.appendChild(UI.card(null, [
               head,
-              el('h2', { text: (M[s.mod].icon || '') + '  ' + M[s.mod].title }),
+              el('h2', { text: t.ic + '  ' + t.name }),
               d ? el('div', { class: 'speech' }, [
                 el('span', { class: 'who', text: d.name + ', ' + d.age + ' ans — ' + d.job }),
                 el('span', { text: '« ' + d.motif + ' »' })
               ]) : null,
               el('p', { class: 'selectable', text: s.task }),
-              a ? UI.note(a.validated
-                    ? '<b>Poste réalisé — ' + a.score + ' %.</b> Vous pouvez le refaire : c’est la dernière validation qui compte.'
-                    : '<b>Poste ouvert mais non validé.</b> Il compte 0 tant que vous n’avez pas validé dans le simulateur.',
-                    a.validated && a.score >= 50 ? '' : 'warn') : null,
-              el('div', { class: 'btn-row' }, [
-                UI.btn('🔬 Ouvrir le poste', function () {
-                  var before = (Store.score(s.mod) || {}).at || 0;
-                  App.closeModule._after = function () {
-                    var after = Store.score(s.mod);
-                    // une validation à 0 % reste une validation : on ne peut pas
-                    // se contenter de tester la note pour savoir si le poste a été fait
-                    var ok = !!(after && after.at > before);
-                    session.answers[session.i] = { validated: ok, score: ok ? after.last : 0 };
-                    drawStrip(); drawStation();
-                  };
-                  App.openModule(s.mod, s.dossier ? { sim: s.dossier.sim, fromCase: s.dossier.id } : {}, {
-                    subtitle: 'Poste ' + (session.i + 1) + (s.dossier ? ' — ' + s.dossier.name + ', ' + s.dossier.age + ' ans' : ''),
-                    banner: '⏱ <b>Épreuve en cours, le chronomètre tourne.</b> ' +
-                            (s.dossier ? '<b>' + s.dossier.name + '</b> — « ' + s.dossier.motif +' » ' : '') +
-                            s.task + ' Validez dans le simulateur, puis fermez cette fenêtre.'
-                  });
-                }, 'primary')
-              ])
+              el('div', { class: 'ue-cas-s selectable' }, info.result || 'Examen sans particularité.'),
+              qbox,
+              locked
+                ? UI.note('<b>Poste validé — ' + a.score + ' %.</b> Les bonnes réponses sont affichées ci-dessus.')
+                : el('div', { class: 'btn-row' }, [
+                    UI.btn('Valider ce poste', function () {
+                      var sc = Reading.score(items, ans);
+                      session.answers[session.i] = { validated: true, score: sc.pct, answers: ans };
+                      drawStrip(); drawStation();
+                    }, 'primary')
+                  ])
             ].filter(Boolean)));
           }
 
@@ -555,7 +575,7 @@
           qcm: { n: 0, sum: 0 }, calc: { n: 0, sum: 0 }, sim: { n: 0, sum: 0 },
           oral: { n: 0, sum: 0 }, cas: { n: 0, sum: 0 }
         };
-        var ICON = { qcm: '❓ ', calc: '🧮 ', sim: '🔬 ', oral: '🎤 ', cas: '🩺 ' };
+        var ICON = { qcm: '❓ ', calc: '🧮 ', sim: '🩻 ', oral: '🎤 ', cas: '🩺 ' };
         function plain(x) { return String(x == null ? '' : x).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim(); }
 
         var rows = session.stations.map(function (s, i) {
@@ -583,8 +603,8 @@
                  : a.self === 100 ? 'traité' : a.self === 50 ? 'partiel' : 'à reprendre';
             truth = plain(s.cas.c);
           } else {
-            label = M[s.mod].title + (s.dossier ? ' — ' + s.dossier.name + ', ' + s.dossier.age + ' ans' : '');
-            mine = !a ? 'non ouvert' : a.validated ? a.score + ' %' : 'ouvert, non validé';
+            label = Reading.testById(s.test).name + (s.dossier ? ' — ' + s.dossier.name + ', ' + s.dossier.age + ' ans' : '');
+            mine = !a ? 'non lu' : a.validated ? a.score + ' %' : 'lu, non validé';
             truth = s.dossier ? s.dossier.diagnosis.options[s.dossier.diagnosis.correct] : '—';
           }
 
@@ -609,7 +629,7 @@
             el('div', { class: 'grid g4' }, [
               UI.stat(session.score + ' %', 'Note globale',
                 session.score >= 70 ? 'var(--green)' : session.score >= 50 ? 'var(--amber)' : 'var(--red)'),
-              part('qcm', 'QCM'), part('calc', 'Calculs'), part('sim', 'Simulation'),
+              part('qcm', 'QCM'), part('calc', 'Calculs'), part('sim', 'Lecture'),
               part('oral', 'Oral'), part('cas', 'Cas')
             ].filter(Boolean)),
             el('div', { class: 'grid g3 mt16' }, [
@@ -651,7 +671,7 @@
       root.appendChild(!session ? setup() : session.finished ? results() : running());
 
       return UI.page({
-        crumb: 'Révision',
+        crumb: 'Réviser',
         title: session && !session.finished ? 'Examen blanc en cours' : 'Examen blanc',
         subtitle: session && !session.finished
           ? 'Le chronomètre tourne. Circulez entre les postes comme vous le souhaitez.'

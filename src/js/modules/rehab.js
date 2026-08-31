@@ -7,7 +7,7 @@
      · le patient évolue séance après séance selon un modèle
        (pertinence de l'exercice, observance, rendements
        décroissants à l'approche des normes),
-     · on re-mesure quand on veut, dans les vrais simulateurs,
+     · on refait un contrôle quand on veut, sur les valeurs courantes,
        réglés sur l'état courant du patient,
      · le bilan final note le protocole, le résultat et le
        nombre de séances qu'il a fallu.
@@ -456,7 +456,7 @@
      Module
      ============================================================ */
   M.rehab = {
-    id: 'rehab', title: 'Rééducation', icon: '🧑‍🏫', group: 'Mise en situation',
+    id: 'rehab', title: 'Rééducation', icon: '🧑‍🏫', group: 'Pratiquer',
     desc: 'Programme de rééducation orthoptique suivi séance après séance',
     keywords: 'reeducation orthoptique exercices convergence divergence accommodation amblyopie brock stereogramme flipper hart occlusion seance suivi programme',
 
@@ -487,7 +487,7 @@
             ]),
             UI.note('Chaque séance représente <b>une semaine</b>. Vous choisissez les exercices et la fréquence du travail à domicile ; ' +
               'le patient évolue en fonction de la <b>pertinence</b> du programme et de son <b>observance</b>. ' +
-              'À tout moment vous pouvez re-mesurer dans les vrais simulateurs — ils sont réglés sur l’état actuel du patient.'),
+              'À tout moment vous pouvez refaire un contrôle — les valeurs affichées suivent l’état actuel du patient.'),
             UI.note('Deux pièges reproduits ici : un exercice <b>contre-indiqué</b> (convergence chez un excès de convergence) ' +
               'n’améliore rien et aggrave la gêne ; un programme <b>trop chargé</b> fait chuter l’observance.', 'warn')
           ]),
@@ -589,41 +589,25 @@
         var freqRange = UI.range(0, 14, 1, 5, function (v) { sess.freq = v; drawFreq(); }, function (v) { return v + '/sem'; });
         drawFreq();
 
-        /* --- re-mesures dans les simulateurs --- */
+        /* --- relevé de contrôle ---
+           Ces boutons ouvraient les simulateurs de PPC, de fusion et
+           d'acuité. Les valeurs qu'ils faisaient « mesurer » étaient de
+           toute façon celles de l'état courant : on les affiche. */
         function measureBtns() {
-          var btns = [];
+          var out = [];
           if (sess.state.ppcB !== undefined) {
-            btns.push(UI.btn('🎯 Re-mesurer le PPC', function () {
-              App.openModule('ppc', { sim: { ppc: { breakCm: Math.round(sess.state.ppcB), recoveryCm: Math.round(sess.state.ppcR) } } }, {
-                subtitle: p.name + ' — semaine ' + sess.week,
-                banner: '🧑‍🏫 <b>Contrôle de rééducation</b> — le simulateur est réglé sur l’état <b>actuel</b> de ' + p.name + ' Mesurez la rupture et le recouvrement.'
-              });
-            }));
+            out.push(UI.chip('PPC — rupture ' + Math.round(sess.state.ppcB) + ' cm, recouvrement ' + Math.round(sess.state.ppcR) + ' cm',
+              sess.state.ppcB <= 6 ? 'green' : sess.state.ppcB <= 10 ? 'amber' : 'red'));
           }
           if (sess.state.be !== undefined) {
-            btns.push(UI.btn('🔗 Re-mesurer les amplitudes de fusion', function () {
-              App.openModule('binocular', { sim: {
-                fusion: {
-                  BE: { blur: Math.max(4, Math.round(sess.state.be * 0.6)), brk: Math.round(sess.state.be), rec: Math.round(sess.state.be * 0.5) },
-                  BI: { blur: 0, brk: Math.round(sess.state.bi), rec: Math.round(sess.state.bi * 0.6) }
-                },
-                worth: sess.state.supp > 45 ? 'sup-os' : 'fusion',
-                stereo: sess.state.supp > 45 ? 200 : 60
-              } }, {
-                subtitle: p.name + ' — semaine ' + sess.week,
-                banner: '🧑‍🏫 <b>Contrôle de rééducation</b> — amplitudes de fusion actuelles de ' + p.name + ' Mesurez le flou, la rupture et le recouvrement.'
-              });
-            }));
+            out.push(UI.chip('Convergence fusionnelle — ' + Math.round(sess.state.be) + ' Δ base externe', 'blue'));
+            out.push(UI.chip('Divergence fusionnelle — ' + Math.round(sess.state.bi) + ' Δ base interne', 'blue'));
           }
           if (sess.state.av !== undefined) {
-            btns.push(UI.btn('🔠 Re-mesurer l’acuité', function () {
-              App.openModule('acuity', { sim: { acuity: { odFar: 1.0, osFar: sess.state.av, odNear: 1.0, osNear: sess.state.av } } }, {
-                subtitle: p.name + ' — semaine ' + sess.week,
-                banner: '🧑‍🏫 <b>Contrôle de rééducation</b> — acuité actuelle de l’œil amblyope de ' + p.name + ' Mesurez l’œil gauche.'
-              });
-            }));
+            out.push(UI.chip('Acuité de l’œil traité — ' + (Math.round(sess.state.av * 10) / 10 * 10) + '/10',
+              sess.state.av >= 0.8 ? 'green' : sess.state.av >= 0.5 ? 'amber' : 'red'));
           }
-          return btns;
+          return out;
         }
 
         function nextSession() {
@@ -657,7 +641,7 @@
           metricsBox,
           el('div', { class: 'mt16' }, chartBox),
           el('div', { class: 'btn-row mt16' }, measureBtns().concat([
-            el('span', { class: 'muted small', text: 'Les simulateurs sont réglés sur les valeurs actuelles — comme un vrai contrôle.' })
+            el('span', { class: 'muted small', text: 'Les valeurs affichées sont celles du patient aujourd’hui — comme un vrai contrôle.' })
           ]))
         ]));
 
@@ -754,7 +738,7 @@
       root.appendChild(!sess ? chooser() : sess.finished ? report() : follow());
 
       return UI.page({
-        crumb: 'Mise en situation',
+        crumb: 'Pratiquer',
         title: sess && !sess.finished ? 'Rééducation en cours' : 'Rééducation orthoptique',
         subtitle: sess && !sess.finished
           ? 'Une séance = une semaine. Choisissez les exercices, dosez le travail à domicile, re-mesurez, adaptez.'

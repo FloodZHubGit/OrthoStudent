@@ -15,7 +15,7 @@
   function shuffle(a) { return a.slice().sort(function () { return Math.random() - 0.5; }); }
 
   M.quiz = {
-    id: 'quiz', title: 'QCM', icon: '❓', group: 'Révision',
+    id: 'quiz', title: 'QCM', icon: '❓', group: 'Réviser',
     desc: 'Questions à choix multiple avec correction commentée',
     keywords: 'qcm question quiz examen entrainement revision',
     render: function (ctx) {
@@ -230,7 +230,7 @@
 
       draw();
       return UI.page({
-        crumb: 'Révision',
+        crumb: 'Réviser',
         title: 'QCM',
         subtitle: QUIZ.length + ' questions réparties en ' + categories().length + ' thèmes, avec correction commentée et suivi de vos points faibles.'
       }, [body]);

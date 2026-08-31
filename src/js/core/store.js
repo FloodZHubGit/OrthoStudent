@@ -8,11 +8,11 @@
 
   var DEFAULTS = {
     theme: 'dark',
-    profile: { name: '', year: 'L1', semester: null },   // semester : 'S1'..'S6' du referentiel
+    profile: { name: '', year: 'L1', semester: null, edtAnnee: null },
+    /* semester : 'S1'..'S6' du referentiel
+       edtAnnee : annee suivie dans l'emploi du temps (1, 2 ou 3), null = deduite du semestre */
     settings: {
-      pxPerMm: 3.78,      // calibration ecran (par defaut ~96 dpi)
       testDistance: 5,     // metres
-      pupil: 4,            // mm, utilise pour la simulation de flou
       goal: { cards: 20, quiz: 10 },  // objectif quotidien de revision
       anki: {}             // paquet, type de note et champs choisis par l'utilisateur
     },
@@ -28,9 +28,14 @@
       ueDone: {},          // 'S3:UE25' -> horodatage de la revision
       planDone: {},        // 'S3:w2:UE25:qcm' -> true
       recite: {},          // 'S3:UE25' -> { pct, n, at } derniere recitation
-      reciteLog: {}        // 'S3:UE25' -> [{ pct, n, at }] historique borne
+      reciteLog: {},       // 'S3:UE25' -> [{ pct, n, at }] historique borne
+      notes: {}            // 'S3:UE25' -> { t: texte, at: horodatage } notes de l'etudiant
     },
-    favorites: []
+    /* emploi du temps telecharge depuis l'application : identifiant de groupe
+       CELCAT -> { annee, label, events, genere }. Il prime sur le fichier livre
+       avec l'application (src/js/data/edt.js), qui reste le point de depart. */
+    edt: {},
+    daily: {}             // plan de la seance du jour : { date, at, steps, skipped }
   };
 
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
@@ -38,7 +43,11 @@
   function deepMerge(base, over) {
     var out = clone(base);
     Object.keys(over || {}).forEach(function (k) {
-      if (over[k] && typeof over[k] === 'object' && !Array.isArray(over[k]) && typeof out[k] === 'object' && !Array.isArray(out[k])) {
+      /* fusionner deux objets, sinon prendre la valeur enregistree telle quelle :
+         out[k] doit etre teste, sinon une valeur par defaut nulle fait echouer la
+         fusion entiere et l'etat reparti de zero */
+      if (over[k] && typeof over[k] === 'object' && !Array.isArray(over[k]) &&
+          out[k] && typeof out[k] === 'object' && !Array.isArray(out[k])) {
         out[k] = deepMerge(out[k], over[k]);
       } else if (over[k] !== undefined) {
         out[k] = over[k];
@@ -48,6 +57,9 @@
   }
 
   var state = clone(DEFAULTS);
+
+  /* périmètre des exercices notés encore présents — posé par app.js */
+  var scoreScope = null;
 
   function load() {
     try {
@@ -90,7 +102,6 @@
 
     load: load,
     save: save,
-    flush: write,
 
     reset: function () {
       state = clone(DEFAULTS);
@@ -113,7 +124,23 @@
       return v;
     },
 
-    /* --- Scores de simulateurs (0..100) --- */
+    /* --- Notes d'exercice (0..100) ---
+       Les notes d'un exercice retiré de l'application survivent dans le
+       stockage local. Elles ne sont pas effacées — on ne jette pas le
+       travail de quelqu'un — mais l'application déclare au démarrage les
+       exercices qui existent encore, et seules ces notes-là entrent dans
+       les moyennes. Sans périmètre déclaré, tout compte. */
+    setScoreScope: function (ids) {
+      scoreScope = ids && ids.length ? ids.slice() : null;
+    },
+
+    /* les identifiants notés qui comptent aujourd'hui */
+    scoredIds: function () {
+      return Object.keys(state.scores).filter(function (id) {
+        return !scoreScope || scoreScope.indexOf(id) >= 0;
+      });
+    },
+
     recordScore: function (moduleId, score, meta) {
       var s = state.scores[moduleId] || { attempts: 0, best: 0, last: 0, sum: 0 };
       s.attempts += 1;
@@ -188,13 +215,6 @@
       save();
     },
 
-    toggleFavorite: function (id) {
-      var i = state.favorites.indexOf(id);
-      if (i >= 0) state.favorites.splice(i, 1); else state.favorites.push(id);
-      save();
-      return state.favorites.indexOf(id) >= 0;
-    },
-
     /* --- Régularité : compteurs par jour, objectif, série --------------
        Un jour de travail est une clé 'AAAA-MM-JJ' : c'est ce qui permet
        la série (jours consécutifs) et la carte de chaleur sans dépendre
@@ -209,7 +229,7 @@
     bump: function (kind, n) {
       var k = Store.dayKey();
       if (!state.days) state.days = {};
-      var d = state.days[k] || { cards: 0, quiz: 0, sims: 0, cases: 0 };
+      var d = state.days[k] || { cards: 0, quiz: 0, sims: 0, cases: 0, ecoute: 0 };
       d[kind] = (d[kind] || 0) + (n === undefined ? 1 : n);
       state.days[k] = d;
       // on garde deux ans d'historique, pas plus
@@ -220,7 +240,7 @@
     },
 
     day: function (key) {
-      return (state.days && state.days[key || Store.dayKey()]) || { cards: 0, quiz: 0, sims: 0, cases: 0 };
+      return (state.days && state.days[key || Store.dayKey()]) || { cards: 0, quiz: 0, sims: 0, cases: 0, ecoute: 0 };
     },
 
     goal: function () {
@@ -234,22 +254,12 @@
       return state.settings.goal;
     },
 
-    goalProgress: function () {
-      var g = Store.goal(), d = Store.day();
-      function part(done, target) {
-        return { done: done, target: target, pct: target ? Math.min(100, Math.round((done / target) * 100)) : 100 };
-      }
-      var cards = part(d.cards, g.cards), quiz = part(d.quiz, g.quiz);
-      return {
-        cards: cards, quiz: quiz,
-        pct: Math.round((cards.pct + quiz.pct) / 2),
-        done: cards.pct >= 100 && quiz.pct >= 100
-      };
-    },
-
     dayTotal: function (key) {
       var d = Store.day(key);
-      return d.cards + d.quiz + d.sims + d.cases;
+      /* l'ecoute compte comme du travail : elle n'installe rien dans les
+         boites, mais une journee passee a reviser en marchant n'est pas
+         une journee vide */
+      return d.cards + d.quiz + d.sims + d.cases + (d.ecoute || 0);
     },
 
     /* série de jours consécutifs travaillés ; la journée en cours ne casse
@@ -292,7 +302,7 @@
         var d = new Date(now - i * DAY);
         var key = Store.dayKey(d);
         var day = Store.day(key);
-        var total = day.cards + day.quiz + day.sims + day.cases;
+        var total = day.cards + day.quiz + day.sims + day.cases + (day.ecoute || 0);
         out.push({
           key: key, date: d, total: total, cards: day.cards, quiz: day.quiz, sims: day.sims, cases: day.cases,
           level: total === 0 ? 0 : total < 5 ? 1 : total < 15 ? 2 : total < 30 ? 3 : 4
@@ -311,7 +321,59 @@
       if (!s.planDone) s.planDone = {};
       if (!s.recite) s.recite = {};
       if (!s.reciteLog) s.reciteLog = {};
+      if (!s.notes) s.notes = {};
+      if (!s.corrections) s.corrections = {};
       return s;
+    },
+
+    /* Notes de l'etudiant sur une UE : ce que le formateur a insiste,
+       une formule dite en cours, un point a reprendre. C'est la seule
+       partie d'une fiche que l'application n'ecrit pas — donc celle
+       qu'il ne faut jamais perdre : elle est exportee et imprimee
+       avec le reste. Renvoie '' quand il n'y a rien. */
+    ueNote: function (key, value) {
+      var s = Store.studies();
+      if (value === undefined) return (s.notes[key] && s.notes[key].t) || '';
+      var t = String(value == null ? '' : value);
+      if (t.trim()) s.notes[key] = { t: t, at: Date.now() };
+      else delete s.notes[key];
+      save();
+      return t;
+    },
+
+    /* --- Corrections de l'étudiant, partie de cours par partie de cours ---
+       Le contenu des fiches n'est adossé à aucune source citée : il vient de
+       ce que l'application sait, pas d'un référentiel qu'on pourrait aller
+       vérifier. Quand le cours du formateur dit autre chose, c'est LUI qui a
+       raison — et l'étudiant doit pouvoir l'écrire une fois pour toutes,
+       plutôt que de se rappeler à chaque révision « attention, ici c'est
+       faux ». Une correction prime ensuite partout : sur la fiche, dans le
+       répétiteur, à l'impression. */
+    correction: function (code, i, value) {
+      var s = Store.studies(), k = code + ':' + i;
+      if (value === undefined) return (s.corrections[k] && s.corrections[k].t) || '';
+      var t = String(value == null ? '' : value);
+      if (t.trim()) s.corrections[k] = { t: t, at: Date.now() };
+      else delete s.corrections[k];
+      save();
+      return t;
+    },
+
+    correctionAt: function (code, i) {
+      var c = Store.studies().corrections[code + ':' + i];
+      return c ? c.at : null;
+    },
+
+    /* combien de parties d'une UE ont été corrigées */
+    correctionsDe: function (code) {
+      var s = Store.studies().corrections, n = 0;
+      Object.keys(s).forEach(function (k) { if (k.indexOf(code + ':') === 0) n++; });
+      return n;
+    },
+
+    ueNoteAt: function (key) {
+      var n = Store.studies().notes[key];
+      return n ? n.at : null;
     },
 
     /* Derniere recitation d'une UE : { pct, n, at }.
@@ -361,7 +423,7 @@
       var qids = Object.keys(state.quiz);
       var seen = 0, ok = 0;
       qids.forEach(function (id) { seen += state.quiz[id].seen; ok += state.quiz[id].ok; });
-      var simIds = Object.keys(state.scores);
+      var simIds = Store.scoredIds();
       var simAvg = 0;
       if (simIds.length) {
         simAvg = Math.round(simIds.reduce(function (a, id) { return a + (state.scores[id].avg || 0); }, 0) / simIds.length);

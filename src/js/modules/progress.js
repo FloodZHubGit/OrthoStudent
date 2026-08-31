@@ -20,8 +20,13 @@
     return g;
   }
 
+  function semYear(id) {
+    var sem = (window.CURRICULUM || []).filter(function (x) { return x.id === id; })[0];
+    return sem ? sem.year : 1;
+  }
+
   M.progress = {
-    id: 'progress', title: 'Ma progression', icon: '📈', group: 'Révision',
+    id: 'progress', title: 'Ma progression', icon: '📈', group: 'Mon travail',
     desc: 'Scores, historique, points forts et points faibles',
     keywords: 'progression score statistique historique bilan',
     render: function () {
@@ -31,11 +36,14 @@
       /* --- courbe des 30 dernières activités notées --- */
       var series = st.log.filter(function (l) { return typeof l.s === 'number'; }).slice(0, 30).reverse().map(function (l) { return l.s; });
 
-      /* --- modules --- */
-      var rows = Object.keys(M).filter(function (id) { return Store.score(id); }).map(function (id) {
+      /* --- exercices notés ---
+         `Store.scoredIds()` écarte les notes des modules retirés, et
+         `App.scoredLabel` nomme aussi ce qui n'est pas un module (les cas
+         d'application d'une UE, qui manquaient jusqu'ici à ce tableau). */
+      var rows = Store.scoredIds().filter(function (id) { return App.scoredLabel(id); }).map(function (id) {
         var sc = Store.score(id);
         return [
-          (M[id].icon || '') + ' ' + M[id].title,
+          App.scoredLabel(id),
           sc.attempts, sc.best + ' %', sc.avg + ' %', sc.last + ' %',
           el('div', { style: { minWidth: '110px' } }, UI.bar(sc.avg, sc.avg >= 70 ? 'var(--green)' : sc.avg >= 45 ? 'var(--amber)' : 'var(--red)'))
         ];
@@ -63,18 +71,20 @@
           r ? new Date(r.at).toLocaleDateString('fr-FR') : '—'];
       });
 
-      var weakest = catRows.length ? catRows[0][0] : null;
+      /* Un « thème le plus fragile » à 79 % n'est pas fragile : l'avertissement
+         ne se déclenche que s'il y a vraiment quelque chose à reprendre. */
+      var weakest = catRows.length && parseInt(catRows[0][2], 10) < 65 ? catRows[0][0] : null;
 
       return UI.page({
-        crumb: 'Révision',
+        crumb: 'Mon travail',
         title: 'Ma progression',
         subtitle: 'Tout est enregistré localement sur cet ordinateur. Menu <b>Fichier</b> pour exporter ou importer.'
       }, [
         el('div', { class: 'grid g4', style: { marginBottom: '16px' } }, [
-          UI.stat(stats.simAvg + ' %', 'Moyenne simulateurs'),
+          UI.stat(stats.simAvg + ' %', 'Moyenne des exercices'),
           UI.stat(stats.quizRate + ' %', 'Réussite QCM'),
           UI.stat(stats.cardsMastered + '/' + Cards.all().length, 'Fiches mémorisées'),
-          UI.stat(stats.casesDone + '/' + CASES.length, 'Cas cliniques')
+          UI.stat(stats.casesDone + '/' + CASES.length, 'Cas rédigés traités')
         ]),
 
         (function () {
@@ -123,8 +133,8 @@
         weakest ? UI.note('Votre thème le plus fragile est actuellement <b>' + weakest + '</b>. ' +
           'Lancez une série de QCM ciblée ou relisez le chapitre correspondant.', 'warn') : null,
 
-        rows.length ? UI.card('Simulateurs', UI.table(['Module', 'Essais', 'Meilleur', 'Moyenne', 'Dernier', ''], rows, { numeric: [1, 2, 3, 4] }))
-          : UI.card('Simulateurs', el('p', { class: 'muted', text: 'Aucun simulateur utilisé pour l’instant.' })),
+        rows.length ? UI.card('Exercices notés', UI.table(['Exercice', 'Essais', 'Meilleur', 'Moyenne', 'Dernier', ''], rows, { numeric: [1, 2, 3, 4] }))
+          : UI.card('Exercices notés', el('p', { class: 'muted', text: 'Aucun exercice noté pour l’instant.' })),
 
         catRows.length ? UI.card('QCM par thème (du plus fragile au plus solide)',
           UI.table(['Thème', 'Questions vues', 'Réussite', ''], catRows, { numeric: [1, 2] })) : null,
@@ -158,7 +168,36 @@
           }).concat(st.log.length ? [] : [el('p', { class: 'muted', text: 'Journal vide.' })])
         )),
 
+        /* Les réglages vivent avec les données qu'ils pilotent : le semestre
+           décide de la préparation affichée juste au-dessus, l'objectif
+           quotidien décide de la régularité. Ils étaient au bas de l'accueil,
+           où personne ne descendait. */
+        UI.card('Votre profil', [
+          el('div', { class: 'grid g3' }, [
+            UI.field('Prénom',
+              (function () {
+                var i = el('input', { type: 'text', class: 'inp', value: st.profile.name, placeholder: 'Votre prénom' });
+                i.addEventListener('input', function () { st.profile.name = i.value; Store.save(); });
+                return i;
+              })()),
+            UI.field('Semestre en cours',
+              UI.select((window.CURRICULUM || []).map(function (sem) { return { value: sem.id, label: sem.label + ' — année ' + sem.year }; })
+                .concat([{ value: '', label: 'Non précisé' }]), st.profile.semester || '', function (v) {
+                  st.profile.semester = v || null;
+                  st.profile.year = v ? 'L' + semYear(v) : st.profile.year;
+                  Store.save();
+                  App.refreshNav();
+                  App.go('progress');
+                })),
+            UI.field('Distance d’examen par défaut',
+              UI.select([{ value: 5, label: '5 mètres' }, { value: 4, label: '4 mètres' }, { value: 6, label: '6 mètres' }, { value: 3, label: '3 mètres' }],
+                Store.setting('testDistance'), function (v) { Store.setting('testDistance', parseFloat(v)); }))
+          ])
+        ]),
+
         UI.card('Gestion des données', [
+          el('p', { class: 'mt0 muted small',
+            text: 'Tout est enregistré sur cet ordinateur, sans compte ni envoi sur un serveur. Exportez avant de changer de machine.' }),
           el('div', { class: 'btn-row' }, [
             UI.btn('Exporter ma progression', function () { App.exportData(); }, 'primary'),
             UI.btn('Importer', function () { App.importData(); }),

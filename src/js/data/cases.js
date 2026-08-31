@@ -3,8 +3,9 @@
    ------------------------------------------------------------
    Chaque cas décrit :
      - l'anamnèse (dialogue),
-     - les paramètres de simulation transmis aux simulateurs
-       interactifs (phoroptère, cover test, fond d'œil…),
+     - `sim` : les valeurs cliniques chiffrées du patient (acuités, angles,
+       réfraction, PPC…), dont core/reading.js tire les questions
+       d'interprétation — elles suivent donc le dossier,
      - le résultat de chaque examen,
      - la pertinence de chaque examen (scoring),
      - le diagnostic et la conduite à tenir attendus.
@@ -30,7 +31,7 @@ window.CASES = [
   sim: {
     acuity: { odFar: 1.0, osFar: 1.0, odNear: 1.0, osNear: 1.0 },
     refraction: { od: { sph: 0, cyl: 0, axis: 0 }, os: { sph: 0.25, cyl: 0, axis: 0 } },
-    covertest: { farH: -2, farV: 0, nearH: -14, nearV: 0, manifest: false, dominant: 'od' },
+    covertest: { farH: 2, farV: 0, nearH: 14, nearV: 0, manifest: false, dominant: 'od' },
     ppc: { breakCm: 18, recoveryCm: 24 },
     fundus: { od: 'normal', os: 'normal' },
     motility: null, worth: 'fusion', bagolini: 'crn', stereo: 60,
@@ -211,7 +212,7 @@ window.CASES = [
   sim: {
     acuity: { odFar: 1.0, osFar: 1.0, odNear: 1.0, osNear: 1.0 },
     refraction: { od: { sph: -1.25, cyl: 0, axis: 0 }, os: { sph: -1.5, cyl: -0.25, axis: 175 } },
-    covertest: { farH: 0, farV: 6, nearH: -4, nearV: 8, manifest: true, dominant: 'os',
+    covertest: { farH: 0, farV: 6, nearH: 4, nearV: 8, manifest: true, dominant: 'os',
                  incomitance: { axis: 'v', levo: 12, dextro: 2, tiltRight: 14, tiltLeft: 2 } },
     ppc: { breakCm: 7, recoveryCm: 10 },
     fundus: { od: 'normal', os: 'normal' },
@@ -272,7 +273,7 @@ window.CASES = [
   sim: {
     acuity: { odFar: 0.63, osFar: 0.1, odNear: 0.5, osNear: 0.06 },
     refraction: { od: { sph: 2.0, cyl: -0.75, axis: 95 }, os: { sph: 2.25, cyl: -1.0, axis: 85 } },
-    covertest: { farH: 0, farV: 0, nearH: -2, nearV: 0, manifest: false, dominant: 'od' },
+    covertest: { farH: 0, farV: 0, nearH: 2, nearV: 0, manifest: false, dominant: 'od' },
     fundus: { od: 'drusen', os: 'dmla' },
     fields: { od: 'normal', os: 'central' },
     amsler: 'meta', ppc: { breakCm: 10, recoveryCm: 14 },
@@ -390,7 +391,7 @@ window.CASES = [
   sim: {
     acuity: { odFar: 0.2, osFar: 0.16, odNear: 1.0, osNear: 1.0 },
     refraction: { od: { sph: -2.25, cyl: -0.75, axis: 170 }, os: { sph: -2.75, cyl: -1.0, axis: 15 } },
-    covertest: { farH: -1, farV: 0, nearH: -8, nearV: 0, manifest: false, dominant: 'od' },
+    covertest: { farH: 1, farV: 0, nearH: 8, nearV: 0, manifest: false, dominant: 'od' },
     ppc: { breakCm: 9, recoveryCm: 12 },
     fundus: { od: 'normal', os: 'normal' },
     motility: null, worth: 'fusion', bagolini: 'crn', stereo: 30,
@@ -451,7 +452,7 @@ window.CASES = [
   sim: {
     acuity: { odFar: 1.0, osFar: 0.8, odNear: 1.0, osNear: 0.8 },
     refraction: { od: { sph: -6.0, cyl: -0.5, axis: 175 }, os: { sph: -6.5, cyl: -0.75, axis: 5 } },
-    covertest: { farH: -4, farV: 0, nearH: -6, nearV: 0, manifest: false, dominant: 'od' },
+    covertest: { farH: 4, farV: 0, nearH: 6, nearV: 0, manifest: false, dominant: 'od' },
     fundus: { od: 'glaucome', os: 'glaucome_avance' },
     fields: { od: 'bjerrum', os: 'altitudinal' }, ppc: { breakCm: 9, recoveryCm: 12 },
     motility: null, worth: 'fusion', bagolini: 'crn', stereo: 60, colorvision: 'normal'
@@ -569,7 +570,7 @@ window.CASES = [
   sim: {
     acuity: { odFar: 1.0, osFar: 1.0, odNear: 0.32, osNear: 0.32 },
     refraction: { od: { sph: 0.75, cyl: -0.25, axis: 90 }, os: { sph: 0.75, cyl: 0, axis: 0 } },
-    covertest: { farH: -1, farV: 0, nearH: -3, nearV: 0, manifest: false, dominant: 'od' },
+    covertest: { farH: 1, farV: 0, nearH: 3, nearV: 0, manifest: false, dominant: 'od' },
     ppc: { breakCm: 8, recoveryCm: 11 },
     fundus: { od: 'normal', os: 'normal' },
     motility: null, worth: 'fusion', bagolini: 'crn', stereo: 40, colorvision: 'normal'

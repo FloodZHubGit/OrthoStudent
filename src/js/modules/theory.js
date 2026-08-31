@@ -7,7 +7,7 @@
   var el = UI.el;
 
   M.theory = {
-    id: 'theory', title: 'Cours & fiches', icon: '📚', group: 'Savoir',
+    id: 'theory', title: 'Cours & fiches', icon: '📚', group: 'Réviser',
     desc: 'Anatomie, oculomotricité, vision binoculaire, réfraction, pathologies',
     keywords: 'cours theorie anatomie physiologie pathologie strabisme refraction',
     render: function (ctx) {
@@ -79,7 +79,7 @@
       draw(current);
 
       return UI.page({
-        crumb: 'Savoir',
+        crumb: 'Réviser',
         title: 'Cours & fiches de synthèse',
         subtitle: 'Le socle théorique organisé par grands chapitres. Cliquez sur un titre pour déplier la fiche ; le texte est sélectionnable et copiable.'
       }, [nav, body]);

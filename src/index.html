@@ -53,7 +53,7 @@
   <div class="modal-panel" tabindex="-1">
     <div class="modal-head">
       <div>
-        <div class="modal-title" id="modalTitle">Simulateur</div>
+        <div class="modal-title" id="modalTitle">Module</div>
         <div class="modal-sub" id="modalSub"></div>
       </div>
       <button class="modal-close" id="modalClose" title="Fermer (Échap)">✕</button>
@@ -64,22 +64,14 @@
 
 <div id="toast"></div>
 
-<!-- Filtres SVG globaux (simulation optique) -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <defs>
-    <filter id="fx-astig" x="-60%" y="-60%" width="220%" height="220%" color-interpolation-filters="sRGB">
-      <feGaussianBlur id="fx-astig-blur" stdDeviation="0 0" />
-    </filter>
-    <filter id="fx-astig2" x="-60%" y="-60%" width="220%" height="220%" color-interpolation-filters="sRGB">
-      <feGaussianBlur id="fx-astig2-blur" stdDeviation="0 0" />
-    </filter>
-  </defs>
-</svg>
-
 <!-- Noyau -->
 <script src="js/core/store.js"></script>
 <script src="js/core/ui.js"></script>
+<script src="js/core/text.js"></script>
+<script src="js/core/voix.js"></script>
 <script src="js/core/optics.js"></script>
+<script src="js/core/drill.js"></script>
+<script src="js/core/reading.js"></script>
 
 <!-- Données -->
 <script src="js/data/theory.js"></script>
@@ -93,11 +85,18 @@
 <script src="js/data/ueguide.js"></script>
 <script src="js/data/ueguide2.js"></script>
 <script src="js/data/uexpand.js"></script>
+<script src="js/data/uecours.js"></script>
 <script src="js/data/uedeep.js"></script>
 <script src="js/data/uedeep2.js"></script>
+<script src="js/data/uecas.js"></script>
+<script src="js/data/uecas2.js"></script>
 <script src="js/data/casegen.js"></script>
+<script src="js/data/edt.js"></script>
 <script src="js/core/cards.js"></script>
 <script src="js/core/uebank.js"></script>
+<script src="js/core/uefigs.js"></script>
+<script src="js/core/repet.js"></script>
+<script src="js/core/ia.js"></script>
 
 <!-- Modules -->
 <script src="js/modules/home.js"></script>
@@ -105,25 +104,18 @@
 <script src="js/modules/studies.js"></script>
 <script src="js/modules/anatomy.js"></script>
 <script src="js/modules/converters.js"></script>
-<script src="js/modules/phoropter.js"></script>
-<script src="js/modules/skiascopy.js"></script>
-<script src="js/modules/acuity.js"></script>
-<script src="js/modules/covertest.js"></script>
-<script src="js/modules/prism.js"></script>
-<script src="js/modules/motility.js"></script>
-<script src="js/modules/lancaster.js"></script>
-<script src="js/modules/binocular.js"></script>
-<script src="js/modules/ppc.js"></script>
-<script src="js/modules/fundus.js"></script>
-<script src="js/modules/colorvision.js"></script>
-<script src="js/modules/fields.js"></script>
 <script src="js/modules/patient.js"></script>
+<script src="js/modules/reading.js"></script>
 <script src="js/modules/rehab.js"></script>
+<script src="js/modules/edt.js"></script>
+<script src="js/modules/session.js"></script>
 <script src="js/modules/quiz.js"></script>
 <script src="js/modules/exam.js"></script>
 <script src="js/modules/flashcards.js"></script>
 <script src="js/modules/glossary.js"></script>
 <script src="js/modules/progress.js"></script>
+<script src="js/modules/chat.js"></script>
+<script src="js/modules/revise.js"></script>
 <script src="js/modules/help.js"></script>
 
 <!-- Boot -->

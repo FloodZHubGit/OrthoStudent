@@ -165,7 +165,7 @@ UE3: {
     'Ordonnance à rédiger et à transposer',
     'Indications comparées des cycloplégiques'
   ],
-  methode: 'Alternez le simulateur de skiascopie et le phoroptère jusqu’à dépasser 80 % de façon régulière, et notez l’erreur systématique qui revient : c’est toujours la même.'
+  methode: 'Enchaînez les lectures de bilan portant sur la réfraction jusqu’à dépasser 80 % de façon régulière, et notez l’erreur systématique qui revient : c’est toujours la même.'
 },
 
 UE4: {
@@ -503,7 +503,7 @@ UE16: {
     'Reconnaissance de fond d’œil pathologique',
     'Signes oculaires du diabète et de l’HTA'
   ],
-  methode: 'Le simulateur de fond d’œil contient les treize tableaux classiques : entraînez-vous en mode diagnostic jusqu’à reconnaître chaque image en moins de cinq secondes.'
+  methode: 'Les comptes rendus de fond d’œil reprennent les treize tableaux classiques : lisez-en un par jour jusqu’à nommer le diagnostic avant d’avoir fini le paragraphe.'
 },
 
 /* ============================ SEMESTRE 2 ============================ */

@@ -168,19 +168,6 @@
     // Puissance necessaire en basse vision (Kestenbaum)
     kestenbaum: function (decAcuity) { return r2(1 / decAcuity, 2); },
 
-    // Simule le flou retinien induit par un defaut de sphere (angle en minutes d'arc)
-    // theta(rad) ~ pupille(mm) * D / 1000
-    blurArcmin: function (defocusD, pupilMm) {
-      return Math.abs(defocusD) * (pupilMm || 4) * 3.4377;
-    },
-
-    // Estimation de l'acuite atteinte avec un flou donne (modele simplifie)
-    acuityFromDefocus: function (defocusD, pupilMm) {
-      var b = Refraction.blurArcmin(defocusD, pupilMm);   // minutes d'arc
-      var mar = Math.max(1, Math.sqrt(1 + b * b * 0.55)); // MAR effectif
-      return r2(1 / mar, 2);
-    },
-
     // Cercle de moindre diffusion / intervalle de Sturm
     sturm: function (sph, cyl) {
       var a = sph, b = sph + cyl;
@@ -241,14 +228,68 @@
   /* ---------- Motricite ---------- */
 
   var Motility = {
+    /* `act` liste les actions du muscle dans l'ordre de puissance :
+       [principale, secondaire, tertiaire]. C'est cette liste qui alimente
+       le schema des actions et la matrice muscle x fonction. */
     muscles: [
-      { id: 'DL', name: 'Droit latéral', nerve: 'VI (abducens)', primary: 'Abduction', secondary: '—', tertiary: '—', origin: 'Anneau de Zinn', insertion: '6,9 mm du limbe', arc: 'Spirale de Tillaux' },
-      { id: 'DM', name: 'Droit médial', nerve: 'III (inférieure)', primary: 'Adduction', secondary: '—', tertiary: '—', origin: 'Anneau de Zinn', insertion: '5,5 mm du limbe', arc: 'Insertion la plus antérieure' },
-      { id: 'DS', name: 'Droit supérieur', nerve: 'III (supérieure)', primary: 'Élévation', secondary: 'Intorsion', tertiary: 'Adduction', origin: 'Anneau de Zinn', insertion: '7,7 mm du limbe', arc: 'Action max en abduction 23°' },
-      { id: 'DI', name: 'Droit inférieur', nerve: 'III (inférieure)', primary: 'Abaissement', secondary: 'Extorsion', tertiary: 'Adduction', origin: 'Anneau de Zinn', insertion: '6,5 mm du limbe', arc: 'Action max en abduction 23°' },
-      { id: 'OS', name: 'Oblique supérieur (grand oblique)', nerve: 'IV (trochléaire)', primary: 'Intorsion', secondary: 'Abaissement', tertiary: 'Abduction', origin: 'Apex orbitaire → trochlée', insertion: 'Quadrant supéro-temporal postérieur', arc: 'Action abaissante max en adduction 51°' },
-      { id: 'OI', name: 'Oblique inférieur (petit oblique)', nerve: 'III (inférieure)', primary: 'Extorsion', secondary: 'Élévation', tertiary: 'Abduction', origin: 'Os maxillaire, angle inféro-nasal', insertion: 'Quadrant inféro-temporal postérieur', arc: 'Action élévatrice max en adduction 51°' }
+      { id: 'DL', short: 'Droit latéral', name: 'Droit latéral', nerve: 'VI (abducens)', primary: 'Abduction', secondary: '—', tertiary: '—', act: ['ABD'], origin: 'Anneau de Zinn', insertion: '6,9 mm du limbe', arc: 'Spirale de Tillaux', plane: 'Plan du muscle confondu avec l’axe visuel', gaze: 'Regard en dehors', why: 'Son plan d’action est celui du plan horizontal : quelle que soit la position du globe, il ne fait qu’abduire. Muscle le plus simple à tester.' },
+      { id: 'DM', short: 'Droit médial', name: 'Droit médial', nerve: 'III (inférieure)', primary: 'Adduction', secondary: '—', tertiary: '—', act: ['ADD'], origin: 'Anneau de Zinn', insertion: '5,5 mm du limbe', arc: 'Insertion la plus antérieure', plane: 'Plan du muscle confondu avec l’axe visuel', gaze: 'Regard en dedans', why: 'Muscle le plus puissant de l’orbite et le seul adducteur pur. Aucune composante verticale ni torsionnelle.' },
+      { id: 'DS', short: 'Droit supérieur', name: 'Droit supérieur', nerve: 'III (supérieure)', primary: 'Élévation', secondary: 'Intorsion', tertiary: 'Adduction', act: ['ELE', 'INT', 'ADD'], origin: 'Anneau de Zinn', insertion: '7,7 mm du limbe', arc: 'Action max en abduction 23°', plane: '23° avec l’axe visuel', gaze: 'Regard en haut et en dehors', why: 'Le plan du muscle fait 23° avec l’axe visuel. En <b>abduction de 23°</b> les deux plans se confondent : le muscle est purement élévateur. En adduction au contraire, sa composante verticale s’efface et il devient surtout intorteur.' },
+      { id: 'DI', short: 'Droit inférieur', name: 'Droit inférieur', nerve: 'III (inférieure)', primary: 'Abaissement', secondary: 'Extorsion', tertiary: 'Adduction', act: ['ABA', 'EXT', 'ADD'], origin: 'Anneau de Zinn', insertion: '6,5 mm du limbe', arc: 'Action max en abduction 23°', plane: '23° avec l’axe visuel', gaze: 'Regard en bas et en dehors', why: 'Image en miroir du droit supérieur : abaisseur pur en <b>abduction de 23°</b>, surtout extorteur en adduction.' },
+      { id: 'OS', short: 'Oblique supérieur', name: 'Oblique supérieur (grand oblique)', nerve: 'IV (trochléaire)', primary: 'Intorsion', secondary: 'Abaissement', tertiary: 'Abduction', act: ['INT', 'ABA', 'ABD'], origin: 'Apex orbitaire → trochlée', insertion: 'Quadrant supéro-temporal postérieur', arc: 'Action abaissante max en adduction 51°', plane: '51° avec l’axe visuel', gaze: 'Regard en bas et en dedans', why: 'Le tendon réfléchi par la trochlée tire le globe vers l’avant et le dedans : son plan fait 51° avec l’axe visuel. En <b>adduction de 51°</b> il est purement abaisseur ; en abduction il n’est plus qu’intorteur.' },
+      { id: 'OI', short: 'Oblique inférieur', name: 'Oblique inférieur (petit oblique)', nerve: 'III (inférieure)', primary: 'Extorsion', secondary: 'Élévation', tertiary: 'Abduction', act: ['EXT', 'ELE', 'ABD'], origin: 'Os maxillaire, angle inféro-nasal', insertion: 'Quadrant inféro-temporal postérieur', arc: 'Action élévatrice max en adduction 51°', plane: '51° avec l’axe visuel', gaze: 'Regard en haut et en dedans', why: 'Seul muscle à ne pas naître de l’apex orbitaire. Purement élévateur en <b>adduction de 51°</b>, purement extorteur en abduction.' }
     ],
+
+    /* Les six actions élémentaires du globe : deux sens de rotation
+       par axe de Fick. `opposite` donne l'action antagoniste. */
+    actions: [
+      { id: 'ELE', name: 'Élévation', short: 'Élév.', hint: 'la cornée monte', opposite: 'ABA',
+        axis: 'Axe transversal X', plane: 'Plan sagittal',
+        txt: 'Rotation du globe vers le haut (sursumduction). Deux élévateurs, dont l’efficacité dépend de la position horizontale du globe.' },
+      { id: 'ABA', name: 'Abaissement', short: 'Abaiss.', hint: 'la cornée descend', opposite: 'ELE',
+        axis: 'Axe transversal X', plane: 'Plan sagittal',
+        txt: 'Rotation du globe vers le bas (déorsumduction). Deux abaisseurs, dont l’efficacité dépend de la position horizontale du globe.' },
+      { id: 'ADD', name: 'Adduction', short: 'Add.', hint: 'la cornée va vers le nez', opposite: 'ABD',
+        axis: 'Axe vertical Z', plane: 'Plan horizontal',
+        txt: 'Rotation du globe vers le nez. Un adducteur pur (droit médial) et deux adducteurs accessoires (les deux droits verticaux).' },
+      { id: 'ABD', name: 'Abduction', short: 'Abd.', hint: 'la cornée va vers la tempe', opposite: 'ADD',
+        axis: 'Axe vertical Z', plane: 'Plan horizontal',
+        txt: 'Rotation du globe vers la tempe. Un abducteur pur (droit latéral) et deux abducteurs accessoires (les deux obliques).' },
+      { id: 'INT', name: 'Intorsion', short: 'Intors.', hint: 'le méridien de 12 h bascule vers le nez', opposite: 'EXT',
+        axis: 'Axe antéro-postérieur Y', plane: 'Plan frontal',
+        txt: 'Incyclotorsion : le pôle supérieur de la cornée roule vers le nez. Réflexe lors de l’inclinaison de la tête sur l’épaule du même côté.' },
+      { id: 'EXT', name: 'Extorsion', short: 'Extors.', hint: 'le méridien de 12 h bascule vers la tempe', opposite: 'INT',
+        axis: 'Axe antéro-postérieur Y', plane: 'Plan frontal',
+        txt: 'Excyclotorsion : le pôle supérieur de la cornée roule vers la tempe. Réflexe lors de l’inclinaison de la tête sur l’épaule opposée.' }
+    ],
+
+    muscle: function (id) {
+      var a = Motility.muscles;
+      for (var i = 0; i < a.length; i++) if (a[i].id === id) return a[i];
+      return null;
+    },
+    action: function (id) {
+      var a = Motility.actions;
+      for (var i = 0; i < a.length; i++) if (a[i].id === id) return a[i];
+      return null;
+    },
+
+    // Rang d'une action pour un muscle : 1 principale, 2 secondaire, 3 tertiaire, 0 absente
+    rank: function (muscleId, actionId) {
+      var m = Motility.muscle(muscleId);
+      return m ? m.act.indexOf(actionId) + 1 : 0;
+    },
+
+    // Muscles realisant une action, du plus puissant au plus accessoire
+    musclesFor: function (actionId) {
+      return Motility.muscles
+        .filter(function (m) { return m.act.indexOf(actionId) >= 0; })
+        .sort(function (a, b) { return a.act.indexOf(actionId) - b.act.indexOf(actionId); });
+    },
+
+    rankLabel: function (rank) {
+      return ['—', 'Action principale', 'Action secondaire', 'Action tertiaire'][rank] || '—';
+    },
 
     // Couples agonistes / antagonistes (loi de Sherrington) et synergistes controlateraux (loi de Hering)
     yokePairs: [
@@ -276,10 +317,6 @@
     if (v === null || v === undefined || isNaN(v)) return '—';
     return (v > 0 ? '+' : '') + v.toFixed(2);
   }
-  function formatDelta(v) {
-    if (v === null || v === undefined || isNaN(v)) return '—';
-    return Math.abs(v).toFixed(0) + 'Δ';
-  }
   function formatRx(sph, cyl, axis) {
     if (cyl === 0 || cyl === null || cyl === undefined) return formatDpt(sph) + ' sph';
     return formatDpt(sph) + ' (' + formatDpt(cyl) + ' à ' + axis + '°)';
@@ -292,9 +329,7 @@
     Binocular: Binocular,
     Motility: Motility,
     formatDpt: formatDpt,
-    formatDelta: formatDelta,
     formatRx: formatRx,
-    r2: r2,
-    DEG: DEG
+    r2: r2
   };
 })();

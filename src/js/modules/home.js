@@ -21,40 +21,39 @@
     ['Glaucome', 'L’acuité centrale reste longtemps normale : c’est le champ visuel qui parle en premier.']
   ];
 
+  /* Les quatre exercices qui produisent une note sur 100 : ce sont les seuls
+     dont un « meilleur score » veut dire quelque chose. `d` remplace la
+     description du module par ce qu'on y gagne, plus utile en vedette. */
   var FEATURED = [
-    { id: 'phoropter', ic: '🔭', t: 'Phoroptère virtuel', d: 'Réfraction subjective complète sur patient simulé' },
-    { id: 'covertest', ic: '👁', t: 'Cover test', d: 'Écran uni/alterné sur visage animé' },
-    { id: 'patient', ic: '🩺', t: 'Mode patient', d: 'Consultation complète, cas générés à l’infini' },
-    { id: 'fundus', ic: '🔴', t: 'Fond d’œil', d: 'Ophtalmoscope, 13 tableaux pathologiques' }
+    { id: 'reading', d: 'Un bilan complet à interpréter, tiré au sort' },
+    { id: 'patient', d: 'Consultation entière, cas générés à l’infini' },
+    { id: 'exam', d: 'Épreuve chronométrée à postes, notée' },
+    { id: 'rehab', d: 'Programme de rééducation, séance après séance' }
   ];
 
-  var QUICK = [
-    ['rehab', '🧑‍🏫', 'Rééducation', 'Programme et suivi séance après séance'],
-    ['exam', '⏱', 'Examen blanc', 'Épreuve chronométrée à postes, notée'],
-    ['skiascopy', '🔦', 'Skiascopie', 'Réfraction objective, ombres et neutralisation'],
-    ['prism', '🔺', 'Mesure au prisme', 'Barre de prismes, neutralisation'],
-    ['acuity', '🔠', 'Échelles d’acuité', 'Monoyer, Landolt, Parinaud calibrés'],
-    ['motility', '🔄', 'Motilité', '9 positions, muscle déficitaire'],
-    ['lancaster', '🟥', 'Lancaster', 'Relevé et schéma des deux yeux'],
-    ['binocular', '🔗', 'Vision binoculaire', 'Worth, Maddox, Bagolini, fusion'],
-    ['ppc', '🎯', 'PPC & convergence', 'Rupture, recouvrement, rééducation'],
-    ['colorvision', '🎨', 'Vision des couleurs', 'Planches et classement D15'],
-    ['fields', '🗺', 'Champ visuel', 'Périmétrie 24-2 et Amsler'],
-    ['converters', '🧮', 'Calculatrices', '11 outils de conversion clinique'],
-    ['theory', '📚', 'Cours & fiches', '7 chapitres, 30 fiches de synthèse'],
-    ['anatomy', '🫀', 'Anatomie', 'Coupe du globe et muscles cliquables'],
-    ['glossary', '📖', 'Glossaire', '50 termes du vocabulaire orthoptique']
-  ];
+  /* La grille « Tous les outils » est lue dans le registre des modules :
+     elle ne peut donc plus proposer un module retiré de l'application. */
+  /* La grille « Tous les outils » double exactement la barre latérale : elle
+     n'a d'intérêt que tant qu'on ne la connaît pas encore, avec la phrase qui
+     dit à quoi sert chaque entrée. Elle disparaît dès la première note. */
+  var QUICK_ORDER = ['studies', 'edt', 'revise', 'progress',
+    'reading', 'patient', 'rehab', 'converters', 'anatomy', 'glossary', 'help'];
 
-  function semYear(id) {
-    var sem = (window.CURRICULUM || []).filter(function (x) { return x.id === id; })[0];
-    return sem ? sem.year : 1;
+  /* Coupe au dernier mot entier avant la limite, plutôt qu'en plein milieu. */
+  function shorten(s, max) {
+    s = String(s || '');
+    if (s.length <= max) return s;
+    var cut = s.slice(0, max);
+    var space = cut.lastIndexOf(' ');
+    return (space > max * 0.6 ? cut.slice(0, space) : cut).replace(/[\s,;:’']+$/, '') + '…';
   }
 
   M.home = {
-    id: 'home', title: 'Accueil', icon: '🏠', group: 'Général',
-    desc: 'Tableau de bord, progression et accès rapide',
-    keywords: 'accueil dashboard progression tableau de bord',
+    id: 'home', title: 'Accueil', icon: '🏠', group: 'Mon travail',
+    desc: 'Ce qu’il y a à faire aujourd’hui : cours, séance du jour, semestre',
+    keywords: 'accueil dashboard seance du jour plan quotidien tableau de bord aujourd hui',
+    /* la séance du jour est rendue ici : ouvrir sa page doit allumer Accueil */
+    children: ['session'],
     render: function () {
       var st = Store.state;
       var stats = Store.stats();
@@ -63,80 +62,73 @@
       var name = st.profile.name ? ', ' + st.profile.name : '';
       var tip = TIPS[new Date().getDate() % TIPS.length];
       var due = Store.dueCards(Cards.all().map(function (c) { return c.id; })).length;
-      var simIds = Object.keys(st.scores);
-      var isNew = !simIds.length && !stats.quizSeen && !stats.casesDone;
+      var left = M.session && M.session.remaining ? M.session.remaining() : 0;
+      /* seuls les exercices encore présents comptent : le périmètre est
+         déclaré au démarrage par app.js */
+      var scoredIds = Store.scoredIds();
+      var isNew = !scoredIds.length && !stats.quizSeen && !stats.casesDone;
 
       /* ---------- Hero ---------- */
       var hero = el('div', { class: 'hero' }, [
         el('h1', { text: hello + name + ' 👋' }),
         el('p', {
           html: isNew
-            ? 'Bienvenue. <b>' + (Object.keys(M).length - 1) + ' modules</b> vous attendent : simulateurs d’examen, calculatrices cliniques, ' +
-              'cours et cas patients. Commencez par calibrer votre écran, puis lancez un simulateur.'
-            : 'Vous avez travaillé <b>' + simIds.length + ' simulateur' + (simIds.length > 1 ? 's' : '') + '</b>, répondu à <b>' +
+            ? 'Bienvenue. <b>' + (Object.keys(M).length - 1) + ' modules</b> vous attendent : bilans à interpréter, consultations, ' +
+              'calculatrices cliniques, cours et fiches. Le guide ci-dessous montre par où entrer.'
+            : 'Vous avez travaillé <b>' + scoredIds.length + ' exercice' + (scoredIds.length > 1 ? 's' : '') + '</b>, répondu à <b>' +
               stats.quizSeen + ' question' + (stats.quizSeen > 1 ? 's' : '') + '</b> et traité <b>' +
               (stats.casesDone + stats.casesGenerated) + ' patient' + ((stats.casesDone + stats.casesGenerated) > 1 ? 's' : '') + '</b>.' +
               (due ? ' <b>' + due + ' fiche' + (due > 1 ? 's' : '') + '</b> à réviser aujourd’hui.' : ' Aucune fiche en retard.')
         }),
+        /* Le plan du jour est juste en dessous : ces boutons servent à en
+           sortir, pas à y entrer. On y met donc ce qui n'est pas dans la
+           séance — un patient de plus, un examen blanc, une question. */
         el('div', { class: 'hero-actions' }, [
+          isNew ? UI.btn('🧭  Découvrir l’application', function () { App.go('help'); }, 'primary') : null,
+          isNew ? UI.btn('🩻  Lire un bilan', function () { App.go('reading'); }) : null,
+          /* « Je fais quoi, là ? » est la question la plus fréquente, et elle
+             se pose depuis l'accueil : le raccourci y reste en permanence. */
+          UI.btn('🎯  Je fais quoi, là ?', function () { App.go('help', { tab: 'routine' }); }),
           UI.btn('🩺  Consulter un patient inédit', function () {
             M.patient.startRandom(); App.go('patient');
-          }, 'primary'),
-          due ? UI.btn('🗂  Réviser ' + due + ' fiches', function () { App.go('flashcards'); }) : null,
+          }, isNew || left ? null : 'primary'),
           UI.btn('❓  QCM rapide', function () { App.go('quiz'); }),
-          isNew ? null : UI.btn('⏱  Examen blanc', function () { App.go('exam'); }),
-          isNew ? UI.btn('📐  Calibrer l’écran', function () { App.go('acuity'); }) : null
+          isNew ? null : UI.btn('⏱  Examen blanc', function () { App.go('exam'); })
         ].filter(Boolean))
       ]);
 
-      /* ---------- Métriques ---------- */
-      var metrics = el('div', { class: 'grid g4', style: { marginBottom: '22px' } }, [
-        UI.metric(stats.simAvg + ' %', 'Moyenne simulateurs', stats.simAvg,
-          stats.simAvg >= 70 ? 'var(--green)' : stats.simAvg >= 40 ? 'var(--amber)' : 'var(--accent)'),
-        UI.metric(stats.quizRate + ' %', 'Réussite QCM', stats.quizRate,
-          stats.quizRate >= 70 ? 'var(--green)' : 'var(--amber)'),
-        UI.metric(stats.cardsMastered + '/' + Cards.all().length, 'Fiches mémorisées',
-          Math.round(stats.cardsMastered / Cards.all().length * 100), 'var(--violet)'),
-        UI.metric((stats.casesDone + stats.casesGenerated) + '', 'Patients vus',
-          Math.min(100, (stats.casesDone / CASES.length) * 100), 'var(--blue)')
+      /* ---------- Première visite : la logique de l'application ---------- */
+      var welcome = !isNew ? null : el('div', { class: 'card', style: { display: 'flex', gap: '16px', alignItems: 'flex-start' } }, [
+        el('div', {
+          style: {
+            width: '40px', height: '40px', flex: 'none', borderRadius: '11px', display: 'grid',
+            placeItems: 'center', fontSize: '19px', background: 'var(--accent-soft)'
+          }, text: '🧭'
+        }),
+        el('div', { style: { minWidth: 0 } }, [
+          el('div', { style: { fontWeight: '650' }, text: 'Première visite ? Trois minutes suffisent' }),
+          el('p', {
+            class: 'muted small', style: { margin: '4px 0 0' },
+            html: 'L’application réunit trois choses : des <b>bilans à interpréter</b> sur des patients tirés au sort, ' +
+              'le <b>cours</b> qui va avec, et un <b>carnet de révision</b> calé sur vos UE. ' +
+              'Le guide explique par où entrer, ce que fait chaque famille de modules et à quel moment l’ouvrir.'
+          }),
+          el('div', { class: 'btn-row mt16' }, [
+            UI.btn('🧭  Lire le guide', function () { App.go('help'); }, 'primary'),
+            UI.btn('🩻  Lire un bilan', function () { App.go('reading'); }),
+            UI.btn('🎓  Choisir mon semestre', function () { App.go('studies'); })
+          ])
+        ])
       ]);
 
-      /* ---------- Objectif du jour et série ---------- */
-      var gp = Store.goalProgress();
-      var streak = Store.streak();
-      var flame = streak.current >= 7 ? '🔥' : streak.current >= 3 ? '✨' : '🌱';
-
-      function goalPart(label, p, color, action, actionLabel) {
-        return el('div', { class: 'goal-part' }, [
-          UI.ring(p.pct, { size: 54, width: 6, color: color, text: p.done + '/' + p.target, fontSize: 11 }),
-          el('div', { style: { minWidth: 0 } }, [
-            el('div', { class: 'gl', text: label }),
-            el('div', { class: 'gv', text: p.pct >= 100 ? 'Objectif atteint ✓' : (p.target - p.done) + ' restant' + (p.target - p.done > 1 ? 's' : '') }),
-            p.pct >= 100 ? null : UI.btn(actionLabel, action, 'sm')
-          ].filter(Boolean))
-        ]);
-      }
-
-      var goalCard = UI.card('Objectif du jour', [
-        el('div', { class: 'goal-row' }, [
-          goalPart('Fiches revues', gp.cards, 'var(--violet)', function () { App.go('flashcards'); }, 'Réviser'),
-          goalPart('QCM répondus', gp.quiz, 'var(--accent)', function () { App.go('quiz'); }, 'Répondre'),
-          el('div', { class: 'goal-part' }, [
-            el('div', { class: 'streak-mark', text: flame }),
-            el('div', {}, [
-              el('div', { class: 'gl', text: 'Série en cours' }),
-              el('div', { class: 'gv', html: '<b>' + streak.current + ' jour' + (streak.current > 1 ? 's' : '') + '</b> d’affilée' }),
-              el('div', { class: 'gs', text: 'Record : ' + streak.best + ' · ' + streak.activeDays + ' jours travaillés' })
-            ])
-          ])
-        ]),
-        UI.heatmap(Store.activity(119), { cell: 12 }),
-        gp.done
-          ? UI.note('🎉 <b>Objectif du jour atteint.</b> Tout ce que vous ferez de plus est du bonus — et la série continue demain.')
-          : null
-      ].filter(Boolean), {
-        right: el('span', { class: 'muted small', text: 'Réglable dans « Ma progression »' })
-      });
+      /* ---------- La séance du jour, rendue ici ---------- */
+      /* « Que dois-je faire maintenant ? » n'a qu'une réponse : elle est
+         donc à un seul endroit. Le module « Séance du jour » garde sa page,
+         où il explique comment le plan est tiré, mais le plan lui-même vit
+         ici, sur la première page qu'on ouvre. */
+      var sessionPanel = M.session && M.session.panel
+        ? M.session.panel({ retour: 'home' })
+        : null;
 
       /* ---------- Votre semestre ---------- */
       var semCard = (function () {
@@ -178,7 +170,10 @@
               el('div', { class: 'streak-mark', text: '🎯' }),
               el('div', {}, [
                 el('div', { class: 'gl', text: 'À travailler en priorité' }),
-                el('div', { class: 'gv', text: prios.length ? prios[0].ue.code + ' — ' + prios[0].ue.title.slice(0, 34) : 'Tout est au vert' }),
+                /* `title` complet en infobulle : la coupe se fait au mot, et
+                   plus au 34ᵉ caractère — « l'amblyopie fon » n'aide personne */
+                el('div', { class: 'gv', title: prios.length ? prios[0].ue.title : '',
+                  text: prios.length ? prios[0].ue.code + ' — ' + shorten(prios[0].ue.title, 34) : 'Tout est au vert' }),
                 el('div', { class: 'gs', text: prios.length ? prios[0].ue.ects + ' ECTS · maîtrise ' + prios[0].pct + ' %' : 'Entretenez avec un examen blanc' })
               ])
             ])
@@ -191,6 +186,64 @@
             UI.btn('🎓 Mon plan de révision', function () { App.go('studies', { sem: sem.id }); }, 'primary')
           ])
         ].filter(Boolean), { right: UI.chip(sem.ues.length + ' UE · ' + sem.stage.ects + ' ECTS de stage') });
+      })();
+
+      /* ---------- Ce qui tombe aujourd'hui ---------- */
+      /* La seule information de l'accueil qui périme dans la journée : ce qu'on
+         a cours tout à l'heure, et l'UE qu'il faudrait avoir survolée avant.
+         Elle passe donc devant tout ce qui peut attendre demain. */
+      var edtCard = (function () {
+        var ap = M.edt && M.edt.apercu ? M.edt.apercu() : null;
+        if (!ap || !ap.next) return null;
+
+        var liste = ap.restant.length ? ap.restant : ap.demain.length ? ap.demain : [ap.next];
+        var quand = ap.restant.length ? 'Aujourd’hui'
+          : ap.demain.length ? 'Demain'
+          : ap.next.jour.nom.charAt(0).toUpperCase() + ap.next.jour.nom.slice(1);
+
+        var rows = liste.slice(0, 4).map(function (s) {
+          var m = s.maitrise;
+          return el('div', { class: 'edt-row' }, [
+            el('span', { class: 'edt-bar', style: { background: 'var(--accent)' } }),
+            el('div', { class: 'edt-when' }, [
+              el('div', { class: 'edt-h', text: s.event.s }),
+              el('div', { class: 'edt-e', text: s.event.e })
+            ]),
+            el('div', { class: 'edt-what' }, [
+              el('div', { class: 'edt-t' }, [
+                el('span', { class: 'edt-type', text: s.event.t }),
+                s.event.ue ? el('b', { text: ' · ' + s.event.ue }) : null
+              ].filter(Boolean)),
+              el('div', { class: 'edt-ti', text: s.titre }),
+              s.event.salle ? el('div', { class: 'edt-m', text: s.event.salle }) : null
+            ].filter(Boolean)),
+            el('div', { class: 'edt-act' }, [
+              m && m.pct !== null ? el('span', { class: 'chip static', style: { color: m.color, borderColor: m.color }, text: m.pct + ' %' }) : null,
+              s.ouvrir ? UI.btn('Fiche', s.ouvrir, 'sm') : null
+            ].filter(Boolean))
+          ]);
+        });
+
+        /* Le conseil n'a de sens que s'il y a de quoi préparer : une UE
+           identifiée, et une maîtrise qui laisse à désirer. */
+        var faible = liste.filter(function (s) { return s.ue && s.maitrise && s.maitrise.pct !== null && s.maitrise.pct < 55; })[0]
+          || liste.filter(function (s) { return s.ue && (!s.maitrise || s.maitrise.pct === null); })[0];
+
+        return UI.card(quand + ' — ' + liste.length + ' séance' + (liste.length > 1 ? 's' : ''), [
+          el('div', {}, rows),
+          faible ? UI.note('À survoler avant : <b>' + faible.ue.code + ' — ' + faible.ue.title + '</b>' +
+            (faible.maitrise && faible.maitrise.pct !== null
+              ? ', que vous maîtrisez à ' + faible.maitrise.pct + ' %.'
+              : ', que vous n’avez jamais travaillée.') +
+            ' Trois minutes sur la fiche valent une heure de cours suivie.') : null,
+          el('div', { class: 'btn-row mt16' }, [
+            UI.btn('📅  Voir mon emploi du temps', function () { App.go('edt'); },
+              ap.restant.length ? 'primary' : null),
+            faible ? UI.btn('🎓  Ouvrir ' + faible.ue.code, faible.ouvrir) : null
+          ].filter(Boolean))
+        ].filter(Boolean), {
+          right: UI.chip(liste === ap.demain ? 'demain' : ap.restant.length ? 'à venir' : ap.next.jour.quand)
+        });
       })();
 
       /* ---------- Réflexe du jour ---------- */
@@ -207,12 +260,16 @@
         ])
       ]);
 
-      /* ---------- Simulateurs en vedette ---------- */
-      var featured = el('div', { class: 'grid g4' }, FEATURED.map(function (q) {
-        var sc = Store.score(q.id);
+      /* ---------- Les exercices notés, en vedette ---------- */
+      var featured = el('div', { class: 'grid g4' }, FEATURED.filter(function (q) { return M[q.id]; }).map(function (q) {
+        var mod = M[q.id];
+        /* le mode patient ne passe pas par `scores` : ses consultations sont
+           comptées à part, on affiche donc leur nombre plutôt qu'une note */
+        var done = q.id === 'patient' ? stats.casesDone + stats.casesGenerated : 0;
+        var sc = q.id === 'patient' ? null : Store.score(q.id);
         return el('div', { class: 'tool-card', onClick: function () { App.go(q.id); } }, [
-          el('div', { class: 'tc-ic', text: q.ic }),
-          el('h4', { text: q.t }),
+          el('div', { class: 'tc-ic', text: mod.icon || '•' }),
+          el('h4', { text: mod.title }),
           el('p', { text: q.d }),
           sc ? el('div', { style: { marginTop: '11px' } }, [
             el('div', { class: 'flex', style: { fontSize: '11px', color: 'var(--txt-3)', marginBottom: '5px' } }, [
@@ -221,87 +278,37 @@
               el('span', { text: sc.attempts + ' essai' + (sc.attempts > 1 ? 's' : '') })
             ]),
             UI.bar(sc.best)
-          ]) : el('div', { style: { marginTop: '11px', fontSize: '11px', color: 'var(--txt-3)' }, text: 'Jamais essayé' })
+          ]) : el('div', { style: { marginTop: '11px', fontSize: '11px', color: 'var(--txt-3)' },
+            text: done ? done + ' consultation' + (done > 1 ? 's' : '') + ' menée' + (done > 1 ? 's' : '') : 'Jamais essayé' })
         ]);
       }));
 
-      /* ---------- Progression détaillée ---------- */
-      var simRows = ['phoropter', 'skiascopy', 'covertest', 'prism', 'acuity', 'fundus', 'lancaster', 'motility', 'colorvision', 'binocular', 'ppc', 'fields']
-        .filter(function (id) { return Store.score(id); })
-        .map(function (id) {
-          var sc = Store.score(id);
-          return [
-            (M[id].icon || '') + '  ' + M[id].title,
-            sc.attempts, sc.best + ' %',
-            el('div', { style: { minWidth: '110px' } },
-              UI.bar(sc.avg, sc.avg >= 70 ? 'var(--green)' : sc.avg >= 40 ? 'var(--amber)' : 'var(--red)'))
-          ];
-        })
-        .sort(function (a, b) { return parseInt(b[2]) - parseInt(a[2]); });
-
-      var recent = st.log.slice(0, 7).map(function (l) {
-        var mod = M[l.m.split(':')[0]];
-        var d = new Date(l.t);
-        var today = new Date().toDateString() === d.toDateString();
-        return el('div', { class: 'log-line' }, [
-          el('span', { class: 't', text: today ? d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }) }),
-          el('b', { text: mod ? mod.title : (l.m.indexOf('gen:') === 0 || l.m.indexOf('patient') === 0 ? 'Consultation' : l.m) }),
-          typeof l.s === 'number'
-            ? el('span', { style: { float: 'right', color: l.s >= 70 ? 'var(--green)' : l.s >= 40 ? 'var(--amber)' : 'var(--red)', fontWeight: '650' }, text: l.s + ' %' })
-            : null
-        ].filter(Boolean));
-      });
-
       /* ---------- Tous les outils ---------- */
-      var allTools = el('div', { class: 'grid g3' }, QUICK.map(function (q) {
-        return UI.modTile(q[1], q[2], q[3], function () { App.go(q[0]); });
-      }));
+      var allTools = el('div', { class: 'grid g3' }, QUICK_ORDER.filter(function (id) { return M[id]; })
+        .map(function (id) {
+          var mod = M[id];
+          return UI.modTile(mod.icon || '•', mod.title, mod.desc || '', function () { App.go(id); });
+        }));
 
       return el('div', { class: 'page' }, [
         hero,
-        metrics,
-        goalCard,
+        welcome,
+        /* Ce qui a lieu tout à l'heure passe avant : c'est la seule chose de
+           la page qui périme dans la journée. */
+        edtCard,
+        /* Puis le plan du jour : la raison d'ouvrir l'application. */
+        sessionPanel,
+        /* Puis le semestre : c'est là que se décide ce qu'on révise ensuite. */
         semCard,
         tipCard,
 
-        el('h2', { style: { fontSize: '15px', margin: '26px 0 14px', letterSpacing: '-.01em' }, text: 'Simulateurs principaux' }),
+        el('h2', { style: { fontSize: '15px', margin: '26px 0 14px', letterSpacing: '-.01em' }, text: 'Se mettre en situation' }),
         featured,
 
-        el('div', { class: 'split', style: { marginTop: '26px' } }, [
-          UI.card('Progression par simulateur',
-            simRows.length
-              ? UI.table(['Module', 'Essais', 'Meilleur', 'Moyenne'], simRows, { numeric: [1, 2] })
-              : UI.empty('📊', 'Aucun simulateur encore utilisé.<br>Lancez le <b>phoroptère</b> ou le <b>cover test</b> pour commencer.')
-          ),
-          UI.card('Activité récente', recent.length ? el('div', { class: 'log' }, recent) : UI.empty('🕑', 'Rien pour l’instant.'))
-        ]),
-
-        el('h2', { style: { fontSize: '15px', margin: '26px 0 14px', letterSpacing: '-.01em' }, text: 'Tous les outils' }),
-        allTools,
-
-        UI.card('Votre profil', [
-          el('div', { class: 'grid g3' }, [
-            UI.field('Prénom',
-              (function () {
-                var i = el('input', { type: 'text', class: 'inp', value: st.profile.name, placeholder: 'Votre prénom' });
-                i.addEventListener('input', function () { st.profile.name = i.value; Store.save(); });
-                return i;
-              })()),
-            UI.field('Semestre en cours',
-              UI.select((window.CURRICULUM || []).map(function (sem) { return { value: sem.id, label: sem.label + ' — année ' + sem.year }; })
-                .concat([{ value: '', label: 'Non précisé' }]), st.profile.semester || '', function (v) {
-                  st.profile.semester = v || null;
-                  st.profile.year = v ? 'L' + semYear(v) : st.profile.year;
-                  Store.save();
-                  App.go('home');
-                })),
-            UI.field('Distance d’examen par défaut',
-              UI.select([{ value: 5, label: '5 mètres' }, { value: 4, label: '4 mètres' }, { value: 6, label: '6 mètres' }, { value: 3, label: '3 mètres' }],
-                Store.setting('testDistance'), function (v) { Store.setting('testDistance', parseFloat(v)); }))
-          ]),
-          UI.note('Progression sauvegardée automatiquement sur cet ordinateur. Menu <b>Fichier → Exporter</b> pour la transférer sur une autre machine.')
-        ], { class: 'mt16' })
-      ]);
+        /* le catalogue des modules ne sert qu'avant de connaître la barre latérale */
+        isNew ? el('h2', { style: { fontSize: '15px', margin: '26px 0 14px', letterSpacing: '-.01em' }, text: 'Tous les outils' }) : null,
+        isNew ? allTools : null
+      ].filter(Boolean));
     }
   };
 })();

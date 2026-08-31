@@ -307,10 +307,6 @@
        Statistiques d'un lot de fiches : ce qui est dû aujourd'hui,
        la répartition dans les cinq boîtes et le taux de mémorisation.
        ------------------------------------------------------------ */
-    srsOf: function (card) {
-      return Store.state.srs[card.id] || null;
-    },
-
     isDue: function (card) {
       var s = Store.state.srs[card.id];
       return !s || s.due <= Date.now();

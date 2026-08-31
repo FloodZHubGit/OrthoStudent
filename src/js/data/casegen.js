@@ -41,8 +41,6 @@
     return out;
   }
 
-  var MUSCLE_NAME = { DL: 'droit latéral', DM: 'droit médial', DS: 'droit supérieur', DI: 'droit inférieur', OS: 'oblique supérieur', OI: 'oblique inférieur' };
-
   /* ============================================================
      Archétypes
      ============================================================ */
