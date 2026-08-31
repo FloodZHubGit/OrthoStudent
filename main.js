@@ -55,7 +55,7 @@ function buildMenu() {
     template.push({
       label: app.name,
       submenu: [
-        { role: 'about', label: 'A propos d’OrthoStudent' },
+        { role: 'about', label: 'À propos d’OrthoStudent' },
         { type: 'separator' },
         { role: 'hide', label: 'Masquer OrthoStudent' },
         { role: 'hideOthers', label: 'Masquer les autres' },
@@ -81,15 +81,21 @@ function buildMenu() {
       },
       { type: 'separator' },
       {
-        label: 'Reinitialiser la progression',
+        label: 'Créer un exécutable…',
+        enabled: !app.isPackaged,
+        click: () => send('menu:goto', 'help:build')
+      },
+      { type: 'separator' },
+      {
+        label: 'Réinitialiser la progression',
         click: async () => {
           const res = await dialog.showMessageBox(mainWindow, {
             type: 'warning',
-            buttons: ['Annuler', 'Reinitialiser'],
+            buttons: ['Annuler', 'Réinitialiser'],
             defaultId: 0,
             cancelId: 0,
             message: 'Effacer toute la progression ?',
-            detail: 'Scores, historique de revision et parametres seront remis a zero. Cette action est irreversible.'
+            detail: 'Scores, historique de révision et paramètres seront remis à zéro. Cette action est irréversible.'
           });
           if (res.response === 1) send('menu:reset');
         }
@@ -100,15 +106,15 @@ function buildMenu() {
   });
 
   template.push({
-    label: 'Edition',
+    label: 'Édition',
     submenu: [
       { role: 'undo', label: 'Annuler' },
-      { role: 'redo', label: 'Retablir' },
+      { role: 'redo', label: 'Rétablir' },
       { type: 'separator' },
       { role: 'cut', label: 'Couper' },
       { role: 'copy', label: 'Copier' },
       { role: 'paste', label: 'Coller' },
-      { role: 'selectAll', label: 'Tout selectionner' }
+      { role: 'selectAll', label: 'Tout sélectionner' }
     ]
   });
 
@@ -116,32 +122,40 @@ function buildMenu() {
     label: 'Affichage',
     submenu: [
       { role: 'reload', label: 'Recharger' },
-      { role: 'toggleDevTools', label: 'Outils de developpement' },
+      { role: 'toggleDevTools', label: 'Outils de développement' },
       { type: 'separator' },
-      { role: 'resetZoom', label: 'Taille reelle' },
+      { role: 'resetZoom', label: 'Taille réelle' },
       { role: 'zoomIn', label: 'Agrandir' },
-      { role: 'zoomOut', label: 'Reduire' },
+      { role: 'zoomOut', label: 'Réduire' },
       { type: 'separator' },
-      { role: 'togglefullscreen', label: 'Plein ecran' },
+      { role: 'togglefullscreen', label: 'Plein écran' },
       { type: 'separator' },
       {
-        label: 'Theme clair / sombre',
+        label: 'Thème clair / sombre',
         accelerator: 'CmdOrCtrl+D',
         click: () => send('menu:theme')
       }
     ]
   });
 
+  /* Les cinq premières entrées doublent Ctrl+1..5 côté page : l'ordre doit
+     rester identique à celui de src/js/app.js, sinon le menu et le clavier
+     n'ouvrent plus la même chose. */
   template.push({
-    label: 'Aller a',
+    label: 'Aller à',
     submenu: [
       { label: 'Accueil', accelerator: 'CmdOrCtrl+1', click: () => send('menu:goto', 'home') },
-      { label: 'Phoroptere', accelerator: 'CmdOrCtrl+2', click: () => send('menu:goto', 'phoropter') },
-      { label: 'Cover test', accelerator: 'CmdOrCtrl+3', click: () => send('menu:goto', 'covertest') },
-      { label: 'Mode patient', accelerator: 'CmdOrCtrl+4', click: () => send('menu:goto', 'patient') },
+      { label: 'Lecture de bilan', accelerator: 'CmdOrCtrl+2', click: () => send('menu:goto', 'reading') },
+      { label: 'Mode patient', accelerator: 'CmdOrCtrl+3', click: () => send('menu:goto', 'patient') },
+      { label: 'Mes UE', accelerator: 'CmdOrCtrl+4', click: () => send('menu:goto', 'studies') },
       { label: 'Calculatrices', accelerator: 'CmdOrCtrl+5', click: () => send('menu:goto', 'converters') },
       { type: 'separator' },
-      { label: 'Precedent', accelerator: 'Alt+Left', click: () => send('menu:back') },
+      { label: 'Séance du jour', click: () => send('menu:goto', 'session') },
+      { label: 'Emploi du temps', click: () => send('menu:goto', 'edt') },
+      { label: 'Réviser', click: () => send('menu:goto', 'revise') },
+      { label: 'Ma progression', click: () => send('menu:goto', 'progress') },
+      { type: 'separator' },
+      { label: 'Précédent', accelerator: 'Alt+Left', click: () => send('menu:back') },
       { label: 'Suivant', accelerator: 'Alt+Right', click: () => send('menu:forward') },
       { type: 'separator' },
       { label: 'Recherche rapide', accelerator: 'CmdOrCtrl+K', click: () => send('menu:search') }
@@ -151,18 +165,18 @@ function buildMenu() {
   template.push({
     label: 'Aide',
     submenu: [
-      { label: 'Guide de demarrage', click: () => send('menu:goto', 'help') },
-      { label: 'Avertissement pedagogique', click: () => send('menu:goto', 'disclaimer') },
+      { label: 'Guide de démarrage', click: () => send('menu:goto', 'help') },
+      { label: 'Avertissement pédagogique', click: () => send('menu:goto', 'disclaimer') },
       {
-        label: 'A propos',
+        label: 'À propos',
         click: () => {
           dialog.showMessageBox(mainWindow, {
             type: 'info',
             message: 'OrthoStudent ' + app.getVersion(),
             detail:
-              'Suite pedagogique pour etudiants en orthoptie.\n\n' +
-              'Simulateurs, calculatrices et fiches de revision.\n' +
-              'Outil de formation : ne remplace ni un cours, ni un examen clinique reel.'
+              'Suite pédagogique pour étudiants en orthoptie.\n\n' +
+              'Bilans à interpréter, calculatrices et fiches de révision.\n' +
+              'Outil de formation : ne remplace ni un cours, ni un examen clinique réel.'
           });
         }
       }
@@ -171,6 +185,165 @@ function buildMenu() {
 
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
+
+/* -------------------------------------------------------------------
+   Le pont vers Ollama
+   -------------------------------------------------------------------
+   Le répétiteur répond seul, hors ligne, sans rien inventer. Quand un
+   modèle tourne en local, il peut en plus REFORMULER : reprendre les
+   mêmes extraits de cours et les redire autrement, plus longuement,
+   sur mesure pour la question posée.
+
+   Pourquoi ce pont vit dans le processus principal et non dans la page :
+
+     · la CSP de index.html est « default-src 'self' » — la page ne peut
+       joindre aucun hôte, et l'ouvrir vers un port serait affaiblir la
+       seule barrière qui protège une application qui charge du HTML ;
+     · Ollama n'accepte que quelques origines, et une page « file:// »
+       n'en fait pas partie : depuis la page, il faudrait demander à
+       l'étudiant de régler OLLAMA_ORIGINS.
+
+   Ici, ni l'un ni l'autre : c'est Node qui appelle 127.0.0.1, et la page
+   ne voit que des messages.
+
+   La réponse arrive en flux. À treize jetons par seconde sur un 4 B,
+   attendre la fin, c'est vingt secondes d'écran figé ; mot à mot, la
+   première ligne s'affiche en une seconde.
+   ------------------------------------------------------------------- */
+
+const IA_HOTE = '127.0.0.1';
+const IA_PORT = 11434;
+let iaEnCours = null;          // la requête en vol, pour pouvoir l'interrompre
+
+function iaAppel(chemin, corps, timeoutMs) {
+  return new Promise((resolve, reject) => {
+    const http = require('http');
+    const body = corps ? JSON.stringify(corps) : null;
+    const req = http.request({
+      host: IA_HOTE, port: IA_PORT, path: chemin,
+      method: body ? 'POST' : 'GET', agent: false,
+      headers: body
+        ? { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) }
+        : {}
+    }, (res) => {
+      let data = '';
+      res.on('data', (c) => { data += c; });
+      res.on('end', () => {
+        try { resolve(JSON.parse(data)); }
+        catch (e) { reject(new Error('Réponse illisible d’Ollama')); }
+      });
+    });
+    req.setTimeout(timeoutMs || 4000, () => req.destroy(new Error('délai dépassé')));
+    req.on('error', reject);
+    if (body) req.write(body);
+    req.end();
+  });
+}
+
+/* Ollama est-il là, et avec quoi ? On rend aussi les capacités déclarées
+   par chaque modèle : « thinking » décide de l'existence même du réglage. */
+ipcMain.handle('ia:etat', async () => {
+  try {
+    const [v, tags] = await Promise.all([
+      iaAppel('/api/version', null, 2500),
+      iaAppel('/api/tags', null, 4000)
+    ]);
+    return {
+      dispo: true,
+      version: v.version || '',
+      modeles: (tags.models || []).map((m) => ({
+        nom: m.name,
+        taille: m.details ? m.details.parameter_size : '',
+        quant: m.details ? m.details.quantization_level : '',
+        pense: (m.capabilities || []).indexOf('thinking') >= 0
+      }))
+    };
+  } catch (e) {
+    return { dispo: false, erreur: String((e && e.message) || e) };
+  }
+});
+
+/* Une demande, diffusée mot à mot vers la page.
+   « pense » est passé tel quel à Ollama : sur un modèle qui raisonne, le
+   couper divise le délai par trois — voir le README. */
+ipcMain.handle('ia:demande', async (evt, d) => {
+  if (iaEnCours) { try { iaEnCours.destroy(); } catch (e) { /* déjà finie */ } }
+
+  return new Promise((resolve) => {
+    const http = require('http');
+    const corps = JSON.stringify({
+      model: d.modele,
+      messages: d.messages,
+      stream: true,
+      think: !!d.pense,
+      options: {
+        temperature: d.temperature === undefined ? 0.3 : d.temperature,
+        num_predict: d.max || 480,
+        num_ctx: 8192
+      }
+    });
+
+    let texte = '', reflexion = '', reste = '', fini = false;
+    function terminer(res) {
+      if (fini) return;
+      fini = true;
+      if (iaEnCours === req) iaEnCours = null;
+      resolve(res);
+    }
+
+    const req = http.request({
+      host: IA_HOTE, port: IA_PORT, path: '/api/chat', method: 'POST', agent: false,
+      headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(corps) }
+    }, (res) => {
+      res.setEncoding('utf8');
+      res.on('data', (paquet) => {
+        /* Ollama émet un objet JSON par ligne, et une ligne peut arriver
+           coupée en deux paquets : on garde le reste pour le suivant. */
+        reste += paquet;
+        const lignes = reste.split('\n');
+        reste = lignes.pop();
+        lignes.forEach((l) => {
+          if (!l.trim()) return;
+          let j;
+          try { j = JSON.parse(l); } catch (e) { return; }
+          const m = j.message || {};
+          if (m.thinking) reflexion += m.thinking;
+          if (m.content) {
+            texte += m.content;
+            if (!evt.sender.isDestroyed()) {
+              evt.sender.send('ia:flux', { id: d.id, t: m.content });
+            }
+          }
+          if (j.error) terminer({ ok: false, erreur: j.error });
+        });
+      });
+      res.on('end', () => terminer({ ok: true, texte: texte, reflexion: reflexion }));
+    });
+
+    /* Le premier jeton peut tarder : le modèle doit d'abord être chargé en
+       mémoire, ce qui prend plusieurs dizaines de secondes au premier appel. */
+    req.setTimeout(d.timeout || 180000, () => {
+      req.destroy();
+      terminer({ ok: false, erreur: 'délai dépassé', texte: texte });
+    });
+    req.on('error', (e) => terminer({
+      ok: false,
+      erreur: /ECONNREFUSED/.test(String(e.message)) ? 'Ollama ne répond pas' : String(e.message),
+      texte: texte
+    }));
+
+    iaEnCours = req;
+    req.write(corps);
+    req.end();
+  });
+});
+
+ipcMain.handle('ia:stop', async () => {
+  if (!iaEnCours) return false;
+  try { iaEnCours.destroy(); } catch (e) { /* déjà finie */ }
+  iaEnCours = null;
+  return true;
+});
 
 ipcMain.handle('data:export', async (_evt, json) => {
   const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
@@ -610,15 +783,6 @@ ipcMain.handle('gdrive:children', async (_evt, folderId) => {
   } catch (e) { return { ok: false, error: String(e.message || e) }; }
 });
 
-ipcMain.handle('gdrive:findFolder', async (_evt, name) => {
-  try {
-    const token = await accessToken();
-    const query = "mimeType = 'application/vnd.google-apps.folder' and name = '" + q(name) + "' and trashed = false";
-    const r = await driveGet('/files?' + form({ q: query, fields: 'files(id,name)', pageSize: 20 }), token);
-    return { ok: true, files: r.files || [] };
-  } catch (e) { return { ok: false, error: String(e.message || e) }; }
-});
-
 /* Parcours récursif d'un dossier Drive et téléchargement des fichiers importables */
 ipcMain.handle('gdrive:tree', async (_evt, folderId) => {
   const out = [];
@@ -677,12 +841,256 @@ ipcMain.handle('gdrive:tree', async (_evt, folderId) => {
   }
 });
 
-ipcMain.handle('app:info', () => ({
-  version: app.getVersion(),
-  platform: process.platform,
-  electron: process.versions.electron,
-  chrome: process.versions.chrome
+/* ============================================================
+   Emploi du temps — CELCAT
+   ------------------------------------------------------------
+   La page ne peut pas interroger l'extranet elle-même : le serveur
+   n'envoie aucun en-tête CORS, donc le navigateur refuse la
+   réponse. Le processus principal, lui, n'est pas un navigateur
+   et passe sans difficulté. C'est ce qui permet à quelqu'un qui a
+   seulement l'installateur — ni dépôt, ni Node — de mettre son
+   emploi du temps à jour depuis l'application.
+   ============================================================ */
+const celcat = require('./celcat');
+
+ipcMain.handle('edt:promos', async () => {
+  try {
+    const promos = await celcat.decouvrirPromotions();
+    if (!promos.length) {
+      return { ok: false, error: 'Aucune promotion d’orthoptie trouvée dans l’emploi du temps de l’université.' };
+    }
+    return { ok: true, promos, anneeUniversitaire: celcat.anneeUniversitaire().label };
+  } catch (e) {
+    return { ok: false, error: String(e.message || e) };
+  }
+});
+
+/* Un seul groupe par appel : c'est une trentaine de requêtes et environ
+   35 Ko de données, inutile de rapatrier les trois promotions quand on
+   n'en suit qu'une. */
+ipcMain.handle('edt:fetch', async (_evt, promo) => {
+  try {
+    if (!promo || !promo.id) return { ok: false, error: 'Promotion non précisée.' };
+    const groupe = await celcat.recupererPromotion(promo);
+    if (!groupe.events.length) {
+      return {
+        ok: false,
+        error: 'L’université ne publie aucune séance pour ' + groupe.label +
+               ' cette année. Réessayez à la rentrée, ou choisissez une autre promotion.'
+      };
+    }
+    return { ok: true, groupe };
+  } catch (e) {
+    return { ok: false, error: String(e.message || e) };
+  }
+});
+
+/* ==================================================================
+   Fabriquer un exécutable depuis l'application elle-même
+   ------------------------------------------------------------------
+   « npm run dist:win » fait déjà le travail, mais suppose un terminal
+   et un dépôt cloné. Depuis l'application lancée en développement, on
+   peut proposer le même geste d'un bouton : electron-builder est déjà
+   installé, on l'exécute comme un script Node grâce à
+   ELECTRON_RUN_AS_NODE — plutôt que de dépendre d'un `node` ou d'un
+   `npx` présents dans le PATH, ce qui n'est vrai nulle part.
+
+   Trois garde-fous :
+   · une application déjà empaquetée ne peut pas se reconstruire —
+     electron-builder n'y est pas. On le dit, on n'échoue pas ;
+   · on ne propose que les cibles de la plateforme courante : un .dmg
+     ne se fabrique que sur macOS, et un .exe depuis un Mac réclame
+     Wine. Mieux vaut ne pas proposer que promettre et rater ;
+   · une seule fabrication à la fois, annulable — c'est un processus
+     de plusieurs minutes qui télécharge parfois 100 Mo.
+================================================================== */
+
+const RACINE = __dirname;
+const DOSSIER_SORTIE = path.join(RACINE, 'dist');
+let fabrication = null;      // le processus en cours, ou null
+
+/* On ne lance pas le CLI d'electron-builder directement mais notre lanceur :
+   il rétablit le drapeau que yargs attend quand le CLI tourne sous Electron
+   en mode Node (voir scripts/build-cli.js). */
+function builderCli() {
+  const lanceur = path.join(RACINE, 'scripts', 'build-cli.js');
+  const cli = path.join(RACINE, 'node_modules', 'electron-builder', 'cli.js');
+  return (fs.existsSync(lanceur) && fs.existsSync(cli)) ? lanceur : null;
+}
+
+function ciblesPossibles() {
+  if (process.platform === 'win32') {
+    return [
+      { id: 'portable', ext: '.exe', label: 'Application portable',
+        quoi: 'Un seul fichier .exe. Rien à installer : on le pose sur le Bureau, on double-clique, ça marche. C’est ce qui se partage le plus simplement.' },
+      { id: 'nsis', ext: '.exe', label: 'Installateur',
+        quoi: 'Un programme d’installation classique : il installe l’application, crée un raccourci et une entrée de désinstallation.' }
+    ];
+  }
+  if (isMac) {
+    return [
+      { id: 'dmg', ext: '.dmg', label: 'Image disque',
+        quoi: 'Le format d’installation habituel sur macOS : on ouvre l’image et on glisse l’application dans Applications.' },
+      { id: 'zip', ext: '.zip', label: 'Archive',
+        quoi: 'L’application compressée, à décompresser où l’on veut. Le plus simple à envoyer.' }
+    ];
+  }
+  return [
+    { id: 'AppImage', ext: '.AppImage', label: 'AppImage',
+      quoi: 'Un fichier exécutable unique, indépendant de la distribution. On le rend exécutable et on le lance.' }
+  ];
+}
+
+/* Ce qui vient d'être produit : on ne liste pas tout `dist/`, seulement
+   les fichiers écrits depuis le début de la fabrication — sinon un vieil
+   installateur d'il y a trois mois se présenterait comme neuf. */
+function fichiersProduits(depuis) {
+  if (!fs.existsSync(DOSSIER_SORTIE)) return [];
+  const exts = /\.(exe|dmg|zip|AppImage|deb|rpm)$/i;
+  return fs.readdirSync(DOSSIER_SORTIE)
+    .filter((f) => exts.test(f))
+    .map((f) => {
+      const complet = path.join(DOSSIER_SORTIE, f);
+      const st = fs.statSync(complet);
+      return { nom: f, chemin: complet, octets: st.size, at: st.mtimeMs };
+    })
+    .filter((f) => f.at >= depuis - 5000)
+    .sort((a, b) => b.at - a.at);
+}
+
+/* Un chemin venu de la page ne sert que s'il désigne vraiment un fichier
+   produit : on ne laisse pas la fenêtre demander l'ouverture de n'importe
+   quel emplacement du disque. */
+function dansLaSortie(chemin) {
+  if (!chemin) return false;
+  const resolu = path.resolve(chemin);
+  return resolu.startsWith(path.resolve(DOSSIER_SORTIE) + path.sep);
+}
+
+ipcMain.handle('build:etat', async () => ({
+  possible: !app.isPackaged && !!builderCli(),
+  empaquetee: app.isPackaged,
+  builder: !!builderCli(),
+  plateforme: process.platform,
+  cibles: ciblesPossibles(),
+  dossier: DOSSIER_SORTIE,
+  bureau: app.getPath('desktop'),
+  enCours: !!fabrication,
+  dejaProduits: fichiersProduits(0).slice(0, 6)
 }));
+
+ipcMain.handle('build:lancer', async (_evt, cible) => {
+  if (fabrication) return { ok: false, error: 'Une fabrication est déjà en cours.' };
+  const cli = builderCli();
+  if (app.isPackaged) {
+    return { ok: false, error: 'L’application installée ne peut pas se reconstruire elle-même : il faut le dépôt et « npm install ».' };
+  }
+  if (!cli) {
+    return { ok: false, error: 'electron-builder est introuvable dans node_modules. Lancez « npm install ».' };
+  }
+  if (!ciblesPossibles().some((c) => c.id === cible)) {
+    return { ok: false, error: 'Cible inconnue sur cette plateforme.' };
+  }
+
+  const drapeau = process.platform === 'win32' ? '--win' : isMac ? '--mac' : '--linux';
+  const args = [cli, drapeau, cible];
+
+  /* Sous Windows, la signature réclame le paquet « winCodeSign », dont
+     l'archive contient des liens symboliques : sans droits administrateur
+     ni mode développeur, son extraction échoue et la fabrication s'arrête.
+     Comme l'application n'est de toute façon pas signée, on désactive la
+     signature et la retouche de l'exécutable — au prix de l'icône par
+     défaut d'Electron, ce que la page annonce. */
+  if (process.platform === 'win32') args.push('-c.win.signAndEditExecutable=false');
+
+  const debut = Date.now();
+
+  return new Promise((resolve) => {
+    const { spawn } = require('child_process');
+    const enfant = spawn(process.execPath, args, {
+      cwd: RACINE,
+      env: Object.assign({}, process.env, {
+        /* le binaire Electron devient un Node ordinaire : c'est ce qui
+           permet de lancer le CLI sans supposer un `node` dans le PATH */
+        ELECTRON_RUN_AS_NODE: '1',
+        /* sans cela, le fs d'Electron intercepte les chemins « .asar » et
+           refuse d'écrire l'archive que le CLI est justement en train de créer */
+        ELECTRON_NO_ASAR: '1',
+        FORCE_COLOR: '0'
+      })
+    });
+    fabrication = enfant;
+    send('build:log', '→ electron-builder ' + drapeau + ' ' + cible);
+
+    function flux(buf) {
+      String(buf).split(/\r?\n/).forEach((l) => {
+        const ligne = l.replace(/\[[0-9;]*m/g, '').trimEnd();
+        if (ligne.trim()) send('build:log', ligne);
+      });
+    }
+    enfant.stdout.on('data', flux);
+    enfant.stderr.on('data', flux);
+
+    enfant.on('error', (e) => {
+      fabrication = null;
+      resolve({ ok: false, error: String(e.message || e) });
+    });
+    enfant.on('close', (code, signal) => {
+      const annule = fabrication === null;   // annuler() a déjà relâché la place
+      fabrication = null;
+      if (annule || signal) return resolve({ ok: false, annule: true });
+      if (code !== 0) {
+        return resolve({ ok: false, code: code,
+          error: 'electron-builder s’est arrêté avec le code ' + code + '. Le journal ci-dessous dit pourquoi.' });
+      }
+      resolve({
+        ok: true,
+        fichiers: fichiersProduits(debut),
+        dossier: DOSSIER_SORTIE,
+        secondes: Math.round((Date.now() - debut) / 1000)
+      });
+    });
+  });
+});
+
+ipcMain.handle('build:annuler', async () => {
+  if (!fabrication) return { ok: false };
+  const proc = fabrication;
+  fabrication = null;
+  /* electron-builder lance des outils enfants (7z, NSIS) : sous Windows,
+     tuer le seul processus parent les laisserait tourner. */
+  if (process.platform === 'win32') {
+    try { require('child_process').spawn('taskkill', ['/pid', String(proc.pid), '/T', '/F']); }
+    catch (e) { proc.kill(); }
+  } else {
+    proc.kill();
+  }
+  send('build:log', '⨯ Fabrication interrompue.');
+  return { ok: true };
+});
+
+ipcMain.handle('build:ouvrir', async (_evt, chemin) => {
+  if (chemin && dansLaSortie(chemin)) { shell.showItemInFolder(chemin); return { ok: true }; }
+  if (!fs.existsSync(DOSSIER_SORTIE)) return { ok: false, error: 'Le dossier dist n’existe pas encore.' };
+  shell.openPath(DOSSIER_SORTIE);
+  return { ok: true };
+});
+
+/* « Le mettre sur mon Bureau » : la demande la plus fréquente, et celle
+   qu'on ne devrait pas avoir à faire à la main dans l'explorateur. */
+ipcMain.handle('build:bureau', async (_evt, chemin) => {
+  if (!dansLaSortie(chemin) || !fs.existsSync(chemin)) {
+    return { ok: false, error: 'Fichier introuvable.' };
+  }
+  const cible = path.join(app.getPath('desktop'), path.basename(chemin));
+  try {
+    fs.copyFileSync(chemin, cible);
+    shell.showItemInFolder(cible);
+    return { ok: true, path: cible };
+  } catch (e) {
+    return { ok: false, error: String(e.message || e) };
+  }
+});
 
 app.whenReady().then(() => {
   createWindow();
