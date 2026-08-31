@@ -42,6 +42,7 @@ UE1: {
   ],
   cas: {
     t: 'Un père inquiet pour son fils',
+    tag: 'clinique',
     s: 'Un homme de 34 ans, daltonien, consulte pour son fils de 5 ans. Il veut savoir si son garçon sera daltonien comme lui, et si sa fille de 8 ans risque quelque chose.',
     q: ['Quel est le mode de transmission du daltonisme ?',
         'Quel est le risque pour le fils ? pour la fille ?',
@@ -86,6 +87,7 @@ UE2: {
   ],
   cas: {
     t: 'Un verre mal centré',
+    tag: 'calcul',
     s: 'Une patiente porte −6,00 D aux deux yeux. Ses lunettes neuves lui donnent une gêne et une impression de « tirage ». Vous mesurez un décentrement de 4 mm en dedans sur l’œil droit.',
     q: ['Quel effet prismatique subit-elle ?', 'Dans quel sens ?', 'Que proposez-vous ?'],
     r: 'Loi de Prentice : Δ = P × décentrement en centimètres = 6 × 0,4 = <b>2,4 Δ</b>. Un verre concave décentré en dedans se comporte comme un prisme base externe pour cet œil, imposant un effort de convergence supplémentaire non compensé de l’autre côté.',
@@ -128,6 +130,7 @@ UE3: {
   ],
   cas: {
     t: 'Un enfant qui « voit très bien »',
+    tag: 'clinique',
     s: 'Garçon de 6 ans adressé pour céphalées de fin de journée et difficultés de copie au tableau. Acuité 10/10 de loin aux deux yeux sans correction. Cover test : orthophorie de loin, ésophorie de 8 Δ de près. Skiascopie sans cycloplégie : +0,50 D.',
     q: ['Pourquoi l’acuité normale n’élimine-t-elle rien ?',
         'Quel examen manque-t-il ?',
@@ -173,6 +176,7 @@ UE4: {
   ],
   cas: {
     t: 'Ne plus conduire la nuit',
+    tag: 'clinique',
     s: 'Un homme de 62 ans se plaint de ne plus supporter la conduite nocturne : éblouissement par les phares, récupération lente, impression de « trou noir ». Son acuité de loin est à 10/10 en photopique.',
     q: ['Pourquoi l’acuité mesurée ne reflète-t-elle pas sa gêne ?',
         'Quels examens complètent le bilan ?',
@@ -215,6 +219,7 @@ UE5: {
   ],
   cas: {
     t: 'Deux acuités qui ne concordent pas',
+    tag: 'clinique',
     s: 'Enfant de 7 ans. En optotypes isolés, l’œil gauche est à 7/10. En ligne, le même œil chute à 3/10. L’œil droit est à 10/10 dans les deux conditions.',
     q: ['Comment s’appelle ce phénomène ?', 'Quelle acuité retenez-vous ?', 'Que cherchez-vous ensuite ?'],
     r: 'C’est l’effet de crowding, ou entassement : la performance chute quand les optotypes sont entourés. Il est physiologique mais très majoré dans l’amblyopie, où il constitue un signe à part entière.',
@@ -258,6 +263,7 @@ UE7: {
   ],
   cas: {
     t: 'Une plaie de l’orbite',
+    tag: 'urgence',
     s: 'Un patient arrive après un traumatisme de l’orbite gauche. On note un ptôsis complet, un œil en abduction et légère abaissement, une mydriase aréactive, et une accommodation abolie.',
     q: ['Quel nerf est atteint ?', 'Pourquoi cette position de l’œil ?', 'Quel élément fait la gravité ?'],
     r: 'Atteinte complète du III gauche. Le ptôsis vient du releveur de la paupière, la mydriase et la perte d’accommodation du contingent parasympathique. L’œil part en abduction et abaissement parce que les seuls muscles encore innervés sont le droit latéral (VI) et l’oblique supérieur (IV).',
@@ -305,6 +311,7 @@ UE8: {
   ],
   cas: {
     t: 'Calculer un AC/A',
+    tag: 'calcul',
     s: 'Patiente de 22 ans. Phorie de loin : 2 Δ d’exophorie. Phorie de près à 33 cm : 10 Δ d’exophorie. Écart pupillaire 62 mm. Avec +1,00 D devant les deux yeux de près, la phorie passe à 14 Δ d’exophorie.',
     q: ['Calculez l’AC/A par le gradient.', 'Que vaut-il ?', 'Qu’en concluez-vous ?'],
     r: 'Méthode du gradient : (phorie avec verre − phorie sans verre) / puissance. En comptant l’exophorie négativement : (−14 − (−10)) / +1,00 = <b>−4</b>, soit 4 Δ/D en valeur absolue. Le verre positif relâche l’accommodation, donc la convergence accommodative, donc l’exophorie augmente : le sens est cohérent.',
@@ -352,6 +359,7 @@ UE9: {
   ],
   cas: {
     t: 'Une déviation verticale',
+    tag: 'clinique',
     s: 'Patient de 40 ans, diplopie verticale et torsionnelle depuis une chute. L’œil droit est le plus haut. La déviation augmente dans le regard à gauche, et augmente à l’inclinaison de la tête sur l’épaule droite.',
     q: ['Déroulez les trois pas de Parks.', 'Quel muscle est atteint ?', 'Quel torticolis attendez-vous ?'],
     r: 'Pas 1 : l’œil droit est le plus haut → soit les abaisseurs droits (oblique supérieur droit, droit inférieur droit), soit les élévateurs gauches. Pas 2 : majorée en regard à gauche, donc en adduction de l’œil droit → oblique supérieur droit ou droit inférieur gauche. Pas 3 : majorée à l’inclinaison droite → <b>oblique supérieur droit</b>, seul muscle commun aux trois réponses.',
@@ -397,6 +405,7 @@ UE12: {
   ],
   cas: {
     t: 'La mère qui demande le dossier',
+    tag: 'décision',
     s: 'La mère d’une patiente de 16 ans vous demande le compte rendu du bilan. L’adolescente, présente, vous dit qu’elle ne veut pas que sa mère le lise.',
     q: ['Qui a le droit d’accès ?', 'Que faites-vous ?', 'Sur quoi vous appuyez-vous ?'],
     r: 'Le titulaire de l’autorité parentale a un droit d’accès au dossier de son enfant mineur. Mais le mineur peut s’opposer à ce que certaines informations soient communiquées, et cette opposition doit être respectée et tracée. Les deux règles coexistent : ce n’est pas un tout ou rien.',
@@ -442,6 +451,7 @@ UE16: {
   ],
   cas: {
     t: 'Une baisse de vision brutale',
+    tag: 'urgence',
     s: 'Femme de 78 ans, baisse de vision de l’œil droit installée en quatre jours, avec déformation des lignes du carrelage. Pas de douleur, pas de rougeur. Acuité OD 2/10, OG 8/10.',
     q: ['Quel signe est le plus évocateur ?', 'Quel test immédiat ?', 'Quelle conduite ?'],
     r: 'Les métamorphopsies signent une atteinte maculaire par déplacement des photorécepteurs. Associées à une baisse rapide et indolore chez une patiente de cet âge, elles orientent d’abord vers une DMLA exsudative.',
@@ -488,6 +498,7 @@ UE10: {
   ],
   cas: {
     t: 'Un champ visuel douteux',
+    tag: 'méthode',
     s: 'Champ visuel automatisé d’un patient suivi pour hypertonie. Le relevé montre un déficit diffus important. Indices : 32 % de pertes de fixation, 18 % de faux positifs.',
     q: ['Que faites-vous de ce résultat ?', 'Quelles causes d’un déficit diffus artefactuel ?', 'Comment procédez-vous ?'],
     r: 'Avec 32 % de pertes de fixation et 18 % de faux positifs, l’examen n’est pas fiable : il ne s’interprète pas. Un déficit diffus artefactuel peut aussi venir d’une correction mal centrée ou absente, d’un myosis, d’une cataracte, d’un ptôsis ou d’une monture qui masque la périphérie.',
@@ -536,6 +547,7 @@ UE11: {
   ],
   cas: {
     t: 'Asthénopie chez une étudiante',
+    tag: 'clinique',
     s: 'Étudiante de 20 ans, céphalées frontales en fin de journée, mots qui se dédoublent après vingt minutes de lecture, ferme un œil pour finir ses révisions. Acuités 10/10 sans correction. Exophorie 4 Δ de loin, 14 Δ de près. PPC rupture à 14 cm. Convergence fusionnelle de près : 12 Δ.',
     q: ['Le critère de Sheard est-il rempli ?', 'Quel est votre diagnostic orthoptique ?', 'Que proposez-vous ?'],
     r: 'Sheard exige une réserve opposée d’au moins deux fois la phorie, soit 2 × 14 = <b>28 Δ</b> de convergence. Elle en a 12 : le critère n’est pas rempli, et de loin. Le PPC à 14 cm est très éloigné de la norme de 6 à 8 cm.',
@@ -570,10 +582,20 @@ UE13: {
         ['Antisepsie', 'Dérivé chloré ou alcool 70°, ≥ 5 min', 'Poursuivre le rinçage'],
         ['Délai médical', 'Avis dans les 4 heures', 'Avis dans les 4 heures'],
         ['Administratif', 'Déclaration sous 24 à 48 h', 'Déclaration sous 24 à 48 h']
+      ] },
+    { t: 'Ce qui se désinfecte, ce qui se jette',
+      c: ['Matériel', 'Entre deux patients', 'Pourquoi'],
+      r: [
+        ['Cône de tonomètre à aplanation', 'Désinfection selon protocole, ou embout à usage unique', 'Contact cornéen direct : adénovirus, prions'],
+        ['Verres striés, occluseur, barre de prismes', 'Essuyage désinfectant', 'Contact cutané et péri-oculaire'],
+        ['Bandelettes de fluorescéine', 'Usage unique, jamais retrempées', 'Vecteur classique de contamination croisée'],
+        ['Unidose de collyre', 'Jetée après la séance', 'Sans conservateur : elle se contamine dès l’ouverture'],
+        ['Mentonnière, appui frontal', 'Essuyage entre chaque patient', 'Contact cutané prolongé']
       ] }
   ],
   cas: {
     t: 'Un œil rouge en salle d’attente',
+    tag: 'décision',
     s: 'Un patient se présente avec un œil très rouge, larmoiement important, adénopathie prétragienne et sensation de corps étranger apparue il y a trois jours. Un membre de sa famille a eu la même chose la semaine dernière.',
     q: ['Quelle est votre hypothèse ?', 'Quelles mesures immédiates ?', 'Que dites-vous au patient ?'],
     r: 'Kérato-conjonctivite épidémique à adénovirus : contexte de contage, adénopathie prétragienne, atteinte bilatéralisable. Le virus est extrêmement contagieux, survit longtemps sur les surfaces et résiste à beaucoup d’antiseptiques usuels.',
@@ -619,6 +641,7 @@ UE14: {
   ],
   cas: {
     t: 'Une diplopie qui varie dans la journée',
+    tag: 'clinique',
     s: 'Femme de 45 ans, diplopie verticale intermittente et ptôsis, absents le matin, marqués le soir. Les mesures varient d’un examen à l’autre. Pupilles normales et réactives.',
     q: ['Qu’est-ce qui doit vous alerter ?', 'Quelle hypothèse ?', 'Quel test simple ?'],
     r: 'La <b>variabilité et la fatigabilité</b> sont le signe : une paralysie oculomotrice classique ne fluctue pas ainsi dans la journée. L’absence d’atteinte pupillaire écarte un III compressif. Le tableau évoque une myasthénie oculaire.',
@@ -666,6 +689,7 @@ UE15: {
   ],
   cas: {
     t: 'Rééducation qui n’avance pas',
+    tag: 'décision',
     s: 'Après huit séances de rééducation d’une insuffisance de convergence, le PPC est passé de 15 à 13 cm et la patiente dit ne pas voir de différence. Elle reconnaît ne pas faire les exercices entre les séances.',
     q: ['Que faites-vous à ce stade ?', 'Quelles causes envisagez-vous ?', 'Quelle décision ?'],
     r: 'On est au point de réévaluation des 8 à 10 séances, et la progression est insuffisante. Trois causes à examiner dans l’ordre : l’<b>observance</b> — ici avouée et probablement principale ; la <b>correction optique</b>, à revérifier, une amétropie non compensée bloquant toute progression ; le <b>diagnostic</b> lui-même, à reprendre si les deux premiers sont en ordre.',
@@ -712,6 +736,7 @@ UE17: {
   ],
   cas: {
     t: 'Faut-il s’inquiéter ?',
+    tag: 'méthode',
     s: 'Patiente de 61 ans suivie pour glaucome débutant. Trois champs visuels sur deux ans, tous fiables, stables. Le RNFL est passé de 92 à 84 µm sur la même période. PIO à 19 mmHg sous monothérapie.',
     q: ['Comment interprétez-vous cette discordance ?', 'Est-ce rassurant ?', 'Que proposez-vous ?'],
     r: 'La perte physiologique du RNFL est d’environ 1 µm par an : 8 µm en deux ans, c’est <b>quatre fois</b> le vieillissement attendu. Or dans le glaucome, la structure bouge souvent avant la fonction. Un champ stable ne rassure donc pas ici : il est simplement en retard sur la structure.',
@@ -744,10 +769,20 @@ UE18: {
         ['Adolescent', 'Négocier le cadre, respecter l’image sociale', 'Imposer le principe'],
         ['Adulte', 'Objectifs et bénéfice concret', 'Jargon, culpabilisation'],
         ['Personne âgée', 'Rythme lent, écrit gros, vérifier l’audition', 'Parler à l’accompagnant plutôt qu’à elle']
+      ] },
+    { t: 'Le développement visuel, de la naissance à six ans',
+      c: ['Âge', 'Ce qui s’installe', 'Ce qui doit alerter'],
+      r: [
+        ['Naissance', 'Réflexe photomoteur, fixation brève', 'Absence de réaction à la lumière, leucocorie'],
+        ['2 – 4 mois', 'Poursuite, sourire-réponse, alignement stable', 'Strabisme constant après 4 mois'],
+        ['6 – 12 mois', 'Vision binoculaire, préhension guidée par la vue', 'Nystagmus, torticolis, absence de préhension'],
+        ['2 – 3 ans', 'Acuité mesurable en images, stéréoscopie', 'Refus d’occlusion d’un œil : amblyopie probable'],
+        ['4 – 6 ans', 'Acuité proche de l’adulte, fin de la période la plus sensible', 'Toute amblyopie non traitée : la fenêtre se referme']
       ] }
   ],
   cas: {
     t: 'Un refus d’occlusion',
+    tag: 'décision',
     s: 'Garçon de 9 ans, amblyopie modérée. Sa mère explique qu’il arrache son cache dès l’école et qu’elle « n’en peut plus ». L’enfant, tête baissée, finit par dire que les autres se moquent de lui.',
     q: ['Quel est le vrai obstacle ?', 'Que proposez-vous ?', 'Que dites-vous à la mère ?'],
     r: 'L’obstacle n’est ni la compréhension ni la motivation : c’est le <b>coût social</b> immédiat, très supérieur pour l’enfant à un bénéfice différé et abstrait. Argumenter sur l’importance médicale ne peut pas fonctionner contre cela.',
@@ -781,10 +816,20 @@ UE19: {
         ['Myotique', 'Pilocarpine', 'Myosis', 'Test de la pupille d’Adie'],
         ['Anesthésique', 'Oxybuprocaïne', 'Anesthésie de contact', 'Protection cornéenne abolie'],
         ['Colorant', 'Fluorescéine', 'BUT, ulcère, adaptation', 'Vecteur de contamination croisée']
+      ] },
+    { t: 'Les contre-indications à ne jamais manquer',
+      c: ['Produit', 'Terrain', 'Ce qu’on risque'],
+      r: [
+        ['Tout mydriatique', 'Angle irido-cornéen étroit', 'Crise aiguë de fermeture de l’angle'],
+        ['Phényléphrine', 'HTA, coronaropathie, nourrisson, sujet âgé', 'Poussée tensionnelle, trouble du rythme'],
+        ['Atropine', 'Petit enfant, faible poids', 'Fièvre, rougeur, agitation, délire atropinique'],
+        ['Bêtabloquant en collyre', 'Asthme, BPCO, bradycardie, bloc', 'Bronchospasme, bradycardie sévère'],
+        ['Anesthésique de contact', 'Sortie sans protection oculaire', 'Abrasion cornéenne passée inaperçue']
       ] }
   ],
   cas: {
     t: 'Une réaction après instillation',
+    tag: 'urgence',
     s: 'Une heure après l’instillation d’atropine 0,5 % chez un enfant de 3 ans, les parents rappellent : il est rouge, chaud, agité et se plaint d’avoir soif.',
     q: ['Que se passe-t-il ?', 'Est-ce grave ?', 'Quels conseils auraient dû être donnés ?'],
     r: 'C’est le tableau classique d’imprégnation atropinique : rougeur du visage, fièvre, sécheresse buccale, agitation, tachycardie. Il traduit un passage systémique, favorisé chez le jeune enfant par le rapport dose / poids et par l’absorption via les voies lacrymales.',

@@ -127,7 +127,7 @@ window.UE_EXTRA = {
 
   UE12: {
     prereq: [],
-    mots: ['Rééducation orthoptique'],
+    mots: ['Rééducation orthoptique', 'Réfraction', 'Champ visuel', 'Tonométrie', 'Fond d’œil', 'Contactologie', 'Basse vision', 'Acuité visuelle'],
     qr: [
       ['Qu’est-ce que le secret professionnel couvre exactement ?', 'Tout ce dont le professionnel a connaissance dans l’exercice : ce qu’on lui a dit, ce qu’il a vu, ce qu’il a compris ou déduit.'],
       ['Un orthoptiste peut-il agir sans prescription ?', 'Oui dans les cas prévus par le décret d’actes — dépistage, bilan visuel dans certaines conditions — mais la rééducation reste sur prescription médicale.'],
@@ -181,7 +181,7 @@ window.UE_EXTRA = {
 
   UE13: {
     prereq: [],
-    mots: ['Film lacrymal', 'Fluorescéine', 'Uvéite'],
+    mots: ['Film lacrymal', 'Fluorescéine', 'Uvéite', 'BUT', 'Schirmer (test de)', 'Goldmann (tonomètre de)', 'Tonométrie', 'Contactologie'],
     qr: [
       ['Quel est le premier geste de prévention de la transmission croisée ?', 'La friction hydro-alcoolique des mains, avant et après chaque patient.'],
       ['Comment traite-t-on un verre d’examen entre deux patients ?', 'Nettoyage puis désinfection selon le protocole du service ; le matériel au contact de la cornée relève d’une désinfection de niveau intermédiaire au minimum.'],
@@ -232,7 +232,7 @@ window.UE_EXTRA = {
 
   UE18: {
     prereq: [],
-    mots: ['Troubles neurovisuels', 'Basse vision', 'Amblyopie'],
+    mots: ['Troubles neurovisuels', 'Basse vision', 'Amblyopie', 'Agnosie visuelle', 'Période sensible', 'Regard préférentiel', 'DEM (test)', 'Asthénopie'],
     qr: [
       ['Quelles sont les grandes étapes du développement de l’enfant utiles au bilan ?', 'Poursuite et sourire réponse vers 2-3 mois, préhension vers 5-6 mois, marche vers 12-18 mois, langage structuré vers 3 ans : elles conditionnent les tests utilisables.'],
       ['Qu’est-ce que le travail de deuil dans l’annonce d’une déficience visuelle ?', 'Une succession non linéaire : sidération, déni, colère, marchandage, dépression, acceptation. On ne saute pas les étapes du patient.'],
@@ -310,7 +310,7 @@ window.UE_EXTRA = {
 
   UE32: {
     prereq: ['UE18'],
-    mots: ['Rééducation orthoptique', 'Occlusion', 'Amsler (grille d’)'],
+    mots: ['Rééducation orthoptique', 'Occlusion', 'Amsler (grille d’)', 'Amblyopie', 'Pénalisation optique', 'Filtres de Bangerter', 'Basse vision', 'Presbytie'],
     qr: [
       ['Quelles sont les quatre étapes de l’éducation thérapeutique ?', 'Diagnostic éducatif, objectifs partagés, séances d’acquisition de compétences, évaluation.'],
       ['Comment vérifie-t-on qu’un patient a compris ?', 'En lui faisant reformuler. Jamais en demandant « vous avez compris ? ».'],
@@ -322,7 +322,7 @@ window.UE_EXTRA = {
 
   UE37: {
     prereq: ['UE11', 'UE15'],
-    mots: ['Rééducation orthoptique', 'Asthénopie', 'Insuffisance de convergence', 'PPC'],
+    mots: ['Rééducation orthoptique', 'Asthénopie', 'Insuffisance de convergence', 'PPC', 'Excès de convergence', 'Insuffisance accommodative', 'Hétérophorie', 'Amplitudes de fusion'],
     qr: [
       ['Qu’est-ce qu’un diagnostic orthoptique ?', 'La description d’un dysfonctionnement et de son retentissement — pas un diagnostic médical, et pas une liste de chiffres.'],
       ['Que doit contenir un projet de soins ?', 'Objectifs mesurables, moyens, rythme, durée prévisionnelle, critères de réévaluation et critères d’arrêt.'],
@@ -424,7 +424,7 @@ window.UE_EXTRA = {
 
   UE33: {
     prereq: ['UE10', 'UE17'],
-    mots: ['OCT', 'Topographie cornéenne', 'Fond d’œil', 'Champ visuel', 'Kératométrie'],
+    mots: ['OCT', 'Topographie cornéenne', 'Fond d’œil', 'Champ visuel', 'Kératométrie', 'Kératocône', 'Pression intraoculaire', 'Cataracte', 'Rétinopathie diabétique'],
     qr: [
       ['Que montre une OCT-angiographie de plus qu’une OCT classique ?', 'Les flux vasculaires rétiniens et choroïdiens, sans injection de colorant.'],
       ['Quel examen pour dépister un kératocône débutant ?', 'La topographie, et mieux la tomographie qui donne les deux faces et la carte d’épaisseur.'],
@@ -436,7 +436,7 @@ window.UE_EXTRA = {
 
   UE41: {
     prereq: [],
-    mots: [],
+    mots: ['Mydriase', 'Anisocorie', 'DPAR', 'Réflexe photomoteur', 'Uvéite', 'Exophtalmie', 'Ptôsis', 'Horner (syndrome de Claude Bernard-)'],
     qr: [
       ['Quel est le premier geste devant une personne inconsciente qui respire ?', 'La position latérale de sécurité, après avoir libéré les voies aériennes et alerté.'],
       ['Numéros d’urgence utiles ?', '15 SAMU, 18 pompiers, 112 numéro européen, 114 pour les personnes sourdes ou malentendantes.'],
