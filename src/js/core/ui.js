@@ -341,6 +341,53 @@
     ]);
   }
 
+  /* ------------------------------------------------------------
+     Amener un élément sous les yeux, quoi qu’il arrive.
+
+     Les modules le faisaient avec un setTimeout de 60 ms. Trois choses
+     se disputent ces 60 ms : go() qui remet le défilement à zéro juste
+     après avoir attaché la page, l’animation d’entrée .page — 0,3 s, et
+     elle transforme un ancêtre — et la mise en page elle-même, le
+     glossaire faisant plus de 40 000 px. Selon la machine et le moment,
+     on arrivait au bon endroit, à mi-chemin, ou pas du tout : cliquer un
+     terme dans Ctrl+K ouvrait le glossaire tout en haut.
+
+     On ne parie donc plus sur un délai. On attend que l’élément soit
+     dans le document, on le place, on VÉRIFIE qu’il est à l’écran, et
+     on recommence à l’image suivante tant que ce n’est pas le cas.
+     Le défilement animé est écarté ici : il se battrait avec cette
+     vérification, et on veut arriver sur ce qui a été demandé plutôt
+     que de le survoler.
+     ------------------------------------------------------------ */
+  function bring(node, opts) {
+    opts = opts || {};
+    var stop = Date.now() + 1200;
+
+    /* On calcule la position visée nous-mêmes plutôt que de la demander à
+       scrollIntoView : lui la déduit d’heuristiques qui dépendent des
+       animations en cours, et pendant l’entrée de page il ne bougeait pas. */
+    function vise(boite) {
+      var haut = node.getBoundingClientRect().top - boite.getBoundingClientRect().top + boite.scrollTop;
+      var v = opts.block === 'start'
+        ? haut - 12
+        : haut - Math.max(0, (boite.clientHeight - node.offsetHeight) / 2);
+      return Math.max(0, Math.min(v, boite.scrollHeight - boite.clientHeight));
+    }
+
+    function place(confirmation) {
+      if (!node || Date.now() > stop) return;
+      var boite = node.isConnected ? node.closest('#main') : null;
+      if (!boite) { setTimeout(place, 16); return; }        /* pas encore attaché */
+      var v = vise(boite);
+      if (Math.abs(boite.scrollTop - v) > 2) boite.scrollTop = v;
+      /* L’animation d’entrée dure 0,3 s et peut décaler la mise en page.
+         Une seconde passe après suffit à rattraper, sans clignotement. */
+      if (!confirmation) setTimeout(function () { place(true); }, 340);
+    }
+
+    setTimeout(place, 0);
+  }
+
   function empty(icon, text) {
     return el('div', { class: 'empty' }, [
       el('span', { class: 'ei', text: icon }),
@@ -402,7 +449,7 @@
       });
       var when = d.date.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
       rect.appendChild(svg('title', {}, d.total
-        ? when + ' — ' + d.cards + ' fiche' + (d.cards > 1 ? 's' : '') + ', ' + d.quiz + ' QCM, ' +
+        ? when + ' — ' + d.cards + ' fiche' + (d.cards > 1 ? 's' : '') + ', ' +
           (d.sims + d.cases) + ' exercice' + (d.sims + d.cases > 1 ? 's' : '')
         : when + ' — rien'));
       if (opts.onPick) rect.addEventListener('click', function () { opts.onPick(d); });
@@ -455,106 +502,13 @@
     }));
   }
 
-  /* ---- Drag helper (souris + pointeur) ---- */
-  function draggable(node, onMove, onEnd) {
-    node.addEventListener('pointerdown', function (e) {
-      if (e.button !== undefined && e.button !== 0) return;   // clic droit / molette : pas un glisser
-      e.preventDefault();
-      node.setPointerCapture(e.pointerId);
-      var start = { x: e.clientX, y: e.clientY };
-      function mv(ev) { onMove(ev.clientX - start.x, ev.clientY - start.y, ev); }
-      function up(ev) {
-        node.removeEventListener('pointermove', mv);
-        node.removeEventListener('pointerup', up);
-        node.removeEventListener('pointercancel', up);
-        try { node.releasePointerCapture(e.pointerId); } catch (err) { /* déjà relâché */ }
-        if (onEnd) onEnd(ev);
-      }
-      node.addEventListener('pointermove', mv);
-      node.addEventListener('pointerup', up);
-      // le glisser doit s'arrêter proprement si le navigateur reprend le pointeur
-      node.addEventListener('pointercancel', up);
-    });
-  }
-
-  /* ---- Molette / drag vertical pour molettes de phoroptere ---- */
-  function knob(opts) {
-    // opts: {value, min, max, step, label, format, onChange}
-    var value = opts.value;
-    var valNode = el('div', { class: 'val' });
-    var tick = el('div', { class: 'dial-tick' });
-    var dial = el('div', {
-      class: 'dial', role: 'slider', tabindex: '0',
-      'aria-label': opts.label || 'Molette',
-      'aria-valuemin': opts.min, 'aria-valuemax': opts.max
-    }, [tick, valNode]);
-    var wrap = el('div', { class: 'dial-wrap' }, [
-      dial,
-      el('div', { class: 'lbl', text: opts.label })
-    ]);
-
-    function render() {
-      var txt = opts.format ? opts.format(value) : String(value);
-      valNode.textContent = txt;
-      dial.setAttribute('aria-valuenow', value);
-      dial.setAttribute('aria-valuetext', txt);
-      var span = (opts.max - opts.min) || 1;
-      var ang = ((value - opts.min) / span) * 300 - 150;
-      tick.style.transform = 'rotate(' + ang + 'deg)';
-      tick.style.transformOrigin = '50% 45px';
-    }
-
-    function setValue(v, silent) {
-      var nv = Math.min(opts.max, Math.max(opts.min, Math.round(v / opts.step) * opts.step));
-      nv = parseFloat(nv.toFixed(4));
-      if (nv === value) return;
-      value = nv;
-      render();
-      if (!silent && opts.onChange) opts.onChange(value);
-    }
-
-    var acc = 0;
-    draggable(dial, function (dx, dy) {
-      acc = -dy;
-      var steps = Math.round(acc / 8);
-      if (steps !== 0) {
-        setValue(value + steps * opts.step);
-        acc = 0;
-      }
-    });
-    dial.addEventListener('wheel', function (e) {
-      e.preventDefault();
-      setValue(value + (e.deltaY < 0 ? opts.step : -opts.step));
-    }, { passive: false });
-
-    /* la molette se règle aussi au clavier : indispensable pour un réglage fin */
-    dial.addEventListener('keydown', function (e) {
-      var big = (opts.max - opts.min) / 10;
-      var d = 0;
-      if (e.key === 'ArrowUp' || e.key === 'ArrowRight') d = opts.step;
-      else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') d = -opts.step;
-      else if (e.key === 'PageUp') d = Math.max(opts.step, Math.round(big / opts.step) * opts.step);
-      else if (e.key === 'PageDown') d = -Math.max(opts.step, Math.round(big / opts.step) * opts.step);
-      else if (e.key === 'Home') { e.preventDefault(); setValue(opts.min); return; }
-      else if (e.key === 'End') { e.preventDefault(); setValue(opts.max); return; }
-      else return;
-      e.preventDefault();
-      setValue(value + d);
-    });
-
-    render();
-    wrap.getValue = function () { return value; };
-    wrap.setValue = function (v) { setValue(v, true); render(); };
-    wrap.setValueLoud = setValue;
-    return wrap;
-  }
-
   window.UI = {
     el: el, svg: svg, clear: clear, toast: toast, copy: copy, download: download,
     page: page, card: card, field: field, num: num, select: select, range: range,
     tabs: tabs, accordion: accordion, table: table, kv: kv, note: note, chip: chip,
-    btn: btn, stat: stat, bar: bar, draggable: draggable, knob: knob, clickable: clickable,
+    btn: btn, stat: stat, bar: bar,
     hotkeys: hotkeys, keyhint: keyhint,
-    ring: ring, metric: metric, modTile: modTile, empty: empty, heatmap: heatmap
+    ring: ring, metric: metric, modTile: modTile, empty: empty, heatmap: heatmap,
+    bring: bring
   };
 })();

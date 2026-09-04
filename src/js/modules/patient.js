@@ -6,39 +6,35 @@
   var M = (window.Modules = window.Modules || {});
   var el = UI.el;
 
-  /* `task` : ce que l'étudiant doit obtenir dans le simulateur. C'est ce
-     texte qui s'affiche en bandeau de la fenêtre — un examen prescrit est
-     une question posée, pas un bouton à cliquer. */
+  /* `task` : la question à laquelle l'examen doit répondre. Un examen prescrit
+     est une question posée, pas un bouton à cliquer : on en lit le compte
+     rendu, puis on l'interprète — et c'est l'interprétation qui est notée.
+     Les identifiants sont ceux de core/reading.js, qui fabrique les items
+     d'interprétation à partir des valeurs du dossier. */
   var TESTS = [
-    { id: 'acuity', name: 'Acuité visuelle', ic: '🔠', mod: 'acuity',
-      task: 'Mesurez l’acuité de l’œil le plus faible, de loin, et notez la ligne atteinte.' },
-    { id: 'phoropter', name: 'Réfraction (phoroptère)', ic: '🔭', mod: 'phoropter',
-      task: 'Faites la réfraction subjective des deux yeux, puis validez.' },
-    { id: 'skiascopy', name: 'Skiascopie (réfraction objective)', ic: '🔦', mod: 'skiascopy',
-      task: 'Neutralisez deux méridiens par œil, retranchez le verre de travail, puis validez.' },
-    { id: 'covertest', name: 'Cover test', ic: '👁', mod: 'covertest',
-      task: 'Cover test unilatéral puis alterné, de loin et de près : nature et amplitude de la déviation.' },
-    { id: 'prism', name: 'Mesure au prisme', ic: '🔺', mod: 'prism',
-      task: 'Neutralisez la déviation à la barre de prismes et donnez l’angle.' },
-    { id: 'motility', name: 'Motilité (9 positions)', ic: '🔄', mod: 'motility',
-      task: 'Explorez les 9 positions du regard et identifiez le muscle déficitaire.' },
-    { id: 'lancaster', name: 'Test de Lancaster', ic: '🟥', mod: 'lancaster',
-      task: 'Relevez le schéma des deux yeux et concluez sur le muscle atteint.' },
-    { id: 'binocular', name: 'Vision binoculaire (Worth, fusion, stéréo)', ic: '🔗', mod: 'binocular',
-      task: 'Worth, Maddox, amplitudes de fusion et stéréoscopie : faites le bilan sensoriel.' },
-    { id: 'ppc', name: 'PPC & convergence', ic: '🎯', mod: 'ppc',
-      task: 'Approchez la cible et notez le point de rupture puis de recouvrement.' },
-    { id: 'fundus', name: 'Fond d’œil', ic: '🔴', mod: 'fundus',
-      task: 'Examinez les deux fonds d’œil, estimez le C/D et concluez.' },
-    { id: 'colorvision', name: 'Vision des couleurs', ic: '🎨', mod: 'colorvision',
-      task: 'Faites lire les planches et concluez sur l’axe de la dyschromatopsie.' },
-    { id: 'fields', name: 'Champ visuel / Amsler', ic: '🗺', mod: 'fields',
-      task: 'Analysez le relevé des deux yeux et la grille d’Amsler, puis concluez.' }
+    { id: 'acuity', name: 'Acuité visuelle', ic: '🔠',
+      task: 'Quelle acuité chaque œil atteint-il, de loin et de près, avec sa correction ?' },
+    { id: 'phoropter', name: 'Réfraction', ic: '🔭',
+      task: 'Quelle est la réfraction des deux yeux, et que change-t-elle à l’acuité ?' },
+    { id: 'covertest', name: 'Cover test', ic: '👁',
+      task: 'Nature et amplitude de la déviation, de loin et de près — unilatéral puis alterné.' },
+    { id: 'prism', name: 'Mesure au prisme', ic: '🔺',
+      task: 'Quel angle neutralise la déviation, et comment se répartit-il ?' },
+    { id: 'motility', name: 'Motilité (9 positions)', ic: '🔄',
+      task: 'Quelle position du regard est limitée, et quel muscle est en cause ?' },
+    { id: 'lancaster', name: 'Test de Lancaster', ic: '🟥',
+      task: 'Que disent les deux schémas : quel muscle est déficitaire, lequel est hyperactif ?' },
+    { id: 'binocular', name: 'Vision binoculaire (Worth, fusion, stéréo)', ic: '🔗',
+      task: 'Worth, amplitudes de fusion et stéréoscopie : où en est la vision binoculaire ?' },
+    { id: 'ppc', name: 'PPC & convergence', ic: '🎯',
+      task: 'Où se situent la rupture et le recouvrement, et est-ce normal ?' },
+    { id: 'fundus', name: 'Fond d’œil', ic: '🔴',
+      task: 'Papille, macula, rapport C/D : le fond d’œil est-il normal ?' },
+    { id: 'colorvision', name: 'Vision des couleurs', ic: '🎨',
+      task: 'Y a-t-il une dyschromatopsie, et selon quel axe ?' },
+    { id: 'fields', name: 'Champ visuel / Amsler', ic: '🗺',
+      task: 'Quel déficit le relevé montre-t-il, et où le situer sur les voies visuelles ?' }
   ];
-
-  /* La skiascopie n'est pas prescriptible séparément : elle double la
-     réfraction et s'ouvre depuis la carte du phoroptère. */
-  var PRESCRIBABLE = TESTS.filter(function (t) { return t.id !== 'skiascopy'; });
 
   function testById(id) {
     return TESTS.filter(function (t) { return t.id === id; })[0];
@@ -62,7 +58,7 @@
     };
   }
 
-  /* Moyenne des gestes techniques réellement réalisés (0 si aucun) */
+  /* Moyenne des interprétations réellement validées (null si aucune) */
   function techScore(sess) {
     var ids = Object.keys(sess.sims || {}).filter(function (k) { return sess.sims[k].validated; });
     if (!ids.length) return null;
@@ -77,7 +73,7 @@
   }
 
   M.patient = {
-    id: 'patient', title: 'Mode patient', icon: '🩺', group: 'Simulateurs',
+    id: 'patient', title: 'Mode patient', icon: '🩺', group: 'Pratiquer',
     desc: 'Un patient arrive : anamnèse, choix des examens, diagnostic, conduite à tenir',
     keywords: 'patient cas clinique consultation anamnese diagnostic bilan conduite aleatoire',
 
@@ -113,10 +109,10 @@
         var genStats = Object.keys(Store.state.cases).filter(function (k) { return k.indexOf('gen:') === 0; }).length;
 
         return UI.page({
-          crumb: 'Simulateurs',
+          crumb: 'Pratiquer',
           title: 'Mode patient',
-          subtitle: 'Interrogez le patient, choisissez les examens pertinents — ils ouvrent les simulateurs <b>réglés sur son dossier</b> — ' +
-                    'puis posez votre diagnostic et votre conduite à tenir.'
+          subtitle: 'Interrogez le patient, choisissez les examens pertinents — leur compte rendu est <b>calculé sur son dossier</b>, ' +
+                    'à vous de l’interpréter — puis posez votre diagnostic et votre conduite à tenir.'
         }, [
           UI.card('Patient inédit', [
             el('div', { class: 'flex wrap' }, [
@@ -151,8 +147,8 @@
             ]),
             UI.note('Chaque examen demandé a un coût : les examens <b>non pertinents</b> font baisser la note, comme en pratique où l’on ne multiplie pas les tests inutiles. ' +
               'Les examens pertinents oubliés pénalisent aussi. Un bilan, c’est une hypothèse que l’on teste, pas une liste que l’on déroule.'),
-            UI.note('<b>Les examens se font vraiment.</b> Prescrire ouvre le simulateur réglé sur ce patient, avec la consigne ; ' +
-              'le compte rendu n’apparaît qu’ensuite. La moyenne de vos gestes techniques rapporte jusqu’à <b>5 points</b> sur la note finale.')
+            UI.note('<b>Prescrire ne suffit pas.</b> Chaque examen prescrit livre son compte rendu, rédigé comme au dossier, ' +
+              'puis vous demande de l’interpréter. La moyenne de vos interprétations rapporte jusqu’à <b>5 points</b> sur la note finale.')
           ])
         ]);
       }
@@ -161,36 +157,66 @@
       var c = resolveCase();
       if (!c) { session = null; return M.patient.render({}); }
 
-      /* Ouvre le simulateur sur le dossier, avec la consigne, et récupère
-         la note obtenue à la fermeture : ce que l'étudiant fait dans le
-         simulateur compte dans la consultation. */
-      function openSim(t, after) {
-        var before = (Store.score(t.mod) || {}).at || 0;
-        var rec = session.sims[t.id] || { opened: false, validated: false, score: 0 };
+      /* Découvre le compte rendu d'un examen. Les questions d'interprétation
+         qui l'accompagnent sont dérivées des valeurs cliniques du dossier
+         (core/reading.js) : elles suivent le patient, elles ne sont pas
+         écrites à la main. */
+      function revealTest(t, after) {
+        var rec = session.sims[t.id] || { opened: false, validated: false, score: 0, answers: {} };
         rec.opened = true;
+        if (!rec.answers) rec.answers = {};
         session.sims[t.id] = rec;
-
-        App.closeModule._after = function () {
-          var sc = Store.score(t.mod);
-          if (sc && sc.at > before) { rec.validated = true; rec.score = sc.last; }
-          session.revealed[t.id] = true;
-          if (after) after();
-        };
-
-        App.openModule(t.mod, { sim: c.sim, fromCase: c.id }, {
-          subtitle: 'Dossier de ' + c.name + ', ' + c.age + ' ans — ' + t.name,
-          banner: '🩺 <b>' + c.name + ', ' + c.age + ' ans</b> — ' + t.task +
-                  ' Validez dans le simulateur : votre note est reprise dans le bilan. ' +
-                  'Fermez ensuite avec la croix (ou Échap) pour lire le compte rendu.'
-        });
+        session.revealed[t.id] = true;
+        if (after) after();
       }
 
       /* Étiquette de l'état d'un examen prescrit */
       function simChip(id) {
         var r = session.sims[id];
-        if (!r || !r.opened) return UI.chip('Compte rendu lu', '');
-        if (!r.validated) return UI.chip('Ouvert, non validé', 'amber');
-        return UI.chip('Réalisé par vous — ' + r.score + ' %', r.score >= 70 ? 'green' : r.score >= 45 ? 'amber' : 'red');
+        if (!r || !r.opened) return UI.chip('Non lu', '');
+        if (!Reading.forTest(c, id).length) return UI.chip('Lu', '');
+        if (!r.validated) return UI.chip('Lu, pas encore interprété', 'amber');
+        return UI.chip('Interprété — ' + r.score + ' %', r.score >= 70 ? 'green' : r.score >= 45 ? 'amber' : 'red');
+      }
+
+      /* Une question d'interprétation, avec sa correction une fois validée. */
+      function itemField(rec, it) {
+        var wrap = el('div', { class: 'read-item' });
+        wrap.appendChild(el('div', { class: 'ri-q', html: it.label }));
+        var done = rec.validated;
+        if (it.type === 'choice') {
+          var opts = el('div', { class: 'ri-opts' });
+          it.options.forEach(function (o, i) {
+            var chosen = rec.answers[it.id] === i;
+            var cls = 'q-opt';
+            if (done) {
+              if (i === it.answer) cls += ' right';
+              else if (chosen) cls += ' wrong';
+              cls += ' locked';
+            } else if (chosen) cls += ' sel';
+            opts.appendChild(el('div', {
+              class: cls,
+              onClick: done ? null : function () {
+                rec.answers[it.id] = i;
+                opts.querySelectorAll('.q-opt').forEach(function (n, j) { n.classList.toggle('sel', j === i); });
+              }
+            }, [el('span', { class: 'mark', text: String.fromCharCode(65 + i) }), el('span', { text: o })]));
+          });
+          wrap.appendChild(opts);
+        } else {
+          var input = UI.num(rec.answers[it.id] === undefined ? '' : rec.answers[it.id],
+            function (v) { rec.answers[it.id] = v; }, { step: 1, disabled: done || null });
+          input.style.maxWidth = '150px';
+          var chk = Reading.check(it, rec.answers[it.id]);
+          wrap.appendChild(el('div', { class: 'flex', style: { gap: '9px' } }, [
+            input,
+            el('span', { class: 'muted small', text: it.unit || '' }),
+            done ? el('span', { class: 'chip static ' + (chk.ok ? 'green' : 'red'),
+              text: chk.ok ? '✔ juste' : '✘ ' + it.answer + ' ' + (it.unit || '') }) : null
+          ].filter(Boolean)));
+        }
+        if (done && it.why) wrap.appendChild(UI.note(it.why));
+        return wrap;
       }
 
       var timeline = el('div', { class: 'timeline', style: { marginBottom: '14px' } }, [
@@ -296,7 +322,8 @@
             var t = testById(id);
             var info = c.tests[id];
             var seen = session.revealed[id];
-            var rec = session.sims[id];
+            var rec = session.sims[id] || { opened: false, validated: false, score: 0, answers: {} };
+            var items = Reading.forTest(c, id);
 
             results.appendChild(el('div', { class: 'card', style: { marginBottom: '10px', background: 'var(--bg-3)' } }, [
               el('div', { class: 'flex' }, [
@@ -306,32 +333,33 @@
                 UI.chip(info && info.relevant ? 'Pertinent' : 'Peu contributif', info && info.relevant ? 'green' : 'amber')
               ].filter(Boolean)),
 
-              // tant que l'examen n'est pas fait, son résultat reste caché :
-              // c'est le geste qui donne le compte rendu, pas la prescription
+              // tant que l'examen n'est pas prescrit, son résultat reste caché
               seen
-                ? el('p', { class: 'selectable', style: { marginBottom: '8px' }, text: info ? info.result : 'Examen sans particularité.' })
+                ? el('div', { class: 'ue-cas-s selectable', style: { marginBottom: '10px' } },
+                    info ? info.result : 'Examen sans particularité.')
                 : el('p', { class: 'muted', style: { marginBottom: '8px' },
                     text: '⏳ ' + t.task + ' Le compte rendu s’affichera ensuite.' }),
 
-              el('div', { class: 'btn-row' }, [
-                UI.btn(rec && rec.opened ? '▶ Refaire ce test' : '▶ Réaliser ce test', function () {
-                  openSim(t, function () { redrawResults(); redrawMenu(); });
-                }, rec && rec.validated ? 'sm' : 'sm primary'),
-                seen ? null : UI.btn('Lire le compte rendu sans manipuler', function () {
-                  session.revealed[id] = true;
-                  redrawResults();
-                }, 'sm ghost'),
-                // la réfraction du dossier alimente aussi la skiascopie : même patient, mesure objective
-                t.id === 'phoropter' && c.sim && c.sim.refraction
-                  ? UI.btn('🔦 Skiascopie sur ce patient', function () {
-                      openSim(testById('skiascopy'), function () { redrawResults(); });
-                    }, 'sm')
-                  : null,
-                session.sims.skiascopy && t.id === 'phoropter'
-                  ? el('span', { class: 'muted small', text: 'Skiascopie : ' +
-                      (session.sims.skiascopy.validated ? session.sims.skiascopy.score + ' %' : 'ouverte, non validée') })
-                  : null
-              ].filter(Boolean))
+              // l'interprétation, dérivée des valeurs cliniques du dossier
+              seen && items.length
+                ? el('div', {}, items.map(function (it) { return itemField(rec, it); })
+                    .concat([el('div', { class: 'btn-row' }, [
+                      rec.validated ? null : UI.btn('Valider mon interprétation', function () {
+                        var sc = Reading.score(items, rec.answers);
+                        rec.validated = true;
+                        rec.score = sc.pct;
+                        redrawResults(); redrawMenu();
+                      }, 'sm primary'),
+                      rec.validated ? el('span', { class: 'muted small',
+                        text: Reading.score(items, rec.answers).ok + '/' + items.length + ' items justes' }) : null
+                    ].filter(Boolean))]))
+                : null,
+
+              !seen ? el('div', { class: 'btn-row' }, [
+                UI.btn('▶ Réaliser cet examen', function () {
+                  revealTest(t, function () { redrawResults(); redrawMenu(); });
+                }, 'sm primary')
+              ]) : null
             ]));
           });
         }
@@ -340,15 +368,14 @@
         var menu = el('div');
         function redrawMenu() {
           UI.clear(menu);
-          PRESCRIBABLE.forEach(function (t) {
+          TESTS.forEach(function (t) {
             var already = session.done.indexOf(t.id) >= 0;
             var rec = session.sims[t.id];
             menu.appendChild(el('div', {
               class: 'tool-card', style: Object.assign({ marginBottom: '8px', padding: '11px 13px' }, already ? { borderColor: 'var(--accent)' } : {}),
               onClick: function () {
                 if (session.done.indexOf(t.id) < 0) session.done.push(t.id);
-                redrawResults(); redrawMenu();
-                openSim(t, function () { redrawResults(); redrawMenu(); });
+                revealTest(t, function () { redrawResults(); redrawMenu(); });
               }
             }, [
               el('div', { class: 'flex' }, [
@@ -376,8 +403,9 @@
           ]),
           UI.card('Prescrire un examen', [
             menu,
-            UI.note('Prescrire un examen, c’est le <b>faire</b> : le simulateur s’ouvre réglé sur ce patient, avec la consigne. ' +
-              'Le compte rendu n’apparaît qu’une fois l’examen réalisé, et la note du simulateur compte dans le bilan final.')
+            UI.note('Prescrire un examen, c’est le <b>faire</b> : son compte rendu s’ouvre, rédigé comme au dossier. ' +
+              'Reste le plus difficile — <b>l’interpréter</b>. Vos réponses comptent dans le bilan final, ' +
+              'et prescrire un examen inutile vous coûte des points.')
           ])
         ]);
       }
@@ -455,7 +483,7 @@
         var hit = session.management.filter(function (i) { return good.indexOf(i) >= 0; }).length;
         var bad = session.management.filter(function (i) { return good.indexOf(i) < 0; }).length;
         var catScore = Math.max(0, 30 * (hit / good.length) - bad * 8);
-        // les gestes techniques réellement réalisés valent jusqu'à 5 points de bonus
+        // les interprétations validées valent jusqu'à 5 points de bonus
         var tech = techScore(session);
         var techBonus = tech ? Math.round((tech.avg / 100) * 5) : 0;
         var total = Math.round(Math.max(0, Math.min(100, anamScore + testScore + dxScore + catScore + techBonus)));
@@ -480,30 +508,30 @@
             ]),
             el('div', { class: 'grid g3 mt16' }, [
               UI.stat(Math.round(catScore) + '/30', 'Conduite à tenir'),
-              UI.stat('+' + techBonus + '/5', 'Gestes techniques', techBonus >= 4 ? 'var(--green)' : techBonus ? 'var(--amber)' : 'var(--txt-3)'),
+              UI.stat('+' + techBonus + '/5', 'Interprétation', techBonus >= 4 ? 'var(--green)' : techBonus ? 'var(--amber)' : 'var(--txt-3)'),
               UI.stat(session.done.length, 'Examens prescrits')
             ])
           ]),
 
-          UI.card('Gestes techniques', [
+          UI.card('Interprétation des examens', [
             tech
-              ? UI.table(['Examen', 'Réalisé', 'Note'], session.done.concat(session.sims.skiascopy ? ['skiascopy'] : [])
+              ? UI.table(['Examen', 'Interprété', 'Note'], session.done
                   .filter(function (id, i, arr) { return arr.indexOf(id) === i; })
                   .map(function (id) {
                     var r = session.sims[id];
                     return [
                       (testById(id) || { name: id }).name,
-                      !r || !r.opened ? 'Non — compte rendu lu' : r.validated ? 'Oui, validé' : 'Ouvert sans valider',
+                      !r || !r.opened ? 'Non prescrit' : r.validated ? 'Oui, validé' : 'Lu sans conclure',
                       r && r.validated
                         ? el('span', { style: { color: r.score >= 70 ? 'var(--green)' : r.score >= 45 ? 'var(--amber)' : 'var(--red)', fontWeight: '700' }, text: r.score + ' %' })
                         : '—'
                     ];
                   }))
-              : UI.empty('🔬', 'Vous n’avez réalisé aucun examen vous-même sur ce patient.<br>Les comptes rendus lus sans manipuler ne rapportent pas de points de technique.'),
+              : UI.empty('🔬', 'Vous n’avez interprété aucun examen de ce patient.<br>Un compte rendu lu sans conclusion validée ne rapporte pas de points.'),
             tech
-              ? UI.note('Moyenne technique <b>' + tech.avg + ' %</b> sur <b>' + tech.n + ' examen' + (tech.n > 1 ? 's' : '') +
-                  '</b> réellement pratiqué' + (tech.n > 1 ? 's' : '') + ' → <b>+' + techBonus + ' point' + (techBonus > 1 ? 's' : '') + '</b> sur la note de consultation. ' +
-                  'Un bilan juste sur le papier ne vaut rien si le geste ne suit pas.')
+              ? UI.note('Moyenne d’interprétation <b>' + tech.avg + ' %</b> sur <b>' + tech.n + ' examen' + (tech.n > 1 ? 's' : '') +
+                  '</b> conclu' + (tech.n > 1 ? 's' : '') + ' → <b>+' + techBonus + ' point' + (techBonus > 1 ? 's' : '') + '</b> sur la note de consultation. ' +
+                  'Prescrire le bon examen ne sert à rien si son compte rendu est mal lu.')
               : null
           ].filter(Boolean)),
           UI.card('Diagnostic', [
@@ -610,7 +638,7 @@
       return UI.page({
         crumb: 'Mode patient',
         title: 'Consultation — ' + c.name,
-        subtitle: 'Suivez le déroulé d’un vrai bilan. Les simulateurs s’ouvrent par-dessus la consultation, réglés sur ce dossier.'
+        subtitle: 'Suivez le déroulé d’un vrai bilan : chaque examen prescrit livre son compte rendu, calculé sur ce dossier, et vous l’interprétez.'
       }, [timeline, header, body]);
     }
   };

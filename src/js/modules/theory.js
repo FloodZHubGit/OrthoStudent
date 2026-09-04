@@ -7,7 +7,7 @@
   var el = UI.el;
 
   M.theory = {
-    id: 'theory', title: 'Cours & fiches', icon: '📚', group: 'Savoir',
+    id: 'theory', title: 'Cours & fiches', icon: '📚', group: 'Réviser',
     desc: 'Anatomie, oculomotricité, vision binoculaire, réfraction, pathologies',
     keywords: 'cours theorie anatomie physiologie pathologie strabisme refraction',
     render: function (ctx) {
@@ -54,7 +54,10 @@
             return { title: s.title, tag: s.tag, body: s.html, open: i === open };
           }))
         ));
-        if (wanted && open > 0) setTimeout(function () { openOnly(open); }, 60);
+        if (wanted && open > 0) {
+          /* la section est déjà dépliée par l'accordéon ; il reste à y aller */
+          UI.bring(body.querySelectorAll('.acc-item')[open], { block: 'start' });
+        }
         wanted = null;
       }
 
@@ -79,7 +82,7 @@
       draw(current);
 
       return UI.page({
-        crumb: 'Savoir',
+        crumb: 'Réviser',
         title: 'Cours & fiches de synthèse',
         subtitle: 'Le socle théorique organisé par grands chapitres. Cliquez sur un titre pour déplier la fiche ; le texte est sélectionnable et copiable.'
       }, [nav, body]);

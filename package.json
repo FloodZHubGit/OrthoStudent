@@ -2,7 +2,7 @@
   "name": "orthostudent",
   "productName": "OrthoStudent",
   "version": "1.0.0",
-  "description": "Suite d'outils, de simulateurs cliniques et de revision pour les etudiants en orthoptie",
+  "description": "Suite de revision, de bilans a interpreter et de consultations simulees pour les etudiants en orthoptie",
   "author": "OrthoStudent",
   "license": "MIT",
   "main": "main.js",
@@ -11,7 +11,19 @@
     "dist": "electron-builder -mw",
     "dist:win": "electron-builder --win",
     "dist:mac": "electron-builder --mac",
-    "postinstall": "electron-builder install-app-deps"
+    "edt": "node scripts/fetch-edt.js",
+    "audit": "node scripts/audit-donnees.js",
+    "smoke": "electron scripts/smoke.js",
+    "postinstall": "electron-builder install-app-deps",
+    "repet": "electron scripts/repet-essai.js",
+    "audit:cours": "node scripts/audit-cours.js",
+    "atelier": "node scripts/atelier-essai.js",
+    "saut": "electron scripts/saut-essai.js",
+    "seances": "node scripts/edt-essai.js",
+    "anki": "node scripts/anki-essai.js",
+    "anki:ecran": "electron scripts/anki-ecran.js",
+    "lab": "node scripts/lab-essai.js",
+    "lab:ecran": "electron scripts/lab-ecran.js"
   },
   "devDependencies": {
     "electron": "^32.2.0",
@@ -26,6 +38,8 @@
     "files": [
       "main.js",
       "preload.js",
+      "celcat.js",
+      "anki.js",
       "src/**/*",
       "package.json"
     ],

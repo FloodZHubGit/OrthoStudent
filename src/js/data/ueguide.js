@@ -17,7 +17,7 @@ window.UE_GUIDE = {
 
 /* ============================ SEMESTRE 1 ============================ */
 
-UE1: {
+UE01: {
   resume: 'De la cellule au tissu : ce qui fait qu’un œil est transparent, sensible à la lumière, et transmissible.',
   objectifs: [
     'Relier la structure d’un tissu oculaire à sa fonction',
@@ -66,7 +66,7 @@ UE1: {
   methode: 'Dessinez la coupe de rétine de mémoire tous les deux jours jusqu’à ce qu’elle sorte sans effort, et associez un exemple emblématique à chaque mode de transmission.'
 },
 
-UE2: {
+UE02: {
   resume: 'L’optique dont vous vous servirez tous les jours : vergences, prismes, astigmatisme, et l’œil comme système optique.',
   objectifs: [
     'Manipuler vergences, dioptries et distances sans hésitation',
@@ -117,7 +117,7 @@ UE2: {
   methode: 'UE d’entraînement, pas de mémorisation : vingt exercices valent mieux que dix pages relues. Vérifiez-vous avec le calcul instantané (Ctrl+K puis « prentice 4 3 » ou « -2,50 -1,00 90 »).'
 },
 
-UE3: {
+UE03: {
   resume: 'Trouver la correction d’un œil, objectivement puis subjectivement, et savoir la prescrire.',
   objectifs: [
     'Conduire une skiascopie et une réfraction subjective complètes',
@@ -165,10 +165,10 @@ UE3: {
     'Ordonnance à rédiger et à transposer',
     'Indications comparées des cycloplégiques'
   ],
-  methode: 'Alternez le simulateur de skiascopie et le phoroptère jusqu’à dépasser 80 % de façon régulière, et notez l’erreur systématique qui revient : c’est toujours la même.'
+  methode: 'Enchaînez les lectures de bilan portant sur la réfraction jusqu’à dépasser 80 % de façon régulière, et notez l’erreur systématique qui revient : c’est toujours la même.'
 },
 
-UE4: {
+UE04: {
   resume: 'Du photon au cortex : comment le signal naît, se transforme et se transmet — et ce que mesurent les explorations.',
   objectifs: [
     'Décrire le trajet du signal visuel étage par étage',
@@ -216,7 +216,7 @@ UE4: {
   methode: 'Tout tient dans un schéma : les voies visuelles avec les cinq sites de lésion classiques et leurs déficits. Le maîtriser ici, c’est aussi gagner l’UE22.'
 },
 
-UE5: {
+UE05: {
   resume: 'Mesurer ce que l’œil voit : les acuités, leurs échelles, leurs limites — et ce qu’une baisse veut dire.',
   objectifs: [
     'Mesurer et convertir une acuité dans toutes les notations',
@@ -265,7 +265,7 @@ UE5: {
   methode: 'Les conversions doivent être automatiques : entraînez-vous avec Ctrl+K (« 5/10 », « logmar 0,3 »), puis refaites-les à froid sans l’application.'
 },
 
-UE7: {
+UE07: {
   resume: 'L’anatomie qui explique la clinique : six muscles, trois nerfs, une orbite — et ce qui se passe quand l’un lâche.',
   objectifs: [
     'Situer origine, trajet, insertion et innervation de chaque muscle',
@@ -313,7 +313,7 @@ UE7: {
   methode: 'Le module Anatomie interactive sert exactement à ça : cliquez chaque structure jusqu’à ce que le nom vienne avant l’étiquette, puis refaites le schéma sur papier.'
 },
 
-UE8: {
+UE08: {
   resume: 'Comment les deux yeux bougent ensemble et fabriquent une seule vision en relief.',
   objectifs: [
     'Énoncer et appliquer les lois de la motilité oculaire',
@@ -362,7 +362,7 @@ UE8: {
   methode: 'Reliez chaque loi à un test : Hering → cover test alterné dans une paralysie, Worth → verres rouge-vert, Panum → stéréotests.'
 },
 
-UE9: {
+UE09: {
   resume: 'Quand la binocularité se déséquilibre : phories, tropies, incomitances, et les adaptations que l’enfant met en place.',
   objectifs: [
     'Distinguer phorie, tropie, comitance et incomitance',
@@ -503,7 +503,7 @@ UE16: {
     'Reconnaissance de fond d’œil pathologique',
     'Signes oculaires du diabète et de l’HTA'
   ],
-  methode: 'Le simulateur de fond d’œil contient les treize tableaux classiques : entraînez-vous en mode diagnostic jusqu’à reconnaître chaque image en moins de cinq secondes.'
+  methode: 'Les comptes rendus de fond d’œil reprennent les treize tableaux classiques : lisez-en un par jour jusqu’à nommer le diagnostic avant d’avoir fini le paragraphe.'
 },
 
 /* ============================ SEMESTRE 2 ============================ */

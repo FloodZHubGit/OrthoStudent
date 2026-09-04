@@ -6,16 +6,63 @@
   var el = UI.el;
   var M = window.Modules;
 
+  /* L'ordre est celui de l'apprentissage, pas celui du code : on révise une UE,
+     on récite ce qu'elle contient, on pose ses calculs, et l'on relit le cours
+     quand il manque quelque chose. Le reste — mise en situation, simulateurs,
+     outils — vient après, et les références se consultent au besoin. */
+  /* « Mes UE » n'est pas une entrée parmi d'autres : c'est le programme de
+     l'étudiant, donc le point de départ de toute révision. Elle est sortie de
+     la liste et affichée en tête, avec l'état du semestre en cours. Le reste
+     tient en trois groupes courts : ce qu'on fait chaque jour, la pratique,
+     et ce qu'on ouvre pour une question précise. */
+  var HERO = 'studies';
+
   var NAV = [
-    { group: 'Général', items: ['home', 'studies', 'help'] },
-    { group: 'Révision', items: ['flashcards', 'quiz', 'exam', 'progress'] },
-    { group: 'Mise en situation', items: ['patient', 'rehab'] },
-    { group: 'Simulateurs', items: ['phoropter', 'skiascopy', 'acuity', 'covertest', 'prism', 'motility', 'lancaster', 'binocular', 'ppc', 'fundus', 'colorvision', 'fields'] },
-    { group: 'Outils', items: ['converters'] },
-    { group: 'Savoir', items: ['theory', 'anatomy', 'glossary'] }
+    /* « Séance du jour » n'a pas d'entrée : son plan est rendu sur l'accueil.
+       Deux entrées pour la même question — que faire maintenant ? — obligeaient
+       à choisir entre deux écrans qui se répondaient l'un l'autre. Le module
+       garde sa page, atteignable depuis l'accueil et depuis la recherche. */
+    { group: 'Mon travail', items: ['home', 'chat', 'edt', 'flashcards', 'revise', 'progress'] },
+    /* « Lecture de bilan » avant « Mode patient » : c'est le plus court des
+       deux, celui par lequel le guide fait entrer, et celui que Ctrl+2
+       ouvre. La consultation vient après, elle demande de choisir. */
+    { group: 'Pratiquer', items: ['reading', 'patient', 'rehab', 'atelier', 'vision'] },
+    { group: 'Références', items: ['converters', 'anatomy', 'glossary', 'help'] }
   ];
 
-  var ALIASES = { disclaimer: 'help' };
+  /* certains points d'entrée (menu Aide) visent une section précise d'un module */
+  var ALIASES = {
+    disclaimer: { id: 'help', params: { tab: 'limits' } },
+    muscles: { id: 'anatomy', params: { tab: 'actions' } }
+  };
+
+  /* Exercices notés qui ne sont pas des modules : les cas d'application d'une
+     UE sont rendus par « Mes UE » mais gardent leur propre note. Les nommer
+     ici évite que chaque écran de statistiques les oublie chacun à sa façon. */
+  var EXTRA_SCORED = { 'ue-cas': '🎓  Cas d’application d’UE' };
+
+  /* Comment nommer un identifiant noté — null s'il ne correspond plus à rien,
+     ce qui arrive avec les notes d'un module retiré. */
+  function scoredLabel(id) {
+    if (M[id]) return (M[id].icon || '') + '  ' + M[id].title;
+    return EXTRA_SCORED[id] || null;
+  }
+
+  function resolve(id, params) {
+    var a = ALIASES[id];
+    if (!a) return { id: id, params: params || {} };
+    if (typeof a === 'string') return { id: a, params: params || {} };
+    return { id: a.id, params: Object.assign({}, a.params, params || {}) };
+  }
+
+  /* Certaines entrées de la barre en hébergent d'autres (« Réviser » contient
+     l'atelier de calcul et le cours) : ouvrir un module hébergé
+     par un lien direct doit allumer l'entrée qui le contient. */
+  function navHolds(navId, id) {
+    if (navId === id) return true;
+    var mod = M[navId];
+    return !!(mod && mod.children && mod.children.indexOf(id) >= 0);
+  }
 
   var current = 'home';
   var view = document.getElementById('view');
@@ -23,22 +70,71 @@
 
   /* ---------------- Navigation ---------------- */
 
+  /* L'entrée de tête : le programme de l'étudiant, avec l'état du semestre.
+     Elle n'est pas une ligne de plus dans la liste — c'est le point de départ. */
+  function navHero() {
+    var mod = M[HERO];
+    if (!mod) return null;
+    var semId = Store.state.profile.semester;
+    var sem = semId ? (window.CURRICULUM || []).filter(function (x) { return x.id === semId; })[0] : null;
+    var ready = null, left = null;
+    if (sem && M.studies && M.studies.readiness) {
+      try { ready = M.studies.readiness(sem.id); left = M.studies.daysToExam(sem.id); } catch (e) { ready = null; }
+    }
+    var sub = sem
+      ? sem.label + ' · ' + sem.ues.length + ' UE' + (left === null || left < 0 ? '' : ' · J−' + left)
+      : 'Choisir mon semestre';
+    return el('div', {
+      class: 'nav-hero' + (navHolds(HERO, current) ? ' active' : ''),
+      title: mod.desc || mod.title,
+      dataset: { id: HERO, kw: (mod.title + ' ' + (mod.keywords || '')).toLowerCase() },
+      onClick: function () { go(HERO); }
+    }, [
+      el('span', { class: 'nh-ic', text: mod.icon || '🎓', 'aria-hidden': 'true' }),
+      el('span', { class: 'nh-txt' }, [
+        el('span', { class: 'nh-t', text: mod.title }),
+        el('span', { class: 'nh-s', text: sub })
+      ]),
+      ready === null ? null : el('span', { class: 'nh-pct', text: ready + ' %' })
+    ].filter(Boolean));
+  }
+
   function buildNav() {
     UI.clear(navRoot);
+    var hero = navHero();
+    if (hero) navRoot.appendChild(hero);
     NAV.forEach(function (g) {
       navRoot.appendChild(el('div', { class: 'nav-group-label', text: g.group }));
       g.items.forEach(function (id) {
         var mod = M[id];
         if (!mod) return;
         var badge = null;
-        if (id === 'flashcards') {
+        /* Le retard de fiches se compte en centaines dès qu'on importe un
+           paquet : une pastille « 341 » n'apprend rien qu'un « 99+ » ne dise
+           déjà, et décourage au lieu d'appeler. */
+        if (id === 'revise') {
           var due = Store.dueCards(Cards.all().map(function (c) { return c.id; })).length;
-          if (due) badge = el('span', { class: 'nav-badge', text: String(due) });
+          if (due) badge = el('span', {
+            class: 'nav-badge', title: due + ' fiche(s) à revoir',
+            text: due > 99 ? '99+' : String(due)
+          });
         }
         if (id === 'patient') {
           badge = el('span', { class: 'nav-badge', text: Store.stats().casesDone + '/' + CASES.length });
         }
-        var active = id === current;
+        /* l'emploi du temps ne compte que ce qui reste de la journée :
+           un badge qui affiche encore « 3 » à 22 h ne veut plus rien dire */
+        if (id === 'edt' && mod.apercu) {
+          var ap = mod.apercu();
+          if (ap && ap.restant.length) badge = el('span', { class: 'nav-badge', text: String(ap.restant.length) });
+        }
+        /* la séance du jour se lit sur l'accueil : c'est donc l'accueil
+           qui porte le nombre d'étapes restantes */
+        if (id === 'home' && M.session && M.session.remaining) {
+          var left = M.session.remaining();
+          if (left) badge = el('span', { class: 'nav-badge', text: String(left) });
+        }
+        var active = navHolds(id, current);
         navRoot.appendChild(el('div', {
           class: 'nav-item' + (active ? ' active' : ''),
           role: 'button',
@@ -75,7 +171,8 @@
 
   function updateFoot() {
     var s = Store.stats();
-    document.getElementById('footStat').textContent = s.simAvg + ' % · ' + s.quizSeen + ' QCM';
+    document.getElementById('footStat').textContent =
+      s.simAvg + ' % · ' + s.cardsMastered + ' item(s) su(s)';
   }
 
   /* ---------------- Historique de navigation ---------------- */
@@ -137,10 +234,16 @@
   }
 
   function go(id, params) {
-    id = ALIASES[id] || id;
+    var r = resolve(id, params); id = r.id; params = r.params;
     var mod = M[id];
     if (!mod) { UI.toast('Module introuvable : ' + id); return; }
     if (!replaying) pushHistory({ id: id, params: params || {} });
+    /* Un module a pu laisser quelque chose en marche — le répétiteur, une
+       génération de texte par le modèle local. On lui rend la main avant de
+       remplacer l'écran, sinon elle occupe le processeur pour rien. */
+    if (current && M[current] && M[current].leave) {
+      try { M[current].leave(); } catch (e) { console.error(e); }
+    }
     current = id;
     UI.clear(view);
     try {
@@ -155,8 +258,10 @@
       ]));
     }
     document.getElementById('main').scrollTop = 0;
+    var hero = navRoot.querySelector('.nav-hero');
+    if (hero) hero.classList.toggle('active', navHolds(hero.dataset.id, id));
     navRoot.querySelectorAll('.nav-item').forEach(function (n) {
-      var on = n.dataset.id === id;
+      var on = navHolds(n.dataset.id, id);
       n.classList.toggle('active', on);
       if (on) n.setAttribute('aria-current', 'page'); else n.removeAttribute('aria-current');
     });
@@ -207,25 +312,9 @@
   var hlIndex = 0, hits = [];
   var searchReturnFocus = null;
 
-  /* normalisation 1 caractère → 1 caractère : les indices restent valables
-     pour surligner la correspondance dans le texte d'origine */
-  function norm(s) {
-    return (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
-  }
-
-  function normKeepLength(s) {
-    s = String(s || '');
-    var out = '';
-    for (var i = 0; i < s.length; i++) {
-      var c = norm(s.charAt(i));
-      out += c.length === 1 ? c : (c.charAt(0) || ' ');
-    }
-    return out;
-  }
-
-  function tokens(q) {
-    return norm(String(q || '').trim()).split(/\s+/).filter(Boolean);
-  }
+  /* comparer sans accents ni ligatures, et surligner ce qui a été trouvé :
+     core/text.js, partagé avec le glossaire et la récitation d'une UE */
+  var norm = Txt.norm, normKeepLength = Txt.keepLength, tokens = Txt.tokens;
 
   /* poids par nature de résultat : les outils passent devant le contenu */
   var CAT_BOOST = { module: 55, cas: 24, ue: 22, cours: 16, glossaire: 12, fiche: 4, qcm: 0 };
@@ -246,6 +335,40 @@
       idx.push(entry('module', M[id].group || 'Module', M[id].title, M[id].desc || '',
         M[id].keywords || '', M[id].desc || '', function () { go(id); }));
     });
+
+    /* le schéma des actions se cherche par le nom d'un muscle ou d'une fonction */
+    if (window.Optics) {
+      var mot = Optics.Motility;
+      idx.push(entry('module', 'Références · Anatomie', 'Actions des muscles oculomoteurs',
+        'Schéma interactif : chaque muscle et ses actions',
+        mot.muscles.map(function (m) { return m.short; }).join(' ') + ' ' +
+        mot.actions.map(function (a) { return a.name; }).join(' ') + ' action fonction torsion',
+        mot.muscles.map(function (m) { return m.name + ' ' + m.primary + ' ' + m.secondary + ' ' + m.tertiary; }).join(' '),
+        function () { go('muscles'); }));
+    }
+
+    /* Le Vision Lab : chaque expérience et chaque mode sont atteignables
+       directement. Passer par l'accueil du module pour relancer la même
+       mesure qu'hier fait trois clics de trop. */
+    if (window.Lab && M.vision) {
+      Lab.toutes().forEach(function (d) {
+        idx.push(entry('module', 'Vision Lab', d.nom, d.court || '',
+          'vision lab experience psychophysique mesure ' + (d.ue || []).join(' '),
+          (d.mesures || []).join(' '),
+          function () { go('vision', { exp: d.id }); }));
+        [['demo', 'Démonstration', 'la version courte, pour voir le phénomène'],
+         ['mesure', 'Mesure', 'le protocole complet, celui dont le résultat compte']
+        ].forEach(function (m) {
+          idx.push(entry('module', 'Vision Lab · ' + d.nom, d.nom + ' — ' + m[1], m[2],
+            'lancer passation experience ' + m[0], '',
+            function () { go('vision', { exp: d.id, mode: m[0] }); }));
+        });
+      });
+      idx.push(entry('module', 'Vision Lab', 'Calibrer l’écran',
+        'Taille d’un pixel, distance des yeux, fréquence',
+        'calibration ecran carte bancaire degre angle visuel pixel distance hertz',
+        '', function () { go('vision', { vue: 'calib' }); }));
+    }
 
     /* les abréviations comptent comme mots-clés : « AC/A », « DVD », « BUT »
        doivent tomber sur l'entrée même quand le titre est en clair */
@@ -272,7 +395,7 @@
        ou même une notion de la fiche (« Kestenbaum ») */
     (window.CURRICULUM || []).forEach(function (sem) {
       sem.ues.forEach(function (u) {
-        if (u.code === 'UE6' || u.code === 'UE libre') return;   // anglais et libre : rien à indexer
+        if (u.code === 'UE06' || u.code === 'UE libre') return;  // anglais et libre : rien à indexer
         var g = (window.UE_GUIDE || {})[u.code];
         var blob = g ? (g.objectifs.join(' ') + ' ' + g.notions.join(' ') + ' ' + g.pieges.join(' ')).replace(/<[^>]+>/g, ' ') : '';
         idx.push(entry('ue', 'Programme · ' + sem.id, u.code + ' — ' + u.title,
@@ -282,14 +405,17 @@
       });
     });
 
-    (window.QUIZ || []).forEach(function (q) {
-      idx.push(entry('qcm', 'QCM · ' + q.cat, q.q, q.exp || '', q.cat, (q.opts || []).join(' ') + ' ' + (q.exp || ''),
-        function () { go('quiz', { qid: q.id }); }));
-    });
-
     Cards.all().forEach(function (c) {
       idx.push(entry('fiche', 'Fiche mémo · ' + c.deck, c.f, c.b, c.deck, c.b,
         function () { go('flashcards', { cardId: c.id }); }));
+    });
+
+    /* Les cartes d'Anki ne sont plus dans le paquet de révision — elles se
+       consultent. Elles restent cherchables : c'est même la seule façon de
+       retrouver une carte quand on ne sait plus dans quelle UE on l'a mise. */
+    Cards.anki().forEach(function (c) {
+      idx.push(entry('anki', 'Anki · ' + c.hint, c.f, c.b, c.chemin, c.b,
+        function () { go('flashcards', { carte: c.id }); }));
     });
 
     return idx;
@@ -299,7 +425,7 @@
   var INDEX_SIG = null;
 
   function indexSignature() {
-    return Cards.custom().length + '/' + (window.QUIZ || []).length + '/' + CASES.length +
+    return Cards.custom().length + '/' + Cards.anki().length + '/' + CASES.length +
            '/' + (window.CURRICULUM || []).length;
   }
 
@@ -327,40 +453,18 @@
   }
 
   /* surligne dans le titre les portions correspondant à la requête */
-  function highlight(text, toks) {
-    var frag = document.createDocumentFragment();
-    if (!toks.length) { frag.appendChild(document.createTextNode(text)); return frag; }
-    var n = normKeepLength(text);
-    var marks = new Array(text.length);
-    toks.forEach(function (t) {
-      var from = 0, i;
-      while ((i = n.indexOf(t, from)) >= 0) {
-        for (var k = i; k < i + t.length; k++) marks[k] = true;
-        from = i + t.length;
-      }
-    });
-    var buf = '', on = false;
-    function flush() {
-      if (!buf) return;
-      frag.appendChild(on ? el('mark', { text: buf }) : document.createTextNode(buf));
-      buf = '';
-    }
-    for (var i = 0; i < text.length; i++) {
-      var m = !!marks[i];
-      if (m !== on) { flush(); on = m; }
-      buf += text.charAt(i);
-    }
-    flush();
-    return frag;
-  }
+  var highlight = Txt.highlight;
 
-  function openSearch() {
+  /* `q` pré-remplit le champ : le répétiteur s'en sert pour passer la main à
+     la recherche quand il n'a pas su répondre lui-même. */
+  function openSearch(q) {
     ensureIndex();
     searchReturnFocus = document.activeElement;
     overlay.classList.add('on');
-    searchInput.value = '';
+    searchInput.value = typeof q === 'string' ? q : '';
     searchInput.focus();
-    renderSearch('');
+    searchInput.select();
+    renderSearch(searchInput.value);
   }
 
   function closeSearch() {
@@ -391,6 +495,74 @@
     };
   }
 
+  /* « /lab recherche visuelle 4 8 12 » lance une expérience avec les tailles
+     d'ensemble données. La palette sert déjà de ligne de commande pour les
+     calculs ; refaire la même mesure qu'hier mérite le même raccourci.
+
+     Les nombres deviennent des tailles d'ensemble, le reste sert à retrouver
+     l'expérience. En dessous de deux tailles il n'y a pas de pente à tracer :
+     on garde alors le protocole complet plutôt que d'en lancer un boiteux. */
+  /* Les nombres d'une commande /lab ne veulent pas dire la même chose selon
+     l'expérience : des tailles d'ensemble pour une recherche visuelle, des
+     excentricités pour un encombrement. C'est l'expérience qui le déclare —
+     la barre de recherche ne peut pas le deviner. */
+  function parametres(exp, nombres) {
+    var champ = exp.champNombres;
+    if (!champ) return {};
+    var o = {};
+    o[champ] = nombres;
+    return o;
+  }
+
+  function labHit(q) {
+    var m = /^\/lab\b\s*(.*)$/i.exec(String(q || '').trim());
+    if (!m || !M.vision || !window.Lab) return null;
+    var reste = m[1];
+    /* Les décimales comptent : une excentricité de 2,5° n’est pas « 2 » et
+       « 5 ». On accepte le point comme la virgule. */
+    var tailles = (reste.match(/\d+(?:[.,]\d+)?/g) || [])
+      .map(function (x) { return Number(String(x).replace(',', '.')); })
+      .filter(function (n) { return n >= 1 && n <= 48; })
+      .sort(function (a, b) { return a - b; })
+      .filter(function (n, i, l) { return l.indexOf(n) === i; });
+    var mots = norm(reste.replace(/\d+/g, ' '));
+
+    var exp = null, meilleur = 0;
+    Lab.toutes().forEach(function (d) {
+      var n = norm(d.nom).split(' ').filter(function (w) { return w.length > 2; });
+      var sc = n.filter(function (w) { return mots.indexOf(w) >= 0; }).length;
+      if (sc > meilleur) { meilleur = sc; exp = d; }
+    });
+    /* « /lab » tout court, ou un nom qu'on ne reconnaît pas : on ouvre le
+       laboratoire plutôt que de deviner une expérience. */
+    if (!exp) {
+      return {
+        kind: 'module', cat: 'Commande', t: 'Vision Lab',
+        d: mots.trim() ? 'Expérience non reconnue — ouvrir le laboratoire' : 'Ouvrir le laboratoire',
+        act: function () { go('vision'); }
+      };
+    }
+    var perso = tailles.length >= 2;
+    return {
+      kind: 'module', cat: 'Commande · Vision Lab',
+      /* Le mot qui désigne ces nombres appartient à l'expérience : des
+         tailles d'ensemble ici, des excentricités là. */
+      t: exp.nom + (perso ? ' — ' + (exp.uniteNombres || 'valeurs') + ' ' +
+        tailles.map(function (x) { return String(x).replace('.', ','); }).join(', ')
+        : ' — protocole complet'),
+      d: perso
+        ? tailles.length + ' ' + (exp.uniteNombres || 'valeurs') + ' au protocole'
+        : (tailles.length === 1
+            ? 'Une seule valeur ne donne pas de pente : protocole complet à la place'
+            : 'Mode Mesure'),
+      act: function () {
+        go('vision', perso
+          ? { exp: exp.id, params: parametres(exp, tailles) }
+          : { exp: exp.id, mode: 'mesure' });
+      }
+    };
+  }
+
   function renderSearch(q) {
     UI.clear(searchRes);
     var toks = tokens(q);
@@ -402,8 +574,14 @@
         .sort(function (a, b) { return b.sc - a.sc; })
         .slice(0, 40)
         .map(function (x) { return x.i; });
-      var c = calcHit(q);
-      if (c) hits.unshift(c);
+      /* Une commande explicite remplace la liste : mélanger « /lab » avec des
+         résultats de glossaire ferait passer la commande pour une suggestion. */
+      var l = labHit(q);
+      if (l) hits = [l];
+      else {
+        var c = calcHit(q);
+        if (c) hits.unshift(c);
+      }
     }
     hlIndex = 0;
     hits.forEach(function (h, i) {
@@ -486,7 +664,7 @@
   }
 
   function openModule(id, params, opts) {
-    id = ALIASES[id] || id;
+    var r = resolve(id, params); id = r.id; params = r.params;
     var mod = M[id];
     if (!mod) { UI.toast('Module introuvable : ' + id); return; }
     opts = opts || {};
@@ -585,9 +763,12 @@
     if (e.altKey && e.key === 'ArrowLeft') { e.preventDefault(); back(); return; }
     if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); forward(); return; }
     if (meta && e.key.toLowerCase() === 'd') { e.preventDefault(); toggleTheme(); return; }
+    /* Ctrl+J : demander. C'est le geste de quelqu'un qui bloque — il doit partir
+       de n'importe quel écran, sans quitter ce qu'on est en train de lire. */
+    if (meta && e.key.toLowerCase() === 'j') { e.preventDefault(); go('chat'); return; }
     if (meta && ['1', '2', '3', '4', '5'].indexOf(e.key) >= 0) {
       e.preventDefault();
-      go(['home', 'phoropter', 'covertest', 'patient', 'converters'][parseInt(e.key, 10) - 1]);
+      go(['home', 'reading', 'patient', 'studies', 'converters'][parseInt(e.key, 10) - 1]);
     }
   });
 
@@ -606,8 +787,13 @@
     window.ortho.on('menu:export', exportData);
     window.ortho.on('menu:import', importData);
     window.ortho.on('menu:theme', toggleTheme);
-    window.ortho.on('menu:search', openSearch);
-    window.ortho.on('menu:goto', function (id) { go(id); });
+    window.ortho.on('menu:search', function () { openSearch(); });
+    /* « module » ou « module:onglet » : le menu peut viser un onglet précis
+       sans que main.js ait à connaître la forme des paramètres de chaque page */
+    window.ortho.on('menu:goto', function (id) {
+      var p = String(id || '').split(':');
+      go(p[0], p[1] ? { tab: p[1] } : null);
+    });
     window.ortho.on('menu:back', back);
     window.ortho.on('menu:forward', forward);
     window.ortho.on('menu:reset', function () {
@@ -619,19 +805,24 @@
 
   window.App = {
     go: go,
-    back: back,
-    forward: forward,
     openModule: openModule,
     closeModule: closeModule,
     exportData: exportData,
     importData: importData,
     openSearch: openSearch,
-    toggleTheme: toggleTheme,
+    /* poser une question au répétiteur depuis n'importe quel écran */
+    demander: function (q) { go('chat', q ? { q: q } : null); },
     refreshNav: buildNav,
-    refreshSearchIndex: function () { INDEX = null; }
+    scoredLabel: scoredLabel
   };
 
   /* ---------------- Démarrage ---------------- */
+
+  /* Les notes d'un module retiré de l'application dorment encore dans le
+     stockage local, et fausseraient tout ce qui se calcule sur une moyenne :
+     le compteur de la barre latérale, l'accueil, la maîtrise d'une UE. Rien
+     n'est effacé — on déclare simplement ce qui existe aujourd'hui. */
+  Store.setScoreScope(Object.keys(M).concat(Object.keys(EXTRA_SCORED)));
 
   Store.load();
   setTheme(Store.state.theme || 'dark');

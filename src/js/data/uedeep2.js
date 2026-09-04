@@ -25,6 +25,7 @@
     ],
     cas: {
       t: 'Dépistage à 4 ans',
+      tag: 'clinique',
       s: 'Enfant de 4 ans, aucun signe, aucune plainte. Au dépistage scolaire : OD 10/10, OG 3/10. Pas de strabisme visible, reflets symétriques, cover test négatif.',
       q: ['Quelle hypothèse en premier ?', 'Quel examen est indispensable ?', 'Que craignez-vous si rien n’est fait ?'],
       r: 'Une amblyopie unilatérale sans strabisme oriente d’abord vers une <b>anisométropie</b> : l’enfant voit bien d’un œil, ne se plaint donc de rien, et le trouble reste invisible pour l’entourage. C’est exactement la population que le dépistage de 3-4 ans existe pour attraper. Une microtropie est aussi possible, avec un cover test faussement rassurant.',
@@ -69,6 +70,7 @@
     ],
     cas: {
       t: 'Une bascule',
+      tag: 'clinique',
       s: 'Fillette de 5 ans, amblyopie sévère de l’œil gauche traitée par occlusion 6 h/j depuis trois mois. L’œil gauche est passé de 1/10 à 5/10. Mais l’œil droit, occlus, est descendu de 10/10 à 7/10.',
       q: ['Que s’est-il passé ?', 'Est-ce grave ?', 'Que faites-vous ?'],
       r: 'C’est une <b>amblyopie à bascule</b> : l’œil occlus, privé de stimulation à un âge encore plastique, perd à son tour. C’est la complication attendue de l’occlusion forte, et la raison pour laquelle on contrôle l’acuité <b>des deux yeux</b> à chaque consultation.',
@@ -110,6 +112,7 @@
     ],
     cas: {
       t: 'Choisir la bonne aide',
+      tag: 'clinique',
       s: 'Homme de 80 ans, DMLA atrophique bilatérale, AV 1/10 aux deux yeux. Il souhaite avant tout continuer à lire son journal et ses factures.',
       q: ['Quel grossissement viser ?', 'Quelle aide proposer ?', 'Quel compromis expliquer ?'],
       r: 'On part de la taille lue et de la taille visée. Avec 1/10, il faut environ un facteur 5 à 6 pour un texte de journal, majoré d’une marge de confort. Une loupe de +24 D donne G = 24/4 = 6 ×.',
@@ -154,6 +157,7 @@
     ],
     cas: {
       t: 'Une référence trop belle',
+      tag: 'méthode',
       s: 'Vous préparez votre mémoire. Un outil d’IA vous propose une référence parfaitement adaptée : auteur crédible, revue connue, année récente, titre exactement sur votre sujet. Vous ne la trouvez ni sur PubMed ni chez l’éditeur.',
       q: ['Que concluez-vous ?', 'Que faites-vous ?', 'Quelle règle en tirez-vous ?'],
       r: 'Une référence introuvable à la source n’existe probablement pas. Les modèles génératifs produisent des références <b>plausibles</b> — le format est correct, les noms sont crédibles, l’année est cohérente — sans qu’elles correspondent à un article réel.',
@@ -188,10 +192,20 @@
           ['Objectifs partagés', 'Que doit-il savoir faire ?', 'Objectifs du soignant, pas du patient'],
           ['Séances', 'Comment le lui faire acquérir ?', 'Cours magistral déguisé'],
           ['Évaluation', 'Sait-il le faire ?', 'Évaluer l’information donnée, pas la compétence']
+        ] },
+      { t: 'Adapter le message à qui l’écoute',
+        c: ['À qui', 'Ce qui marche', 'Ce qui échoue'],
+        r: [
+          ['Enfant', 'Des mots concrets et un rôle actif : « c’est ton œil paresseux qui s’entraîne »', 'Parler aux parents par-dessus sa tête'],
+          ['Adolescent', 'Négocier le cadre — horaires, lieux — sans négocier le principe', 'Ignorer le coût social immédiat'],
+          ['Adulte actif', 'Relier la consigne à sa journée de travail', 'Un protocole qui suppose du temps libre'],
+          ['Personne âgée', 'Ralentir, écrire gros, vérifier l’audition', 'Un document dense remis sans commentaire'],
+          ['Patient allophone', 'Un interprète professionnel', 'Faire traduire par un proche, et surtout par un enfant']
         ] }
     ],
     cas: {
       t: 'Des consignes qui ne tiennent pas',
+      tag: 'décision',
       s: 'Vous avez expliqué à une mère l’occlusion de sa fille : 6 h par jour, tous les jours. Trois semaines plus tard, l’observance est quasi nulle. La mère travaille en horaires décalés et la garde est assurée par la grand-mère l’après-midi.',
       q: ['Où est l’erreur ?', 'Que changez-vous ?', 'Comment vérifiez-vous ?'],
       r: 'La consigne était médicalement juste et pratiquement inapplicable : elle n’a pas été construite avec la personne qui l’applique. Le diagnostic éducatif — qui fait quoi, à quel moment de la journée, avec quelles contraintes — a été sauté.',
@@ -235,6 +249,7 @@
     ],
     cas: {
       t: 'Écrire la conclusion',
+      tag: 'méthode',
       s: 'Vous venez de terminer le bilan d’un lycéen de 17 ans : exophorie 12 Δ de près, PPC rupture 12 cm, convergence fusionnelle 14 Δ, accommodation normale, réfraction négligeable. Il se plaint de céphalées et abandonne ses devoirs au bout d’une demi-heure.',
       q: ['Rédigez le diagnostic orthoptique.', 'Rédigez le projet.', 'Quels critères d’arrêt ?'],
       r: 'Diagnostic orthoptique : <b>insuffisance de convergence décompensée, avec asthénopie et retentissement sur le travail scolaire</b>. Le critère de Sheard exigerait 24 Δ de convergence pour 12 Δ d’exophorie ; il en a 14.',
@@ -279,6 +294,7 @@
     ],
     cas: {
       t: 'Un dépistage qui inquiète pour rien',
+      tag: 'calcul',
       s: 'Un test de dépistage a une sensibilité de 95 % et une spécificité de 90 %. On l’applique à une population où la maladie touche 1 personne sur 1 000.',
       q: ['Sur 100 000 personnes, combien de tests positifs ?', 'Combien de vrais malades parmi eux ?', 'Que vaut la VPP ?'],
       r: 'Sur 100 000 : 100 malades, dont 95 dépistés (vrais positifs). 99 900 sains, dont 10 % de faux positifs, soit 9 990. Total des positifs : 10 085.',
@@ -323,6 +339,7 @@
     ],
     cas: {
       t: 'Une mydriase du matin',
+      tag: 'clinique',
       s: 'Femme de 30 ans, mydriase unilatérale découverte le matin, sans douleur, sans ptôsis, sans diplopie. La pupille réagit très peu à la lumière mais se contracte lentement en vision de près, avec un retour lent. Mouvements vermiformes de l’iris.',
       q: ['Quel diagnostic évoquez-vous ?', 'Qu’est-ce qui écarte un III ?', 'Quel test confirme ?'],
       r: 'Le tableau est celui d’une <b>pupille d’Adie</b> : mydriase tonique par atteinte du ganglion ciliaire, avec dissociation lumière / proximité, contraction lente et prolongée de près, et mouvements vermiformes.',
@@ -366,6 +383,7 @@
     ],
     cas: {
       t: 'Trois mois après un AVC',
+      tag: 'clinique',
       s: 'Patient de 58 ans, trois mois après un AVC occipital droit. Hémianopsie latérale homonyme gauche congruente, sans négligence. Il bute contre les obstacles à gauche et perd sa ligne en lecture.',
       q: ['Peut-on récupérer le champ ?', 'Que travaillez-vous ?', 'Quels aménagements ?'],
       r: 'Le champ perdu ne se récupère pas au-delà des premiers mois : la rééducation ne vise pas la restauration mais la <b>compensation</b>. On travaille des stratégies d’exploration : balayage systématique et volontaire vers la gauche, saccades d’ancrage, élargissement du repérage avant déplacement.',
@@ -399,10 +417,20 @@
           ['Intermédiaire', 'Loupe sur support, écran agrandi', 'Encombrement'],
           ['Loin', 'Système télescopique', 'Champ étroit, pas en déplacement'],
           ['Toutes', 'Éclairage, contraste, filtres', 'Souvent le levier le plus efficace']
+        ] },
+      { t: 'Atteinte centrale ou périphérique : deux prises en charge',
+        c: ['', 'Atteinte centrale', 'Atteinte périphérique'],
+        r: [
+          ['La plainte', 'Lire, reconnaître les visages', 'Se cogner, tomber, perdre ses repères'],
+          ['Ce qu’on rééduque', 'Une stratégie de fixation excentrée', 'Une stratégie d’exploration et de déplacement'],
+          ['La priorité', 'Le confort de lecture', 'La sécurité, avant toute chose'],
+          ['Les aides', 'Grossissement, contraste, éclairage', 'Canne, contraste au sol, éclairage des escaliers'],
+          ['Avec qui', 'Ergothérapeute, opticien spécialisé', 'Instructeur en locomotion, ergothérapeute']
         ] }
     ],
     cas: {
       t: 'Réapprendre à regarder',
+      tag: 'clinique',
       s: 'Patiente de 74 ans, DMLA exsudative stabilisée, scotome central de l’œil directeur. Elle fixe droit devant et « perd » les mots. Acuité 1,5/10.',
       q: ['Que se passe-t-il quand elle fixe ?', 'Que lui apprend-on ?', 'Comment procède-t-on ?'],
       r: 'En fixant droit devant, elle place l’image sur son scotome : plus elle regarde le mot, moins elle le voit. C’est le paradoxe déroutant du scotome central, et la raison pour laquelle beaucoup de patients concluent qu’ils « ne peuvent plus lire ».',
@@ -439,10 +467,20 @@
           ['Se fatigue vite en lecture', 'Convergence, accommodation', 'Endurance, motivation'],
           ['Copie mal du tableau', 'Saccades loin-près, amétropie', 'Mémoire de travail'],
           ['Écriture désordonnée', 'Coordination œil-main', 'Graphisme — psychomotricité']
+        ] },
+      { t: 'Les aménagements qui se demandent, et ce qu’ils ne règlent pas',
+        c: ['Aménagement', 'Il répond à', 'Il ne règle pas'],
+        r: [
+          ['Place devant, hors reflet', 'Fatigue visuelle, acuité de loin limite', 'La lenteur de décodage'],
+          ['Police agrandie, interligne', 'Crowding, instabilité de fixation', 'La compréhension du texte'],
+          ['Photocopies contrastées', 'Sensibilité aux contrastes basse', 'Un trouble du langage écrit'],
+          ['Tiers-temps', 'Endurance de lecture insuffisante', 'Un déficit de connaissances'],
+          ['Support numérique', 'Besoin de zoom, de synthèse vocale', 'La dyslexie elle-même']
         ] }
     ],
     cas: {
       t: 'Un bilan demandé par l’école',
+      tag: 'décision',
       s: 'Garçon de 9 ans, CM1, adressé par l’enseignante pour « suspicion de dyslexie visuelle ». Bilan : acuités 10/10, réfraction négligeable, PPC 7 cm, amplitudes normales, flippers 10 cycles/min, DEM normal en colonnes comme en lignes.',
       q: ['Que concluez-vous ?', 'Que répondez-vous à l’école ?', 'Quel risque à mal formuler ?'],
       r: 'Le bilan orthoptique est <b>normal</b> : rien dans les vergences, l’accommodation ni les saccades n’explique la difficulté. La « dyslexie visuelle » n’est d’ailleurs pas une entité : la dyslexie est un trouble phonologique du langage écrit.',
@@ -483,6 +521,7 @@
     ],
     cas: {
       t: 'Un enfant né grand prématuré',
+      tag: 'clinique',
       s: 'Enfant de 7 ans né à 27 semaines. Acuités 10/10, réfraction et oculomotricité normales. Il se cogne, peine à retrouver un objet dans un tiroir, ne repère pas sa ligne dans un texte dense, mais lit correctement un texte aéré.',
       q: ['Que suggère la dissociation texte dense / texte aéré ?', 'Quelle voie est en cause ?', 'Que proposez-vous ?'],
       r: 'Un œil sain avec une gêne majorée par l’<b>encombrement visuel</b> oriente vers un trouble neurovisuel d’origine centrale, et non vers un trouble oculomoteur. La difficulté à trouver un objet parmi d’autres et le guidage du geste orientent vers la voie <b>dorsale</b>, occipito-pariétale — profil classique de la prématurité.',
@@ -526,6 +565,7 @@
     ],
     cas: {
       t: 'Organiser un dépistage',
+      tag: 'méthode',
       s: 'Une école de 180 élèves de grande section vous sollicite pour un dépistage visuel. On vous propose une demi-journée, une salle de classe vide et l’aide de deux enseignants.',
       q: ['Qu’exigez-vous avant d’accepter ?', 'Quels tests retenez-vous ?', 'Quel est le point critique ?'],
       r: 'Avant tout : un <b>circuit d’aval</b> écrit — qui reçoit les enfants repérés, dans quel délai, et comment les familles sont informées. Ensuite les conditions matérielles : distance d’examen respectée et constante, éclairage suffisant, salle sans passage.',
@@ -560,10 +600,20 @@
           ['Kératocône débutant', 'Topographie / tomographie', 'Courbure, élévation, épaisseur'],
           ['Néovaisseaux', 'Angiographie ou OCT-A', 'Flux, diffusion'],
           ['Dépistage diabétique', 'Rétinophotographie grand champ', 'Lecture différée possible']
+        ] },
+      { t: 'Ce que chaque appareil mesure — et ce dont il ne dit rien',
+        c: ['Appareil', 'Il mesure', 'Il ne dit rien de'],
+        r: [
+          ['Topographie cornéenne', 'La forme de la surface antérieure', 'L’épaisseur, et la face postérieure'],
+          ['Pachymétrie', 'L’épaisseur cornéenne centrale', 'La régularité de la surface'],
+          ['Microscopie spéculaire', 'La densité endothéliale', 'La transparence du stroma'],
+          ['OCT de segment antérieur', 'L’angle irido-cornéen, en coupe', 'La pression elle-même'],
+          ['Biométrie optique', 'Longueur axiale, kératométrie, chambre', 'L’état de la rétine']
         ] }
     ],
     cas: {
       t: 'Un cliché à transmettre',
+      tag: 'décision',
       s: 'Un confrère vous demande par messagerie personnelle une rétinophotographie d’un patient, pour avis. Le fichier porte le nom et la date de naissance du patient.',
       q: ['Que refusez-vous ?', 'Comment procédez-vous ?', 'Quel cadre s’applique ?'],
       r: 'Une image de fond d’œil est une <b>donnée de santé</b> : elle relève du RGPD et du secret professionnel. La transmettre par messagerie personnelle expose la donnée et engage la responsabilité de l’expéditeur.',
@@ -606,6 +656,7 @@
     ],
     cas: {
       t: 'Une projection de produit',
+      tag: 'urgence',
       s: 'Un patient arrive au cabinet, un œil fermé, très douloureux : il a reçu un produit d’entretien alcalin il y a dix minutes. Il vous demande ce qu’il doit faire et veut d’abord savoir s’il va perdre son œil.',
       q: ['Quel est votre premier geste ?', 'Combien de temps ?', 'Pourquoi les bases sont-elles pires ?'],
       r: 'Le rinçage, <b>immédiatement</b> et avant tout autre chose : ni acuité, ni interrogatoire, ni dossier. Au moins 15 minutes, à l’eau ou au sérum physiologique, en écartant les paupières et en faisant regarder dans toutes les directions.',
@@ -651,6 +702,7 @@
     ],
     cas: {
       t: 'Un acte demandé hors cadre',
+      tag: 'décision',
       s: 'Dans le cabinet où vous exercez, l’ophtalmologiste absent vous demande par téléphone de renouveler la correction d’un patient de 42 ans, dont la dernière ordonnance date de 6 ans, et qui signale une baisse récente à un œil.',
       q: ['Quels éléments vous arrêtent ?', 'Que faites-vous ?', 'Comment le formulez-vous ?'],
       r: 'Deux éléments bloquent. La condition réglementaire d’abord : le renouvellement et l’adaptation sont encadrés par des conditions d’âge et d’ancienneté de l’ordonnance, et six ans dépasse le cadre. Le tableau clinique ensuite : une <b>baisse récente unilatérale</b> est un signe d’alarme qui impose un avis médical, pas un renouvellement.',
@@ -693,6 +745,7 @@
     ],
     cas: {
       t: 'Un examen préalable qui dérape',
+      tag: 'décision',
       s: 'Vous réalisez les examens préalables d’un patient de 55 ans venu pour un renouvellement. Il mentionne au passage que depuis deux jours, il voit « comme un rideau » en bas à gauche de l’œil droit, avec des éclairs.',
       q: ['Que faites-vous du programme prévu ?', 'Quelle hypothèse ?', 'Quel délai ?'],
       r: 'On interrompt : phosphènes et amputation périphérique progressive évoquent un <b>décollement de rétine</b>, éventuellement précédé d’une déchirure. Poursuivre le circuit d’examens de routine ferait perdre un temps qui compte.',
@@ -737,6 +790,7 @@
     ],
     cas: {
       t: 'Après l’opération',
+      tag: 'clinique',
       s: 'Enfant opéré d’une ésotropie de 35 Δ il y a cinq semaines. Angle résiduel : 8 Δ d’ésotropie. Les parents sont déçus, ils espéraient « zéro ».',
       q: ['Le résultat est-il satisfaisant ?', 'Que regardez-vous en plus de l’angle ?', 'Que dites-vous aux parents ?'],
       r: 'Un angle résiduel inférieur à 10 Δ est habituellement considéré comme un <b>succès</b> chirurgical. Viser zéro n’est ni réaliste ni nécessairement souhaitable : une microtropie résiduelle peut s’accompagner d’une union binoculaire fonctionnelle.',
@@ -783,6 +837,7 @@
     ],
     cas: {
       t: 'Un mémoire mal engagé',
+      tag: 'méthode',
       s: 'À quatre mois de la soutenance, une étudiante a une belle revue de littérature, un questionnaire prêt, mais aucune autorisation déposée et aucun patient inclus.',
       q: ['Où est le risque ?', 'Que peut-elle sauver ?', 'Quelle leçon ?'],
       r: 'Le risque est l’impasse : les autorisations et le recueil dépendent de tiers, et quatre mois ne suffisent probablement pas pour obtenir les unes puis mener l’autre, analyser et rédiger.',
@@ -827,6 +882,7 @@
     ],
     cas: {
       t: 'Deux courriers pour un bilan',
+      tag: 'décision',
       s: 'Vous terminez le bilan d’un enfant de 8 ans : insuffisance de convergence avec PPC à 13 cm, exophorie de près de 12 Δ, retentissement net en lecture. Vous devez écrire à l’ophtalmologiste et à l’enseignante.',
       q: ['Qu’écrivez-vous à chacun ?', 'Qu’est-ce qui change ?', 'Que ne faites-vous pas ?'],
       r: 'À l’ophtalmologiste : les chiffres, le diagnostic orthoptique, la proposition et le nombre de séances envisagées. À l’enseignante : aucun chiffre, aucun terme technique — ce que l’enfant n’arrive pas à faire, dans quelles conditions, et ce qui l’aide en classe.',
@@ -867,6 +923,7 @@
     ],
     cas: {
       t: 'Un stagiaire qui inquiète',
+      tag: 'décision',
       s: 'À mi-stage, votre stagiaire de deuxième année reste en retrait, laisse passer des erreurs de mesure sans les relever, et répond aux patients de façon évasive quand il ne sait pas. Le stage se termine dans trois semaines.',
       q: ['Attendez-vous le bilan final ?', 'Comment formulez-vous le retour ?', 'Qu’organisez-vous ?'],
       r: 'Non : attendre la fin est le pire service à lui rendre. Un retour utile est <b>descriptif, précis et immédiat</b> — sur des faits observables, pas sur la personne : « ce matin, sur deux mesures de cover test, l’écart n’a pas été relevé », et non « tu n’es pas rigoureux ».',

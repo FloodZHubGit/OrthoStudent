@@ -20,7 +20,7 @@ window.UE_EXTRA = {
 
   /* ---------------- Semestre 1 ---------------- */
 
-  UE1: {
+  UE01: {
     prereq: [],
     mots: ['Cône', 'Bâtonnet', 'Fovéa', 'Macula', 'Cornée', 'Cristallin', 'Cellules ganglionnaires', 'Rétinopathie pigmentaire', 'Rétinoblastome'],
     qr: [
@@ -33,7 +33,7 @@ window.UE_EXTRA = {
     ]
   },
 
-  UE2: {
+  UE02: {
     prereq: [],
     mots: ['Dioptrie', 'Dioptrie prismatique', 'Prisme', 'Prentice (loi de)', 'Sturm (conoïde de)', 'Équivalent sphérique', 'Transposition cylindrique', 'Punctum remotum', 'Punctum proximum', 'Distance de sommet', 'Puissance effective', 'Axe visuel'],
     qr: [
@@ -46,8 +46,8 @@ window.UE_EXTRA = {
     ]
   },
 
-  UE3: {
-    prereq: ['UE2'],
+  UE03: {
+    prereq: ['UE02'],
     mots: ['Réfraction', 'Réfraction subjective', 'Skiascopie', 'Autoréfractomètre', 'Cycloplégie', 'Cyclopentolate', 'Hypermétropie latente', 'Myopie', 'Hypermétropie', 'Astigmatisme', 'Duochrome', 'Brouillage', 'Phoroptère', 'Addition', 'Presbytie'],
     qr: [
       ['Pourquoi réfracte-t-on un enfant sous cycloplégie ?', 'Parce que le tonus accommodatif masque une part de l’hypermétropie et simule une myopie : seule la cycloplégie donne la réfraction vraie.'],
@@ -59,8 +59,8 @@ window.UE_EXTRA = {
     ]
   },
 
-  UE4: {
-    prereq: ['UE1'],
+  UE04: {
+    prereq: ['UE01'],
     mots: ['Cône', 'Bâtonnet', 'Vision photopique', 'Vision scotopique', 'Vision mésopique', 'Adaptation à l’obscurité', 'Dyschromatopsie', 'Voies optiques', 'Chiasma optique', 'Champ visuel', 'Cellules ganglionnaires', 'Réflexe photomoteur'],
     qr: [
       ['Quelles fibres croisent au chiasma ?', 'Les fibres nasales, qui portent le champ visuel temporal.'],
@@ -72,8 +72,8 @@ window.UE_EXTRA = {
     ]
   },
 
-  UE5: {
-    prereq: ['UE2', 'UE4'],
+  UE05: {
+    prereq: ['UE02', 'UE04'],
     mots: ['Acuité visuelle', 'logMAR', 'Optotype', 'Landolt (anneaux de)', 'Monoyer (échelle de)', 'Parinaud (échelle de)', 'Snellen', 'Crowding', 'Trou sténopéique', 'Sensibilité aux contrastes', 'Regard préférentiel'],
     qr: [
       ['Que mesure-t-on exactement quand on mesure l’acuité ?', 'Le pouvoir séparateur : le plus petit angle sous lequel deux points sont vus distincts. 10/10 = un détail sous 1 minute d’arc.'],
@@ -85,8 +85,8 @@ window.UE_EXTRA = {
     ]
   },
 
-  UE7: {
-    prereq: ['UE1'],
+  UE07: {
+    prereq: ['UE01'],
     mots: ['Anneau de Zinn', 'Tillaux (spirale de)', 'Oblique supérieur', 'Oblique inférieur', 'Limbe', 'Cornée', 'Cristallin', 'Zonule', 'Iris', 'Papille', 'Nerf optique'],
     qr: [
       ['Donnez la spirale de Tillaux.', 'Droit médial 5,5 – droit inférieur 6,5 – droit latéral 6,9 – droit supérieur 7,7 mm du limbe.'],
@@ -98,8 +98,8 @@ window.UE_EXTRA = {
     ]
   },
 
-  UE8: {
-    prereq: ['UE4', 'UE7'],
+  UE08: {
+    prereq: ['UE04', 'UE07'],
     mots: ['Duction', 'Version', 'Vergence', 'Convergence', 'Convergence accommodative', 'Convergence fusionnelle', 'Fusion', 'Stéréoscopie', 'Aire de Panum', 'Horoptère', 'Disparité rétinienne', 'Correspondance rétinienne normale', 'Rapport AC/A', 'Hering (loi de)', 'Sherrington (loi de)', 'Donders (loi de)', 'Listing (plan de)', 'Accommodation', 'Hofstetter (formules de)'],
     qr: [
       ['Énoncez la loi de Hering, puis celle de Sherrington.', 'Hering : égale innervation des synergistes des deux yeux dans les mouvements conjugués. Sherrington : innervation réciproque, la contraction d’un muscle s’accompagne du relâchement de son antagoniste homolatéral.'],
@@ -112,8 +112,8 @@ window.UE_EXTRA = {
     ]
   },
 
-  UE9: {
-    prereq: ['UE8'],
+  UE09: {
+    prereq: ['UE08'],
     mots: ['Hétérophorie', 'Hétérotropie', 'Ésotropie', 'Exotropie', 'Microtropie', 'Comitance', 'Déviation primaire / secondaire', 'Correspondance rétinienne anormale', 'Neutralisation', 'Diplopie', 'Confusion', 'Angle kappa', 'Cover test', 'Hirschberg (test de)', 'Krimsky (test de)', 'DVD', 'Nystagmus latent', 'Syndrome alphabétique'],
     qr: [
       ['Comment distinguez-vous une phorie d’une tropie ?', 'La phorie n’apparaît qu’après dissociation, au cover test alterné. La tropie est manifeste en binoculaire non dissocié.'],
@@ -127,7 +127,7 @@ window.UE_EXTRA = {
 
   UE12: {
     prereq: [],
-    mots: ['Rééducation orthoptique'],
+    mots: ['Rééducation orthoptique', 'Réfraction', 'Champ visuel', 'Tonométrie', 'Fond d’œil', 'Contactologie', 'Basse vision', 'Acuité visuelle'],
     qr: [
       ['Qu’est-ce que le secret professionnel couvre exactement ?', 'Tout ce dont le professionnel a connaissance dans l’exercice : ce qu’on lui a dit, ce qu’il a vu, ce qu’il a compris ou déduit.'],
       ['Un orthoptiste peut-il agir sans prescription ?', 'Oui dans les cas prévus par le décret d’actes — dépistage, bilan visuel dans certaines conditions — mais la rééducation reste sur prescription médicale.'],
@@ -138,7 +138,7 @@ window.UE_EXTRA = {
   },
 
   UE16: {
-    prereq: ['UE1', 'UE4'],
+    prereq: ['UE01', 'UE04'],
     mots: ['Cataracte', 'Glaucome', 'Pression intraoculaire', 'Rapport cup/disc', 'DMLA', 'Rétinopathie diabétique', 'Œdème maculaire', 'Uvéite', 'Kératocône', 'Fond d’œil', 'Métamorphopsies', 'Amsler (grille d’)', 'Leucocorie'],
     qr: [
       ['Comment reconnaît-on un œil rouge grave ?', 'Douleur profonde, baisse d’acuité, photophobie, cercle périkératique, anomalie pupillaire ou cornéenne. Une conjonctivite ne baisse pas l’acuité.'],
@@ -153,7 +153,7 @@ window.UE_EXTRA = {
   /* ---------------- Semestre 2 ---------------- */
 
   UE10: {
-    prereq: ['UE4', 'UE5'],
+    prereq: ['UE04', 'UE05'],
     mots: ['Champ visuel', 'Périmétrie', 'Goldmann (périmètre de)', 'Isoptère', 'Scotome', 'OCT', 'Électrorétinogramme', 'PEV', 'Ishihara (test d’)', 'Farnsworth (test de)', 'Dyschromatopsie', 'Sensibilité aux contrastes'],
     qr: [
       ['Périmétrie statique ou cinétique : laquelle et quand ?', 'Statique automatisée pour le glaucome et le suivi quantitatif ; cinétique de Goldmann pour le neurologique, la périphérie et les patients peu coopérants.'],
@@ -166,7 +166,7 @@ window.UE_EXTRA = {
   },
 
   UE11: {
-    prereq: ['UE3', 'UE5', 'UE8', 'UE9'],
+    prereq: ['UE03', 'UE05', 'UE08', 'UE09'],
     mots: ['Cover test', 'Hétérophorie', 'PPC', 'Amplitudes de fusion', 'Réserves fusionnelles', 'Rapport AC/A', 'Sheard (critère de)', 'Percival (critère de)', 'Maddox (baguette de)', 'Worth (test de)', 'Bagolini (verres striés)', 'Lang (test de)', 'TNO (test)', 'Stéréoscopie', 'Synoptophore', 'Asthénopie', 'Flippers'],
     qr: [
       ['Dans quel ordre menez-vous un bilan orthoptique ?', 'Interrogatoire, acuités de loin et de près, réfraction, équilibre oculomoteur, vergences et accommodation, sensoriel, puis synthèse et conclusion.'],
@@ -181,7 +181,7 @@ window.UE_EXTRA = {
 
   UE13: {
     prereq: [],
-    mots: ['Film lacrymal', 'Fluorescéine', 'Uvéite'],
+    mots: ['Film lacrymal', 'Fluorescéine', 'Uvéite', 'BUT', 'Schirmer (test de)', 'Goldmann (tonomètre de)', 'Tonométrie', 'Contactologie'],
     qr: [
       ['Quel est le premier geste de prévention de la transmission croisée ?', 'La friction hydro-alcoolique des mains, avant et après chaque patient.'],
       ['Comment traite-t-on un verre d’examen entre deux patients ?', 'Nettoyage puis désinfection selon le protocole du service ; le matériel au contact de la cornée relève d’une désinfection de niveau intermédiaire au minimum.'],
@@ -192,7 +192,7 @@ window.UE_EXTRA = {
   },
 
   UE14: {
-    prereq: ['UE9'],
+    prereq: ['UE09'],
     mots: ['Paralysie du III', 'Paralysie du IV', 'Paralysie du VI', 'Bielschowsky (manœuvre de)', 'Parks (test des 3 pas de)', 'Lancaster (test de)', 'Duction forcée (test de)', 'Syndrome restrictif', 'Brown (syndrome de)', 'Duane (syndrome de)', 'Orbitopathie dysthyroïdienne', 'Torticolis oculaire', 'Comitance'],
     qr: [
       ['Les trois pas de Parks ?', 'Quel œil est le plus haut ; la déviation est-elle majorée en regard droit ou gauche ; est-elle majorée à l’inclinaison droite ou gauche.'],
@@ -232,7 +232,7 @@ window.UE_EXTRA = {
 
   UE18: {
     prereq: [],
-    mots: ['Troubles neurovisuels', 'Basse vision', 'Amblyopie'],
+    mots: ['Troubles neurovisuels', 'Basse vision', 'Amblyopie', 'Agnosie visuelle', 'Période sensible', 'Regard préférentiel', 'DEM (test)', 'Asthénopie'],
     qr: [
       ['Quelles sont les grandes étapes du développement de l’enfant utiles au bilan ?', 'Poursuite et sourire réponse vers 2-3 mois, préhension vers 5-6 mois, marche vers 12-18 mois, langage structuré vers 3 ans : elles conditionnent les tests utilisables.'],
       ['Qu’est-ce que le travail de deuil dans l’annonce d’une déficience visuelle ?', 'Une succession non linéaire : sidération, déni, colère, marchandage, dépression, acceptation. On ne saute pas les étapes du patient.'],
@@ -258,7 +258,7 @@ window.UE_EXTRA = {
   /* ---------------- Semestre 3 ---------------- */
 
   UE24: {
-    prereq: ['UE5', 'UE9'],
+    prereq: ['UE05', 'UE09'],
     mots: ['Amblyopie', 'Période sensible', 'Anisométropie', 'Crowding', 'Fixation excentrique', 'Visuscope', 'Strabisme sensoriel', 'Leucocorie', 'Brückner (test de)', 'Regard préférentiel', 'Emmétropisation'],
     qr: [
       ['Définissez l’amblyopie.', 'Une baisse d’acuité par trouble du développement visuel, sans lésion organique proportionnelle à la baisse. Le mécanisme est cortical.'],
@@ -284,7 +284,7 @@ window.UE_EXTRA = {
   },
 
   UE26: {
-    prereq: ['UE5', 'UE16'],
+    prereq: ['UE05', 'UE16'],
     mots: ['Basse vision', 'Grossissement', 'Loupe', 'DMLA', 'Rétinopathie pigmentaire', 'Glaucome', 'Sensibilité aux contrastes', 'Champ visuel', 'Scotome'],
     qr: [
       ['Définitions OMS de la malvoyance et de la cécité ?', 'Malvoyance : acuité < 3/10 au meilleur œil corrigé, ou champ visuel < 20°. Cécité : acuité < 1/20.'],
@@ -310,7 +310,7 @@ window.UE_EXTRA = {
 
   UE32: {
     prereq: ['UE18'],
-    mots: ['Rééducation orthoptique', 'Occlusion', 'Amsler (grille d’)'],
+    mots: ['Rééducation orthoptique', 'Occlusion', 'Amsler (grille d’)', 'Amblyopie', 'Pénalisation optique', 'Filtres de Bangerter', 'Basse vision', 'Presbytie'],
     qr: [
       ['Quelles sont les quatre étapes de l’éducation thérapeutique ?', 'Diagnostic éducatif, objectifs partagés, séances d’acquisition de compétences, évaluation.'],
       ['Comment vérifie-t-on qu’un patient a compris ?', 'En lui faisant reformuler. Jamais en demandant « vous avez compris ? ».'],
@@ -322,7 +322,7 @@ window.UE_EXTRA = {
 
   UE37: {
     prereq: ['UE11', 'UE15'],
-    mots: ['Rééducation orthoptique', 'Asthénopie', 'Insuffisance de convergence', 'PPC'],
+    mots: ['Rééducation orthoptique', 'Asthénopie', 'Insuffisance de convergence', 'PPC', 'Excès de convergence', 'Insuffisance accommodative', 'Hétérophorie', 'Amplitudes de fusion'],
     qr: [
       ['Qu’est-ce qu’un diagnostic orthoptique ?', 'La description d’un dysfonctionnement et de son retentissement — pas un diagnostic médical, et pas une liste de chiffres.'],
       ['Que doit contenir un projet de soins ?', 'Objectifs mesurables, moyens, rythme, durée prévisionnelle, critères de réévaluation et critères d’arrêt.'],
@@ -347,7 +347,7 @@ window.UE_EXTRA = {
   },
 
   UE22: {
-    prereq: ['UE4', 'UE7', 'UE16'],
+    prereq: ['UE04', 'UE07', 'UE16'],
     mots: ['Voies optiques', 'Chiasma optique', 'Hémianopsie', 'Quadranopsie', 'Nerf optique', 'Névrite optique', 'DPAR', 'Papille', 'Anisocorie', 'Mydriase', 'Myosis', 'Horner (syndrome de Claude Bernard-)', 'Adie (pupille d’)', 'Paralysie du III', 'Ophtalmoplégie internucléaire', 'Nystagmus'],
     qr: [
       ['Que signifie une hémianopsie bitemporale ?', 'Une compression chiasmatique médiane — adénome hypophysaire typiquement.'],
@@ -387,7 +387,7 @@ window.UE_EXTRA = {
   /* ---------------- Semestre 5 ---------------- */
 
   UE29: {
-    prereq: ['UE8', 'UE11'],
+    prereq: ['UE08', 'UE11'],
     mots: ['DEM (test)', 'Saccade', 'Insuffisance de convergence', 'Asthénopie', 'Flippers', 'Insuffisance accommodative', 'Rééducation orthoptique'],
     qr: [
       ['Quelles plaintes évoquent un trouble visuel dans les apprentissages ?', 'Perte de la ligne, saut de mots, fatigue en lecture, céphalées de fin de journée, refus de la lecture — pas une baisse d’acuité.'],
@@ -411,7 +411,7 @@ window.UE_EXTRA = {
   },
 
   UE31: {
-    prereq: ['UE5', 'UE11'],
+    prereq: ['UE05', 'UE11'],
     mots: ['Regard préférentiel', 'Brückner (test de)', 'Épicanthus', 'Pseudo-strabisme', 'Amblyopie', 'Asthénopie', 'BUT', 'Emmétropisation'],
     qr: [
       ['Signes d’appel visuels chez le nourrisson ?', 'Absence de poursuite ou de sourire réponse, errance du regard, nystagmus, strabisme après 4 mois, leucocorie, signe digito-oculaire.'],
@@ -424,7 +424,7 @@ window.UE_EXTRA = {
 
   UE33: {
     prereq: ['UE10', 'UE17'],
-    mots: ['OCT', 'Topographie cornéenne', 'Fond d’œil', 'Champ visuel', 'Kératométrie'],
+    mots: ['OCT', 'Topographie cornéenne', 'Fond d’œil', 'Champ visuel', 'Kératométrie', 'Kératocône', 'Pression intraoculaire', 'Cataracte', 'Rétinopathie diabétique'],
     qr: [
       ['Que montre une OCT-angiographie de plus qu’une OCT classique ?', 'Les flux vasculaires rétiniens et choroïdiens, sans injection de colorant.'],
       ['Quel examen pour dépister un kératocône débutant ?', 'La topographie, et mieux la tomographie qui donne les deux faces et la carte d’épaisseur.'],
@@ -436,7 +436,7 @@ window.UE_EXTRA = {
 
   UE41: {
     prereq: [],
-    mots: [],
+    mots: ['Mydriase', 'Anisocorie', 'DPAR', 'Réflexe photomoteur', 'Uvéite', 'Exophtalmie', 'Ptôsis', 'Horner (syndrome de Claude Bernard-)'],
     qr: [
       ['Quel est le premier geste devant une personne inconsciente qui respire ?', 'La position latérale de sécurité, après avoir libéré les voies aériennes et alerté.'],
       ['Numéros d’urgence utiles ?', '15 SAMU, 18 pompiers, 112 numéro européen, 114 pour les personnes sourdes ou malentendantes.'],
@@ -473,7 +473,7 @@ window.UE_EXTRA = {
   },
 
   UE36: {
-    prereq: ['UE9', 'UE11', 'UE14'],
+    prereq: ['UE09', 'UE11', 'UE14'],
     mots: ['Cover test', 'Prisme', 'Hirschberg (test de)', 'Krimsky (test de)', 'Tillaux (spirale de)', 'Comitance', 'Syndrome alphabétique', 'Kestenbaum (opération de)', 'DVD'],
     qr: [
       ['Que vérifie-t-on avant d’opérer un strabisme ?', 'Un angle stable mesuré à plusieurs reprises, une amblyopie traitée, une correction optique optimale, et l’absence de cause restrictive ou paralytique évolutive.'],
@@ -539,7 +539,7 @@ window.UE_EXTRA_CHECK = function () {
     (e.prereq || []).forEach(function (p) { if (!codes[p]) out.prereqInconnus.push(k + ' → ' + p); });
   });
   Object.keys(codes).forEach(function (c) {
-    if (c === 'UE6' || c === 'UE libre') return;
+    if (c === 'UE06' || c === 'UE libre') return;
     if (!window.UE_EXTRA[c]) out.ueSansExtra.push(c);
   });
   return out;
