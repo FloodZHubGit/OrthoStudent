@@ -54,7 +54,10 @@
             return { title: s.title, tag: s.tag, body: s.html, open: i === open };
           }))
         ));
-        if (wanted && open > 0) setTimeout(function () { openOnly(open); }, 60);
+        if (wanted && open > 0) {
+          /* la section est déjà dépliée par l'accordéon ; il reste à y aller */
+          UI.bring(body.querySelectorAll('.acc-item')[open], { block: 'start' });
+        }
         wanted = null;
       }
 

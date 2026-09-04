@@ -295,7 +295,7 @@
        meilleure reponse possible, quelle que soit sa nature. */
     if (ctx && it.tn && it.tn === ctx.nom) total += 260;
     /* Une UE citee dans la question ferme le perimetre : « qu'est-ce qui
-       tombe en UE3 » ne doit pas repondre avec l'UE 9. */
+       tombe en UE03 » ne doit pas repondre avec l'UE 9. */
     if (ctx && ctx.code) total += it.code === ctx.code ? 130 : -60;
     return total + (POIDS[it.k] || 0) + ((boost && boost[it.k]) || 0)
       - Math.min(18, (it.t || '').length / 10);
@@ -1038,7 +1038,7 @@
       var qc = M.converters && M.converters.quickCalc;
       var brut = q.replace(/\s*\?\s*$/, '').trim();
       /* Un code d'UE se termine par un chiffre : sans ce garde-fou, « un cas
-         clinique sur UE1 » devient une conversion d'acuité. */
+         clinique sur UE01 » devient une conversion d'acuité. */
       if (qc && !/\bue\s*\d/i.test(brut)) {
         calc = qc(brut);
         /* On écrit à un répétiteur ce qu'on ne tape pas dans un champ de

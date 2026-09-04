@@ -171,7 +171,7 @@
 
   /* ---------------- Le lien avec le référentiel ---------------- */
 
-  /* Un même code peut vivre dans plusieurs semestres — UE6, l'anglais, court
+  /* Un même code peut vivre dans plusieurs semestres — UE06, l'anglais, court
      sur les six. On tranche par l'année du groupe, puis par la période : de
      septembre à janvier c'est le semestre impair de l'année, ensuite l'autre. */
   function ueDuCours(ev) {
@@ -250,9 +250,17 @@
         el('div', { class: 'edt-t' }, [
           el('span', { class: 'edt-type', style: { color: couleur(ev.t) }, text: ev.t }),
           ev.ue ? el('b', { text: ' · ' + ev.ue }) : null,
+          /* trois séances de l'année portent deux UE : la seconde était
+             jusqu'ici présentée comme une salle */
+          ev.aussi && ev.aussi.length
+            ? el('span', { class: 'muted small', text: ' + ' + ev.aussi.join(' + ') }) : null,
           duree(ev) ? el('span', { class: 'muted small', text: ' · ' + heuresLisibles(duree(ev)) }) : null
         ].filter(Boolean)),
         titre && titre !== ev.t ? el('div', { class: 'edt-ti', text: titre }) : null,
+        /* La remarque de l'enseignant dit ce que la séance contient vraiment
+           — « Méthodologie de travail, 1ère partie ». Elle n'a rien à faire
+           dans la ligne des lieux : on la met sous l'intitulé, où on la lit. */
+        ev.note ? el('div', { class: 'edt-note', text: ev.note }) : null,
         meta.length ? el('div', { class: 'edt-m', text: meta.join(' · ') }) : null
       ].filter(Boolean)),
       el('div', { class: 'edt-act' }, [

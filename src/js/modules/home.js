@@ -27,7 +27,6 @@
   var FEATURED = [
     { id: 'reading', d: 'Un bilan complet à interpréter, tiré au sort' },
     { id: 'patient', d: 'Consultation entière, cas générés à l’infini' },
-    { id: 'exam', d: 'Épreuve chronométrée à postes, notée' },
     { id: 'rehab', d: 'Programme de rééducation, séance après séance' }
   ];
 
@@ -36,8 +35,8 @@
   /* La grille « Tous les outils » double exactement la barre latérale : elle
      n'a d'intérêt que tant qu'on ne la connaît pas encore, avec la phrase qui
      dit à quoi sert chaque entrée. Elle disparaît dès la première note. */
-  var QUICK_ORDER = ['studies', 'edt', 'revise', 'progress',
-    'reading', 'patient', 'rehab', 'converters', 'anatomy', 'glossary', 'help'];
+  var QUICK_ORDER = ['studies', 'chat', 'edt', 'revise', 'progress',
+    'reading', 'patient', 'rehab', 'atelier', 'vision', 'converters', 'anatomy', 'glossary', 'help'];
 
   /* Coupe au dernier mot entier avant la limite, plutôt qu'en plein milieu. */
   function shorten(s, max) {
@@ -92,8 +91,7 @@
           UI.btn('🩺  Consulter un patient inédit', function () {
             M.patient.startRandom(); App.go('patient');
           }, isNew || left ? null : 'primary'),
-          UI.btn('❓  QCM rapide', function () { App.go('quiz'); }),
-          isNew ? null : UI.btn('⏱  Examen blanc', function () { App.go('exam'); })
+          isNew ? null : UI.btn('⚡  Mes cartes Anki', function () { App.go('flashcards'); })
         ].filter(Boolean))
       ]);
 

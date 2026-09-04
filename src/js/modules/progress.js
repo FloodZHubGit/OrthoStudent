@@ -49,20 +49,6 @@
         ];
       }).sort(function (a, b) { return parseInt(b[3]) - parseInt(a[3]); });
 
-      /* --- QCM par thème --- */
-      var byCat = {};
-      QUIZ.forEach(function (q) {
-        var r = st.quiz[q.id];
-        if (!r) return;
-        byCat[q.cat] = byCat[q.cat] || { ok: 0, n: 0 };
-        byCat[q.cat].ok += r.ok; byCat[q.cat].n += r.seen;
-      });
-      var catRows = Object.keys(byCat).map(function (k) {
-        var b = byCat[k];
-        var p = Math.round((b.ok / b.n) * 100);
-        return [k, b.n, p + ' %', el('div', { style: { minWidth: '110px' } }, UI.bar(p, p >= 70 ? 'var(--green)' : p >= 50 ? 'var(--amber)' : 'var(--red)'))];
-      }).sort(function (a, b) { return parseInt(a[2]) - parseInt(b[2]); });
-
       /* --- cas cliniques --- */
       var caseRows = CASES.map(function (c) {
         var r = st.cases[c.id];
@@ -71,18 +57,13 @@
           r ? new Date(r.at).toLocaleDateString('fr-FR') : '—'];
       });
 
-      /* Un « thème le plus fragile » à 79 % n'est pas fragile : l'avertissement
-         ne se déclenche que s'il y a vraiment quelque chose à reprendre. */
-      var weakest = catRows.length && parseInt(catRows[0][2], 10) < 65 ? catRows[0][0] : null;
-
       return UI.page({
         crumb: 'Mon travail',
         title: 'Ma progression',
         subtitle: 'Tout est enregistré localement sur cet ordinateur. Menu <b>Fichier</b> pour exporter ou importer.'
       }, [
-        el('div', { class: 'grid g4', style: { marginBottom: '16px' } }, [
+        el('div', { class: 'grid g3', style: { marginBottom: '16px' } }, [
           UI.stat(stats.simAvg + ' %', 'Moyenne des exercices'),
-          UI.stat(stats.quizRate + ' %', 'Réussite QCM'),
           UI.stat(stats.cardsMastered + '/' + Cards.all().length, 'Fiches mémorisées'),
           UI.stat(stats.casesDone + '/' + CASES.length, 'Cas rédigés traités')
         ]),
@@ -94,14 +75,14 @@
           var worked30 = last30.filter(function (d) { return d.total > 0; }).length;
           var g = Store.goal();
           var totals = act.reduce(function (a, d) {
-            a.cards += d.cards; a.quiz += d.quiz; a.ex += d.sims + d.cases; return a;
-          }, { cards: 0, quiz: 0, ex: 0 });
+            a.cards += d.cards; a.ex += d.sims + d.cases; return a;
+          }, { cards: 0, ex: 0 });
 
           var goalHint = el('p', { class: 'small muted', style: { marginTop: '10px' } });
           function hint() {
             var gg = Store.goal();
-            goalHint.textContent = 'Objectif : ' + gg.cards + ' fiches et ' + gg.quiz + ' QCM par jour — ' +
-              'soit environ ' + Math.max(1, Math.round((gg.cards * 8 + gg.quiz * 25) / 60)) + ' minutes de travail.';
+            goalHint.textContent = 'Objectif : ' + gg.items + ' items d’UE à réciter par jour — ' +
+              'soit environ ' + Math.max(1, Math.round((gg.items * 8) / 60)) + ' minutes de travail.';
           }
           hint();
 
@@ -110,16 +91,14 @@
               UI.stat(streak.current + ' j', 'Série en cours', streak.current ? 'var(--accent)' : 'var(--txt-3)'),
               UI.stat(streak.best + ' j', 'Record de série', 'var(--violet)'),
               UI.stat(worked30 + '/30', 'Jours travaillés (30 j)', worked30 >= 20 ? 'var(--green)' : 'var(--amber)'),
-              UI.stat(totals.cards + totals.quiz + totals.ex, 'Actions sur 1 an')
+              UI.stat(totals.cards + totals.ex, 'Actions sur 1 an')
             ]),
             UI.heatmap(act, { cell: 12 }),
             el('div', { class: 'grid g3', style: { marginTop: '18px' } }, [
-              UI.field('Objectif de fiches par jour',
-                UI.num(g.cards, function (v) { Store.setGoal(v || 0, Store.goal().quiz); hint(); }, { min: 0, max: 200, step: 5 })),
-              UI.field('Objectif de QCM par jour',
-                UI.num(g.quiz, function (v) { Store.setGoal(Store.goal().cards, v || 0); hint(); }, { min: 0, max: 200, step: 5 })),
+              UI.field('Objectif d’items à réciter par jour',
+                UI.num(g.items, function (v) { Store.setGoal(v || 0); hint(); }, { min: 0, max: 200, step: 5 })),
               UI.field('Détail sur un an',
-                el('div', { class: 'small muted', text: totals.cards + ' fiches · ' + totals.quiz + ' QCM · ' + totals.ex + ' exercices notés' }))
+                el('div', { class: 'small muted', text: totals.cards + ' items récités · ' + totals.ex + ' exercices notés' }))
             ]),
             goalHint
           ]);
@@ -130,14 +109,9 @@
           el('p', { class: 'small muted', text: 'La ligne pointillée marque le seuil de 70 %.' })
         ]) : null,
 
-        weakest ? UI.note('Votre thème le plus fragile est actuellement <b>' + weakest + '</b>. ' +
-          'Lancez une série de QCM ciblée ou relisez le chapitre correspondant.', 'warn') : null,
-
         rows.length ? UI.card('Exercices notés', UI.table(['Exercice', 'Essais', 'Meilleur', 'Moyenne', 'Dernier', ''], rows, { numeric: [1, 2, 3, 4] }))
           : UI.card('Exercices notés', el('p', { class: 'muted', text: 'Aucun exercice noté pour l’instant.' })),
 
-        catRows.length ? UI.card('QCM par thème (du plus fragile au plus solide)',
-          UI.table(['Thème', 'Questions vues', 'Réussite', ''], catRows, { numeric: [1, 2] })) : null,
 
         UI.card('Cas cliniques rédigés', UI.table(['Patient', 'Thèmes', 'Score', 'Date'], caseRows, { numeric: [2] })),
 

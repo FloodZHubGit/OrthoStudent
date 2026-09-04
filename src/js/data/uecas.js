@@ -19,7 +19,7 @@ window.UE_CAS = {
 
 /* ============================ SEMESTRE 1 ============================ */
 
-UE1: [
+UE01: [
   { t: 'Une leucocorie sur une photo de famille',
     tag: 'urgence',
     s: 'Des parents apportent une photo de leur fille de 14 mois : la pupille gauche apparaît blanche au flash, la droite est rouge. L’enfant va bien par ailleurs et fixe des deux yeux.',
@@ -39,7 +39,7 @@ UE1: [
     c: 'Œdème cornéen par souffrance endothéliale post-opératoire. Surveillance de la densité endothéliale ; en cas de décompensation, seule une greffe endothéliale rendra la transparence.' }
 ],
 
-UE2: [
+UE02: [
   { t: 'Du verre de lunettes à la lentille de contact',
     tag: 'calcul',
     s: 'Un patient myope porte des lunettes de −8,00 D, à 12 mm de la cornée. Il souhaite passer aux lentilles de contact.',
@@ -59,7 +59,7 @@ UE2: [
     c: '3 Δ base supérieure OD + 3 Δ base inférieure OG. Au-delà de 8 à 10 Δ, on privilégie les prismes souples de Fresnel, moins lourds mais qui dégradent l’acuité.' }
 ],
 
-UE3: [
+UE03: [
   { t: 'Une myope de 48 ans qui retire ses lunettes pour lire',
     tag: 'clinique',
     s: 'Une patiente myope de −2,50 D aux deux yeux, 48 ans, lit sans ses lunettes en tenant le texte à 40 cm. Elle demande des progressifs parce que ce geste l’agace.',
@@ -79,7 +79,7 @@ UE3: [
     c: 'Diplopie monoculaire par astigmatisme non corrigé. Correction complète, contrôle de l’acuité obtenue, et topographie si l’astigmatisme progresse d’un contrôle à l’autre.' }
 ],
 
-UE4: [
+UE04: [
   { t: 'Un adolescent qui ne voit plus rien au cinéma',
     tag: 'clinique',
     s: 'Un garçon de 16 ans se cogne dans les salles sombres et met « très longtemps » à s’habituer. Son acuité diurne est de 10/10 aux deux yeux et son champ visuel central est normal.',
@@ -99,7 +99,7 @@ UE4: [
     c: 'Hémianopsie bitemporale d’origine chiasmatique : IRM hypophysaire sans délai. On recherche une dyschromatopsie d’axe rouge-vert, une baisse d’acuité et une pâleur papillaire en « nœud papillon ».' }
 ],
 
-UE5: [
+UE05: [
   { t: 'Mesurer l’acuité d’un enfant de 3 ans',
     tag: 'clinique',
     s: 'Une petite fille de 3 ans est adressée pour suspicion de strabisme intermittent. Elle parle peu et se lasse vite.',
@@ -119,7 +119,7 @@ UE5: [
     c: 'Baisse d’acuité d’origine réfractive : on refait la réfraction avant tout autre examen. Le sténopé est un test de débrouillage, jamais une preuve à lui seul.' }
 ],
 
-UE7: [
+UE07: [
   { t: 'Où le chirurgien coupe-t-il ?',
     tag: 'oral',
     s: 'Vous assistez à un recul du droit médial gauche pour ésotropie. Le chirurgien mesure une distance au limbe avant de désinsérer le muscle.',
@@ -139,7 +139,7 @@ UE7: [
     c: 'Paralysie du III <b>extrinsèque et intrinsèque</b> : urgence neurochirurgicale, imagerie vasculaire immédiate. Le bilan orthoptique attendra ; ici c’est l’orientation qui sauve.' }
 ],
 
-UE8: [
+UE08: [
   { t: 'Deux doigts au lieu d’un, et c’est normal',
     tag: 'oral',
     s: 'Vous demandez à un patient de fixer votre doigt à 40 cm en gardant conscience de votre stylo tenu à 1 m derrière. Il déclare voir deux stylos.',
@@ -159,7 +159,7 @@ UE8: [
     c: 'Ésotropie accommodative de près par excès de convergence. Correction optique totale sous cycloplégie, puis <b>double foyer</b> ou progressif enfant ; la chirurgie ne se discute que sur la part non accommodative résiduelle.' }
 ],
 
-UE9: [
+UE09: [
   { t: 'Un strabique qui ne voit jamais double',
     tag: 'oral',
     s: 'Un adulte porteur d’une ésotropie depuis l’âge de 2 ans dévie de 25 Δ. Il n’a jamais eu de diplopie. Au verre rouge, il ne perçoit qu’une seule lumière.',

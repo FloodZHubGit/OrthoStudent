@@ -54,9 +54,17 @@ app.whenReady().then(async () => {
       catch (e) { out.errors.push(label + ' → ' + (e && e.message)); }
     }
 
+    /* App.go() sur un identifiant inconnu affiche un toast et rend la main :
+       une étape qui ouvre un module supprimé passerait donc au vert sans rien
+       tester. On exige que le module existe. */
+    function aller(id, params) {
+      if (!window.Modules[id]) throw new Error('module absent : ' + id);
+      window.App.go(id, params);
+    }
+
     step('consultation complète', function () {
       window.Modules.patient.startRandom('ic');
-      window.App.go('patient');
+      aller('patient');
       document.querySelectorAll('#view .chip').forEach(function (n) { n.click(); });
       var suite = [].slice.call(document.querySelectorAll('#view .btn'))
         .filter(function (b) { return /Passer aux examens/.test(b.textContent); })[0];
@@ -85,15 +93,8 @@ app.whenReady().then(async () => {
 
     step('fiche d’UE', function () {
       var sem = window.CURRICULUM[2];
-      window.App.go('studies', { sem: sem.id, ue: sem.ues[0].code });
+      aller('studies', { sem: sem.id, ue: sem.ues[0].code });
       document.querySelectorAll('#view .tab').forEach(function (t) { t.click(); });
-    });
-
-    step('épreuve blanche', function () {
-      window.App.go('exam');
-      var go = [].slice.call(document.querySelectorAll('#view .btn'))
-        .filter(function (b) { return /Commencer|Lancer/.test(b.textContent); })[0];
-      if (go) go.click();
     });
 
     /* la recherche construit son index sur toutes les banques de données :

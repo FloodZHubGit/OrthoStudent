@@ -6,7 +6,7 @@
    Régénérer : npm run edt — ou le bouton « Actualiser » du
    module Emploi du temps, qui écrit dans le stockage local.
 
-   Année universitaire 2026-2027, relevé du 2026-08-24.
+   Année universitaire 2026-2027, relevé du 2026-09-01.
    Chaque séance porte :
      d, s, e : date (AAAA-MM-JJ), heure de début, heure de fin
      t       : type de séance — CM, TD, CM/TD, TP, examen…
@@ -17,7 +17,7 @@
 window.EDT = {
  "source": "CELCAT / UPJV",
  "anneeUniversitaire": "2026-2027",
- "genere": "2026-08-24T20:28:18.794Z",
+ "genere": "2026-09-01T15:47:28.822Z",
  "groupes": {
   "C1OPTI/261": {
    "annee": 1,
@@ -58,7 +58,7 @@ window.EDT = {
      "s": "16:15",
      "e": "18:15",
      "t": "CM",
-     "ue": "UE4",
+     "ue": "UE04",
      "titre": "Physiologie du système visuel, physio neurosensorielle",
      "salle": "D101 - Salle de cours - 41 Max",
      "site": "Campus - BAT D"
@@ -68,7 +68,7 @@ window.EDT = {
      "s": "08:30",
      "e": "12:30",
      "t": "CM/TD",
-     "ue": "UE2",
+     "ue": "UE02",
      "titre": "Optique géométrique, Optique physiologique",
      "salle": "M009 [Salle de cours]",
      "site": "Sciences - Batiment des Minimes"
@@ -78,7 +78,7 @@ window.EDT = {
      "s": "14:00",
      "e": "16:00",
      "t": "TD",
-     "ue": "UE6",
+     "ue": "UE06",
      "titre": "Anglais",
      "salle": "G203",
      "site": "Campus - BAT G"
@@ -92,6 +92,16 @@ window.EDT = {
      "titre": "",
      "salle": "E200",
      "site": "Campus - BAT E"
+    },
+    {
+     "d": "2026-09-11",
+     "s": "14:00",
+     "e": "16:00",
+     "t": "CM",
+     "ue": "UE12",
+     "titre": "Déontologie et éthique : histoire de la profession",
+     "salle": "D101 - Salle de cours - 41 Max",
+     "site": "Campus - BAT D"
     },
     {
      "d": "2026-09-14",
@@ -108,7 +118,7 @@ window.EDT = {
      "s": "14:00",
      "e": "18:00",
      "t": "CM",
-     "ue": "UE7",
+     "ue": "UE07",
      "titre": "Anatomie et histologie de l'appareil oculomoteur et de",
      "salle": "D101 - Salle de cours - 41 Max",
      "site": "Campus - BAT D"
@@ -118,7 +128,7 @@ window.EDT = {
      "s": "13:30",
      "e": "17:30",
      "t": "CM/TD",
-     "ue": "UE1",
+     "ue": "UE01",
      "titre": "Biologie moléculaire et cellulaire, génétique, histolo",
      "salle": "M002 [Salle de cours]",
      "site": "Sciences - Batiment des Minimes"
@@ -128,7 +138,7 @@ window.EDT = {
      "s": "08:30",
      "e": "12:30",
      "t": "CM/TD",
-     "ue": "UE2",
+     "ue": "UE02",
      "titre": "Optique géométrique, Optique physiologique",
      "salle": "M009 [Salle de cours]",
      "site": "Sciences - Batiment des Minimes"
@@ -138,7 +148,7 @@ window.EDT = {
      "s": "15:00",
      "e": "17:00",
      "t": "TD",
-     "ue": "UE6",
+     "ue": "UE06",
      "titre": "Anglais",
      "salle": "G203",
      "site": "Campus - BAT G"
@@ -148,7 +158,7 @@ window.EDT = {
      "s": "13:30",
      "e": "17:30",
      "t": "CM",
-     "ue": "UE8",
+     "ue": "UE08",
      "titre": "Physiologie appareil oculomoteur et vision binoculaire",
      "salle": "D101 - Salle de cours - 41 Max",
      "site": "Campus - BAT D"
@@ -160,8 +170,8 @@ window.EDT = {
      "t": "CM",
      "ue": "UE16",
      "titre": "Pathologies ophtalmologiques et générales",
-     "salle": "",
-     "site": ""
+     "salle": "D101 - Salle de cours - 41 Max",
+     "site": "Campus - BAT D"
     },
     {
      "d": "2026-09-21",
@@ -178,7 +188,7 @@ window.EDT = {
      "s": "13:30",
      "e": "17:30",
      "t": "CM/TD",
-     "ue": "UE1",
+     "ue": "UE01",
      "titre": "Biologie moléculaire et cellulaire, génétique, histolo",
      "salle": "M002 [Salle de cours]",
      "site": "Sciences - Batiment des Minimes"
@@ -188,7 +198,7 @@ window.EDT = {
      "s": "08:30",
      "e": "12:30",
      "t": "CM/TD",
-     "ue": "UE2",
+     "ue": "UE02",
      "titre": "Optique géométrique, Optique physiologique",
      "salle": "F009 [Salle de cours]",
      "site": "Sciences - Batiment F"
@@ -198,17 +208,27 @@ window.EDT = {
      "s": "15:00",
      "e": "17:00",
      "t": "TD",
-     "ue": "UE6",
+     "ue": "UE06",
      "titre": "Anglais",
      "salle": "G203",
      "site": "Campus - BAT G"
     },
     {
      "d": "2026-09-24",
+     "s": "09:00",
+     "e": "11:00",
+     "t": "CM",
+     "ue": "UE12",
+     "titre": "Déontologie et éthique : histoire de la profession",
+     "salle": "D101 - Salle de cours - 41 Max",
+     "site": "Campus - BAT D"
+    },
+    {
+     "d": "2026-09-24",
      "s": "13:30",
      "e": "17:30",
      "t": "CM",
-     "ue": "UE8",
+     "ue": "UE08",
      "titre": "Physiologie appareil oculomoteur et vision binoculaire",
      "salle": "D101 - Salle de cours - 41 Max",
      "site": "Campus - BAT D"
@@ -218,8 +238,18 @@ window.EDT = {
      "s": "09:00",
      "e": "12:00",
      "t": "CM",
-     "ue": "UE8",
+     "ue": "UE08",
      "titre": "Physiologie appareil oculomoteur et vision binoculaire",
+     "salle": "D101 - Salle de cours - 41 Max",
+     "site": "Campus - BAT D"
+    },
+    {
+     "d": "2026-09-29",
+     "s": "08:30",
+     "e": "10:30",
+     "t": "CM",
+     "ue": "UE05",
+     "titre": "Vision monoculaire, acuités visuelles et anomalies",
      "salle": "D101 - Salle de cours - 41 Max",
      "site": "Campus - BAT D"
     },
@@ -228,7 +258,7 @@ window.EDT = {
      "s": "13:30",
      "e": "17:30",
      "t": "CM/TD",
-     "ue": "UE1",
+     "ue": "UE01",
      "titre": "Biologie moléculaire et cellulaire, génétique, histolo",
      "salle": "M002 [Salle de cours]",
      "site": "Sciences - Batiment des Minimes"
@@ -238,7 +268,7 @@ window.EDT = {
      "s": "08:30",
      "e": "12:30",
      "t": "CM/TD",
-     "ue": "UE2",
+     "ue": "UE02",
      "titre": "Optique géométrique, Optique physiologique",
      "salle": "H22 [Salle de cours]",
      "site": "Sciences - Batiment H"
@@ -248,7 +278,7 @@ window.EDT = {
      "s": "15:00",
      "e": "17:00",
      "t": "TD",
-     "ue": "UE6",
+     "ue": "UE06",
      "titre": "Anglais",
      "salle": "G203",
      "site": "Campus - BAT G"
@@ -258,7 +288,7 @@ window.EDT = {
      "s": "08:30",
      "e": "12:30",
      "t": "CM",
-     "ue": "UE3",
+     "ue": "UE03",
      "titre": "Réfraction",
      "salle": "D101 - Salle de cours - 41 Max",
      "site": "Campus - BAT D"
@@ -268,7 +298,7 @@ window.EDT = {
      "s": "14:00",
      "e": "17:30",
      "t": "CM",
-     "ue": "UE8",
+     "ue": "UE08",
      "titre": "Physiologie appareil oculomoteur et vision binoculaire",
      "salle": "D101 - Salle de cours - 41 Max",
      "site": "Campus - BAT D"
@@ -278,7 +308,7 @@ window.EDT = {
      "s": "10:00",
      "e": "12:00",
      "t": "CM",
-     "ue": "UE4",
+     "ue": "UE04",
      "titre": "Physiologie du système visuel, physio neurosensorielle",
      "salle": "D101 - Salle de cours - 41 Max",
      "site": "Campus - BAT D"
@@ -288,7 +318,7 @@ window.EDT = {
      "s": "08:30",
      "e": "10:30",
      "t": "CM",
-     "ue": "UE7",
+     "ue": "UE07",
      "titre": "Anatomie et histologie de l'appareil oculomoteur et de",
      "salle": "D101 - Salle de cours - 41 Max",
      "site": "Campus - BAT D"
@@ -298,7 +328,7 @@ window.EDT = {
      "s": "10:30",
      "e": "12:30",
      "t": "CM",
-     "ue": "UE7",
+     "ue": "UE07",
      "titre": "Anatomie et histologie de l'appareil oculomoteur et de",
      "salle": "D101 - Salle de cours - 41 Max",
      "site": "Campus - BAT D"
@@ -308,7 +338,7 @@ window.EDT = {
      "s": "13:30",
      "e": "17:30",
      "t": "CM/TD",
-     "ue": "UE1",
+     "ue": "UE01",
      "titre": "Biologie moléculaire et cellulaire, génétique, histolo",
      "salle": "M002 [Salle de cours]",
      "site": "Sciences - Batiment des Minimes"
@@ -318,7 +348,7 @@ window.EDT = {
      "s": "08:30",
      "e": "12:30",
      "t": "CM/TD",
-     "ue": "UE2",
+     "ue": "UE02",
      "titre": "Optique géométrique, Optique physiologique",
      "salle": "F009 [Salle de cours]",
      "site": "Sciences - Batiment F"
@@ -338,17 +368,40 @@ window.EDT = {
      "s": "08:30",
      "e": "12:30",
      "t": "CM",
-     "ue": "UE3",
+     "ue": "UE03",
      "titre": "Réfraction",
      "salle": "D101 - Salle de cours - 41 Max",
      "site": "Campus - BAT D"
+    },
+    {
+     "d": "2026-10-12",
+     "s": "09:30",
+     "e": "12:30",
+     "t": "CM",
+     "ue": "UE05",
+     "titre": "Vision monoculaire, acuités visuelles et anomalies",
+     "salle": "D101 - Salle de cours - 41 Max",
+     "site": "Campus - BAT D"
+    },
+    {
+     "d": "2026-10-12",
+     "s": "13:00",
+     "e": "18:00",
+     "t": "CM",
+     "ue": "UE12",
+     "titre": "Déontologie et éthique : histoire de la profession",
+     "salle": "D101 - Salle de cours - 41 Max",
+     "site": "Campus - BAT D",
+     "aussi": [
+      "UE08"
+     ]
     },
     {
      "d": "2026-10-13",
      "s": "09:00",
      "e": "12:00",
      "t": "CM",
-     "ue": "UE4",
+     "ue": "UE04",
      "titre": "Physiologie du système visuel, physio neurosensorielle",
      "salle": "D101 - Salle de cours - 41 Max",
      "site": "Campus - BAT D"
@@ -358,7 +411,7 @@ window.EDT = {
      "s": "13:30",
      "e": "17:30",
      "t": "CM/TD",
-     "ue": "UE1",
+     "ue": "UE01",
      "titre": "Biologie moléculaire et cellulaire, génétique, histolo",
      "salle": "M002 [Salle de cours]",
      "site": "Sciences - Batiment des Minimes"
@@ -368,7 +421,7 @@ window.EDT = {
      "s": "08:30",
      "e": "12:30",
      "t": "CM/TD",
-     "ue": "UE2",
+     "ue": "UE02",
      "titre": "Optique géométrique, Optique physiologique",
      "salle": "F009 [Salle de cours]",
      "site": "Sciences - Batiment F"
@@ -400,8 +453,8 @@ window.EDT = {
      "t": "CM",
      "ue": "UE18",
      "titre": "Psychologie, psychopathologie, neurophysiologie",
-     "salle": "",
-     "site": ""
+     "salle": "D101 - Salle de cours - 41 Max",
+     "site": "Campus - BAT D"
     },
     {
      "d": "2026-10-19",
@@ -568,7 +621,7 @@ window.EDT = {
      "s": "08:20",
      "e": "12:20",
      "t": "CM",
-     "ue": "UE9",
+     "ue": "UE09",
      "titre": "Physiopathologie de l'oculomotricité et de la vision bi",
      "salle": "D101 - Salle de cours - 41 Max",
      "site": "Campus - BAT D"
@@ -578,7 +631,7 @@ window.EDT = {
      "s": "13:30",
      "e": "17:30",
      "t": "CM",
-     "ue": "UE9",
+     "ue": "UE09",
      "titre": "Physiopathologie de l'oculomotricité et de la vision bi",
      "salle": "D101 - Salle de cours - 41 Max",
      "site": "Campus - BAT D"
@@ -588,7 +641,7 @@ window.EDT = {
      "s": "13:30",
      "e": "17:30",
      "t": "CM/TD",
-     "ue": "UE1",
+     "ue": "UE01",
      "titre": "Biologie moléculaire et cellulaire, génétique, histolo",
      "salle": "M002 [Salle de cours]",
      "site": "Sciences - Batiment des Minimes"
@@ -598,7 +651,7 @@ window.EDT = {
      "s": "08:30",
      "e": "12:30",
      "t": "CM/TD",
-     "ue": "UE2",
+     "ue": "UE02",
      "titre": "Optique géométrique, Optique physiologique",
      "salle": "F009 [Salle de cours]",
      "site": "Sciences - Batiment F"
@@ -618,7 +671,7 @@ window.EDT = {
      "s": "13:30",
      "e": "17:30",
      "t": "CM",
-     "ue": "UE4",
+     "ue": "UE04",
      "titre": "Physiologie du système visuel, physio neurosensorielle",
      "salle": "D101 - Salle de cours - 41 Max",
      "site": "Campus - BAT D"
@@ -628,7 +681,7 @@ window.EDT = {
      "s": "08:30",
      "e": "12:30",
      "t": "CM",
-     "ue": "UE3",
+     "ue": "UE03",
      "titre": "Réfraction",
      "salle": "D101 - Salle de cours - 41 Max",
      "site": "Campus - BAT D"
@@ -638,7 +691,7 @@ window.EDT = {
      "s": "14:30",
      "e": "17:30",
      "t": "CM",
-     "ue": "UE4",
+     "ue": "UE04",
      "titre": "Physiologie du système visuel, physio neurosensorielle",
      "salle": "D101 - Salle de cours - 41 Max",
      "site": "Campus - BAT D"
@@ -648,7 +701,7 @@ window.EDT = {
      "s": "14:00",
      "e": "16:00",
      "t": "CM",
-     "ue": "UE3",
+     "ue": "UE03",
      "titre": "Réfraction",
      "salle": "D101 - Salle de cours - 41 Max",
      "site": "Campus - BAT D"
@@ -658,7 +711,7 @@ window.EDT = {
      "s": "08:30",
      "e": "12:30",
      "t": "CM/TD",
-     "ue": "UE2",
+     "ue": "UE02",
      "titre": "Optique géométrique, Optique physiologique",
      "salle": "M101 [Salle de cours]",
      "site": "Sciences - Batiment des Minimes"
@@ -668,7 +721,7 @@ window.EDT = {
      "s": "13:45",
      "e": "15:45",
      "t": "TD",
-     "ue": "UE6",
+     "ue": "UE06",
      "titre": "Anglais",
      "salle": "D008 Salle TP",
      "site": "Campus - BAT D"
@@ -700,15 +753,18 @@ window.EDT = {
      "t": "CM",
      "ue": "UE12",
      "titre": "Déontologie et éthique : histoire de la profession",
-     "salle": "UE5 : Vision monoculaire, acuités visuelles et anomalies / D101 - Salle de cours - 41 Max",
-     "site": "Campus - BAT D"
+     "salle": "D101 - Salle de cours - 41 Max",
+     "site": "Campus - BAT D",
+     "aussi": [
+      "UE05"
+     ]
     },
     {
      "d": "2026-11-16",
      "s": "08:30",
      "e": "12:30",
      "t": "TD",
-     "ue": "UE8",
+     "ue": "UE08",
      "titre": "Physiologie appareil oculomoteur et vision binoculaire",
      "salle": "D101 - Salle de cours - 41 Max",
      "site": "Campus - BAT D"
@@ -728,7 +784,7 @@ window.EDT = {
      "s": "10:45",
      "e": "12:45",
      "t": "TD",
-     "ue": "UE6",
+     "ue": "UE06",
      "titre": "Anglais",
      "salle": "D101 - Salle de cours - 41 Max",
      "site": "Campus - BAT D"
@@ -738,7 +794,7 @@ window.EDT = {
      "s": "13:30",
      "e": "17:30",
      "t": "CM/TD",
-     "ue": "UE1",
+     "ue": "UE01",
      "titre": "Biologie moléculaire et cellulaire, génétique, histolo",
      "salle": "M002 [Salle de cours]",
      "site": "Sciences - Batiment des Minimes"
@@ -748,7 +804,7 @@ window.EDT = {
      "s": "08:30",
      "e": "12:30",
      "t": "CM/TD",
-     "ue": "UE2",
+     "ue": "UE02",
      "titre": "Optique géométrique, Optique physiologique",
      "salle": "H25 [Salle de cours]",
      "site": "Sciences - Batiment H"
@@ -788,7 +844,7 @@ window.EDT = {
      "s": "08:30",
      "e": "12:30",
      "t": "CM",
-     "ue": "UE3",
+     "ue": "UE03",
      "titre": "Réfraction",
      "salle": "D101 - Salle de cours - 41 Max",
      "site": "Campus - BAT D"
@@ -800,15 +856,18 @@ window.EDT = {
      "t": "CM en distanciel",
      "ue": "UE16",
      "titre": "Pathologies ophtalmologiques et générales",
-     "salle": "UE17 : Explorations fonctionnelles-pathologies ophtalmo.",
-     "site": ""
+     "salle": "",
+     "site": "",
+     "aussi": [
+      "UE17"
+     ]
     },
     {
      "d": "2026-11-23",
      "s": "08:30",
      "e": "12:30",
      "t": "TD",
-     "ue": "UE8",
+     "ue": "UE08",
      "titre": "Physiologie appareil oculomoteur et vision binoculaire",
      "salle": "D101 - Salle de cours - 41 Max",
      "site": "Campus - BAT D"
@@ -820,15 +879,15 @@ window.EDT = {
      "t": "CM",
      "ue": "UE18",
      "titre": "Psychologie, psychopathologie, neurophysiologie",
-     "salle": "",
-     "site": ""
+     "salle": "D101 - Salle de cours - 41 Max",
+     "site": "Campus - BAT D"
     },
     {
      "d": "2026-11-25",
      "s": "08:30",
      "e": "12:30",
      "t": "CM/TD",
-     "ue": "UE2",
+     "ue": "UE02",
      "titre": "Optique géométrique, Optique physiologique",
      "salle": "F009 [Salle de cours]",
      "site": "Sciences - Batiment F"
@@ -848,7 +907,7 @@ window.EDT = {
      "s": "08:30",
      "e": "12:30",
      "t": "TD",
-     "ue": "UE3",
+     "ue": "UE03",
      "titre": "Réfraction",
      "salle": "D101 - Salle de cours - 41 Max",
      "site": "Campus - BAT D"
@@ -2174,7 +2233,7 @@ window.EDT = {
      "s": "08:00",
      "e": "10:00",
      "t": "TD",
-     "ue": "UE6",
+     "ue": "UE06",
      "titre": "Anglais S3",
      "salle": "G103",
      "site": "Campus - BAT G"
@@ -2206,8 +2265,8 @@ window.EDT = {
      "t": "CM",
      "ue": "UE22",
      "titre": "Pathologies neuro-ophtalmologiques",
-     "salle": "",
-     "site": ""
+     "salle": "D104 - Salle de cours - 41 Max",
+     "site": "Campus - BAT D"
     },
     {
      "d": "2026-09-21",
@@ -2324,7 +2383,7 @@ window.EDT = {
      "s": "16:00",
      "e": "18:00",
      "t": "TD",
-     "ue": "UE6",
+     "ue": "UE06",
      "titre": "Anglais S3",
      "salle": "G103",
      "site": "Campus - BAT G"
@@ -2373,7 +2432,7 @@ window.EDT = {
      "d": "2026-10-08",
      "s": "16:32",
      "e": "18:32",
-     "t": "CM en distanciel",
+     "t": "CM - Reporté",
      "ue": "UE32",
      "titre": "Communication, éducation thérapeutique",
      "salle": "",
@@ -2394,7 +2453,7 @@ window.EDT = {
      "s": "10:00",
      "e": "12:30",
      "t": "TD",
-     "ue": "UE6",
+     "ue": "UE06",
      "titre": "Anglais S3",
      "salle": "D008 Salle TP",
      "site": "Campus - BAT D"
@@ -2441,13 +2500,23 @@ window.EDT = {
     },
     {
      "d": "2026-10-15",
-     "s": "10:00",
-     "e": "12:00",
+     "s": "08:30",
+     "e": "10:29",
      "t": "CM",
      "ue": "UE32",
      "titre": "Communication, éducation thérapeutique",
-     "salle": "",
-     "site": ""
+     "salle": "D104 - Salle de cours - 41 Max",
+     "site": "Campus - BAT D"
+    },
+    {
+     "d": "2026-10-15",
+     "s": "10:30",
+     "e": "12:30",
+     "t": "CM",
+     "ue": "UE32",
+     "titre": "Communication, éducation thérapeutique",
+     "salle": "D104 - Salle de cours - 41 Max",
+     "site": "Campus - BAT D"
     },
     {
      "d": "2026-10-15",
@@ -2456,8 +2525,8 @@ window.EDT = {
      "t": "CM",
      "ue": "UE37",
      "titre": "Diagnostic orthoptique et projets de soins",
-     "salle": "",
-     "site": ""
+     "salle": "D104 - Salle de cours - 41 Max",
+     "site": "Campus - BAT D"
     },
     {
      "d": "2026-10-16",
@@ -2744,7 +2813,7 @@ window.EDT = {
      "s": "10:00",
      "e": "12:30",
      "t": "TD",
-     "ue": "UE6",
+     "ue": "UE06",
      "titre": "Anglais S3",
      "salle": "G103",
      "site": "Campus - BAT G"
@@ -2796,7 +2865,7 @@ window.EDT = {
      "t": "CM",
      "ue": "UE32",
      "titre": "Communication, éducation thérapeutique",
-     "salle": "E114 - Salle de cours - 41 Max",
+     "salle": "E108-Salle de cours",
      "site": "Campus - BAT E"
     },
     {
@@ -2806,7 +2875,7 @@ window.EDT = {
      "t": "CM/TD",
      "ue": "UE21",
      "titre": "Statistiques, Epidemiologie, Santé publique, Informatiq",
-     "salle": "E114 - Salle de cours - 41 Max",
+     "salle": "E108-Salle de cours",
      "site": "Campus - BAT E"
     },
     {
@@ -4262,8 +4331,8 @@ window.EDT = {
      "t": "CM",
      "ue": "UE29",
      "titre": "Vision des troubles de l'apprentissage",
-     "salle": "",
-     "site": ""
+     "salle": "D103 - Salle de cours - 41 Max",
+     "site": "Campus - BAT D"
     },
     {
      "d": "2026-09-22",
@@ -4272,8 +4341,8 @@ window.EDT = {
      "t": "CM/TD",
      "ue": "UE30",
      "titre": "Troubles neurovisuels, vision équilibre",
-     "salle": "",
-     "site": ""
+     "salle": "D103 - Salle de cours - 41 Max",
+     "site": "Campus - BAT D"
     },
     {
      "d": "2026-09-23",
@@ -4312,8 +4381,8 @@ window.EDT = {
      "t": "CM",
      "ue": "UE29",
      "titre": "Vision des troubles de l'apprentissage",
-     "salle": "",
-     "site": ""
+     "salle": "D103 - Salle de cours - 41 Max",
+     "site": "Campus - BAT D"
     },
     {
      "d": "2026-09-24",
@@ -4340,7 +4409,7 @@ window.EDT = {
      "s": "13:30",
      "e": "15:30",
      "t": "TD",
-     "ue": "UE6",
+     "ue": "UE06",
      "titre": "Anglais S5",
      "salle": "G103",
      "site": "Campus - BAT G"
@@ -4552,15 +4621,15 @@ window.EDT = {
      "t": "CM en distanciel",
      "ue": "UE30",
      "titre": "Troubles neurovisuels, vision équilibre",
-     "salle": "",
-     "site": ""
+     "salle": "D103 - Salle de cours - 41 Max",
+     "site": "Campus - BAT D"
     },
     {
      "d": "2026-10-23",
      "s": "13:30",
      "e": "15:30",
      "t": "TD en distanciel",
-     "ue": "UE6",
+     "ue": "UE06",
      "titre": "Anglais S5",
      "salle": "",
      "site": ""
@@ -4740,7 +4809,7 @@ window.EDT = {
      "s": "08:00",
      "e": "09:30",
      "t": "TD",
-     "ue": "UE6",
+     "ue": "UE06",
      "titre": "Anglais S5",
      "salle": "G103",
      "site": "Campus - BAT G"
@@ -4792,8 +4861,8 @@ window.EDT = {
      "t": "CM",
      "ue": "UE29",
      "titre": "Vision des troubles de l'apprentissage",
-     "salle": "",
-     "site": ""
+     "salle": "D103 - Salle de cours - 41 Max",
+     "site": "Campus - BAT D"
     },
     {
      "d": "2026-11-18",
@@ -4812,8 +4881,8 @@ window.EDT = {
      "t": "CM",
      "ue": "UE29",
      "titre": "Vision des troubles de l'apprentissage",
-     "salle": "",
-     "site": ""
+     "salle": "D103 - Salle de cours - 41 Max",
+     "site": "Campus - BAT D"
     },
     {
      "d": "2026-11-19",
@@ -4980,7 +5049,7 @@ window.EDT = {
      "s": "13:30",
      "e": "16:00",
      "t": "CM/TD",
-     "ue": "UE6",
+     "ue": "UE06",
      "titre": "Anglais S5",
      "salle": "D008 Salle TP",
      "site": "Campus - BAT D"

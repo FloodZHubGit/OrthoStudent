@@ -16,24 +16,6 @@
 
   /* ---------------- Ce qu'il y a à travailler ---------------- */
 
-  /* Thèmes de QCM classés par besoin : ce qu'on rate passe devant,
-     ce qu'on n'a jamais vu compte comme à moitié su. */
-  function catStats() {
-    var by = {};
-    (window.QUIZ || []).forEach(function (q) {
-      var c = by[q.cat] || (by[q.cat] = { cat: q.cat, n: 0, seen: 0, ok: 0, never: 0 });
-      var s = Store.state.quiz[q.id];
-      c.n++;
-      if (s) { c.seen += s.seen; c.ok += s.ok; } else c.never++;
-    });
-    return Object.keys(by).map(function (k) {
-      var c = by[k];
-      c.rate = c.seen ? Math.round((c.ok / c.seen) * 100) : null;
-      c.prio = (c.rate === null ? 45 : 100 - c.rate) + Math.min(25, c.never * 2);
-      return c;
-    }).sort(function (a, b) { return b.prio - a.prio; });
-  }
-
   /* L'exercice technique du jour. La lecture de bilan a remplacé les douze
      postes de simulation : un seul exercice, mais tiré sur un dossier
      différent chaque jour. */
@@ -68,19 +50,13 @@
 
   function buildPlan() {
     var goal = Store.goal();
-    var due = Cards.stats(Cards.all()).due;
-    var cats = catStats();
+    /* La récitation d'UE remplace les fiches : c'est ce qui reste en
+       répétition espacée depuis que l'application ne livre plus de fiches. */
+    var due = window.UEBank ? UEBank.dues(UEBank.codesDuSemestre()) : 0;
     var steps = [];
 
-    if (goal.cards > 0 && due > 0) {
-      steps.push({ kind: 'cards', target: Math.min(due, goal.cards), due: due });
-    }
-    if (goal.quiz > 0 && cats.length) {
-      steps.push({
-        kind: 'quiz', target: goal.quiz,
-        cats: cats.slice(0, 2).map(function (c) { return c.cat; }),
-        why: cats[0].rate === null ? 'thème jamais travaillé' : cats[0].rate + ' % de réussite jusqu’ici'
-      });
+    if (goal.items > 0 && due > 0) {
+      steps.push({ kind: 'items', target: Math.min(due, goal.items), due: due });
     }
     var s = simNeed();
     if (s.id) steps.push({ kind: 'sim', id: s.id, why: s.why });
@@ -97,7 +73,7 @@
      déclarer son semestre ou revoir son objectif quotidien doit se voir tout de suite. */
   function signature() {
     var g = Store.goal();
-    return (Store.state.profile.semester || '-') + '/' + g.cards + '/' + g.quiz;
+    return (Store.state.profile.semester || '-') + '/' + g.items;
   }
 
   function plan(force) {
@@ -114,8 +90,7 @@
 
   function progressOf(s) {
     var d = Store.day();
-    if (s.kind === 'cards') return { done: Math.min(d.cards, s.target), total: s.target };
-    if (s.kind === 'quiz') return { done: Math.min(d.quiz, s.target), total: s.target };
+    if (s.kind === 'items') return { done: Math.min(d.cards, s.target), total: s.target };
     if (s.kind === 'case') return { done: Math.min(d.cases, 1), total: 1 };
     if (s.kind === 'sim') {
       var sc = Store.score(s.id);
@@ -148,22 +123,13 @@
   /* ---------------- Présentation d'une étape ---------------- */
 
   function view(s) {
-    if (s.kind === 'cards') {
+    if (s.kind === 'items') {
       return {
-        ic: '🗂', minutes: Math.max(3, Math.round(s.target * 0.3)),
-        t: s.target + ' fiches mémo',
-        d: s.due + ' fiche' + (s.due > 1 ? 's sont dues' : ' est due') + ' aujourd’hui en répétition espacée. ' +
-           'On en fait ' + s.target + ' — c’est votre objectif quotidien.',
-        go: 'Réviser'
-      };
-    }
-    if (s.kind === 'quiz') {
-      return {
-        ic: '❓', minutes: Math.max(3, Math.round(s.target * 0.6)),
-        t: s.target + ' QCM sur « ' + s.cats[0] + ' »',
-        d: 'Votre thème le plus fragile : ' + s.why + '.' +
-           (s.cats[1] ? ' Complété par « ' + s.cats[1] + ' ».' : ''),
-        go: 'Répondre'
+        ic: '🎤', minutes: Math.max(3, Math.round(s.target * 0.3)),
+        t: s.target + ' items à réciter',
+        d: s.due + ' item' + (s.due > 1 ? 's sont à revoir' : ' est à revoir') + ' aujourd’hui : chiffres, ' +
+           'questions d’oral, lignes de tableau. On en fait ' + s.target + ' — c’est votre objectif quotidien.',
+        go: 'Réciter'
       };
     }
     if (s.kind === 'sim') {
@@ -207,8 +173,20 @@
   }
 
   function launch(s, retour) {
-    if (s.kind === 'cards') { backHere(retour); App.openModule('flashcards', { auto: 'due', limit: s.target }, { subtitle: 'Séance du jour — ' + s.target + ' fiches' }); return; }
-    if (s.kind === 'quiz') { backHere(retour); App.openModule('quiz', { cats: s.cats, n: s.target, mode: 'train' }, { subtitle: 'Séance du jour — ' + s.cats.join(' · ') }); return; }
+    /* On envoie sur l'UE qui en a le plus à revoir : c'est là que la séance
+       rapporte le plus, et l'étudiant n'a pas à choisir lui-même. */
+    if (s.kind === 'items') {
+      var codes = window.UEBank ? (UEBank.codesDuSemestre() || []) : [];
+      var pire = null, max = 0;
+      codes.forEach(function (c) {
+        var n = UEBank.dues([c]);
+        if (n > max) { max = n; pire = c; }
+      });
+      var lieu = window.UEBank && pire ? UEBank.locate(pire) : null;
+      if (lieu) App.go('studies', { sem: lieu.sem, ue: pire });
+      else App.go('studies');
+      return;
+    }
     if (s.kind === 'sim') { backHere(retour); App.openModule(s.id, {}, { subtitle: 'Séance du jour' }); return; }
     if (s.kind === 'ue') { App.go('studies', { sem: s.sem, ue: s.code }); return; }
     if (s.kind === 'case') { M.patient.startRandom(); App.go('patient'); return; }
@@ -220,10 +198,6 @@
     id: 'session', title: 'Séance du jour', icon: '⚡', group: 'Mon travail',
     desc: 'Le plan de travail du jour, construit sur ce qui est dû et sur vos points faibles',
     keywords: 'seance jour plan quotidien routine revision adaptatif objectif que faire aujourd hui programme',
-
-    /* thèmes de QCM les plus fragiles — partagé avec le module « Réviser »,
-       pour que les deux ne finissent pas par proposer des thèmes différents */
-    weakCats: function (n) { return catStats().slice(0, n || 2); },
 
     /* utilisé par la pastille de la barre latérale */
     remaining: function () {
@@ -320,7 +294,7 @@
               el('div', { class: 'streak-mark', text: '📊' }),
               el('div', {}, [
                 el('div', { class: 'gl', text: 'Déjà fait aujourd’hui' }),
-                el('div', { class: 'gv', html: '<b>' + Store.day().cards + '</b> fiches · <b>' + Store.day().quiz + '</b> QCM' }),
+                el('div', { class: 'gv', html: '<b>' + Store.day().cards + '</b> item(s) récité(s)' }),
                 el('div', { class: 'gs', text: Store.day().sims + ' simulation(s) · ' + Store.day().cases + ' patient(s)' })
               ])
             ])
@@ -344,7 +318,6 @@
                 '<b>' + streak.current + ' jour' + (streak.current > 1 ? 's' : '') + '</b> d’affilée.' }),
               el('div', { class: 'btn-row' }, [
                 UI.btn('🩺  Un patient de plus', function () { M.patient.startRandom(); App.go('patient'); }, 'primary'),
-                UI.btn('⏱  Examen blanc', function () { App.go('exam'); }),
                 UI.btn('📈  Voir ma progression', function () { App.go('progress'); })
               ])
             ])
@@ -365,9 +338,6 @@
             '<p>La répétition espacée décide seule de ce qui revient : une fiche ratée revient le lendemain, ' +
             'une fiche sue revient dans 25 jours. La séance en propose autant que votre objectif quotidien ' +
             '(réglable dans « Ma progression »), jamais plus que ce qui est réellement dû.</p>' },
-          { title: 'Les QCM sur votre thème le plus fragile', body:
-            '<p>Chaque thème est noté sur votre taux de réussite, et les questions jamais vues comptent comme à moitié sues. ' +
-            'Le thème le plus faible est proposé en premier, complété par le deuxième pour éviter la lassitude.</p>' },
           { title: 'Une lecture de bilan par jour', body:
             '<p>Un bilan complet à interpréter, tiré sur un dossier différent chaque jour. ' +
             'Un jour = une lecture : c’est la répétition qui installe le réflexe de lire un compte rendu dans le bon ordre.</p>' },
@@ -379,7 +349,7 @@
             '<p>C’est le seul exercice qui enchaîne anamnèse, examens, diagnostic et conduite à tenir. ' +
             'Elle n’est proposée que si vous n’en avez pas fait depuis deux jours.</p>' },
           { title: 'Rien n’est « validé » à la main', body:
-            '<p>L’avancement est lu dans vos compteurs du jour : dès qu’une fiche est revue, un QCM répondu ou une lecture ' +
+            '<p>L’avancement est lu dans vos compteurs du jour : dès qu’une fiche est revue ou une lecture ' +
             'validée, l’étape avance. Vous pouvez donc travailler depuis n’importe quel module — la séance suit.</p>' }
         ]));
 

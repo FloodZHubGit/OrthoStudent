@@ -21,7 +21,7 @@ window.UE_DEEP = {
 
 /* ============================ SEMESTRE 1 ============================ */
 
-UE1: {
+UE01: {
   tableaux: [
     { t: 'Les quatre modes de transmission',
       c: ['Mode', 'Qui est atteint', 'Risque', 'Indice qui fait mouche'],
@@ -67,7 +67,7 @@ UE1: {
   ]
 },
 
-UE2: {
+UE02: {
   tableaux: [
     { t: 'Les unités à ne pas confondre',
       c: ['Unité', 'Définition', 'Repère'],
@@ -110,7 +110,7 @@ UE2: {
   ]
 },
 
-UE3: {
+UE03: {
   tableaux: [
     { t: 'Les trois cycloplégiques',
       c: ['Produit', 'Concentration', 'Protocole', 'Quand'],
@@ -157,7 +157,7 @@ UE3: {
   ]
 },
 
-UE4: {
+UE04: {
   tableaux: [
     { t: 'Photopique, mésopique, scotopique',
       c: ['Régime', 'Récepteurs', 'Maximum', 'Ce qui change'],
@@ -202,7 +202,7 @@ UE4: {
   ]
 },
 
-UE5: {
+UE05: {
   tableaux: [
     { t: 'Les échelles et ce qu’elles mesurent',
       c: ['Échelle', 'Notation', 'Ce qu’elle vaut'],
@@ -243,7 +243,7 @@ UE5: {
   ]
 },
 
-UE7: {
+UE07: {
   tableaux: [
     { t: 'Les six muscles : actions et innervation',
       c: ['Muscle', 'Principale', 'Secondaire', 'Tertiaire', 'Nerf'],
@@ -288,7 +288,7 @@ UE7: {
   ]
 },
 
-UE8: {
+UE08: {
   tableaux: [
     { t: 'Les trois degrés de Worth',
       c: ['Degré', 'Ce qui est testé', 'Comment'],
@@ -336,7 +336,7 @@ UE8: {
   ]
 },
 
-UE9: {
+UE09: {
   tableaux: [
     { t: 'Paralysie ou restriction : le tableau qui départage',
       c: ['Critère', 'Paralysie', 'Restriction'],

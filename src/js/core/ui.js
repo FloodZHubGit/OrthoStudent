@@ -341,6 +341,53 @@
     ]);
   }
 
+  /* ------------------------------------------------------------
+     Amener un élément sous les yeux, quoi qu’il arrive.
+
+     Les modules le faisaient avec un setTimeout de 60 ms. Trois choses
+     se disputent ces 60 ms : go() qui remet le défilement à zéro juste
+     après avoir attaché la page, l’animation d’entrée .page — 0,3 s, et
+     elle transforme un ancêtre — et la mise en page elle-même, le
+     glossaire faisant plus de 40 000 px. Selon la machine et le moment,
+     on arrivait au bon endroit, à mi-chemin, ou pas du tout : cliquer un
+     terme dans Ctrl+K ouvrait le glossaire tout en haut.
+
+     On ne parie donc plus sur un délai. On attend que l’élément soit
+     dans le document, on le place, on VÉRIFIE qu’il est à l’écran, et
+     on recommence à l’image suivante tant que ce n’est pas le cas.
+     Le défilement animé est écarté ici : il se battrait avec cette
+     vérification, et on veut arriver sur ce qui a été demandé plutôt
+     que de le survoler.
+     ------------------------------------------------------------ */
+  function bring(node, opts) {
+    opts = opts || {};
+    var stop = Date.now() + 1200;
+
+    /* On calcule la position visée nous-mêmes plutôt que de la demander à
+       scrollIntoView : lui la déduit d’heuristiques qui dépendent des
+       animations en cours, et pendant l’entrée de page il ne bougeait pas. */
+    function vise(boite) {
+      var haut = node.getBoundingClientRect().top - boite.getBoundingClientRect().top + boite.scrollTop;
+      var v = opts.block === 'start'
+        ? haut - 12
+        : haut - Math.max(0, (boite.clientHeight - node.offsetHeight) / 2);
+      return Math.max(0, Math.min(v, boite.scrollHeight - boite.clientHeight));
+    }
+
+    function place(confirmation) {
+      if (!node || Date.now() > stop) return;
+      var boite = node.isConnected ? node.closest('#main') : null;
+      if (!boite) { setTimeout(place, 16); return; }        /* pas encore attaché */
+      var v = vise(boite);
+      if (Math.abs(boite.scrollTop - v) > 2) boite.scrollTop = v;
+      /* L’animation d’entrée dure 0,3 s et peut décaler la mise en page.
+         Une seconde passe après suffit à rattraper, sans clignotement. */
+      if (!confirmation) setTimeout(function () { place(true); }, 340);
+    }
+
+    setTimeout(place, 0);
+  }
+
   function empty(icon, text) {
     return el('div', { class: 'empty' }, [
       el('span', { class: 'ei', text: icon }),
@@ -402,7 +449,7 @@
       });
       var when = d.date.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
       rect.appendChild(svg('title', {}, d.total
-        ? when + ' — ' + d.cards + ' fiche' + (d.cards > 1 ? 's' : '') + ', ' + d.quiz + ' QCM, ' +
+        ? when + ' — ' + d.cards + ' fiche' + (d.cards > 1 ? 's' : '') + ', ' +
           (d.sims + d.cases) + ' exercice' + (d.sims + d.cases > 1 ? 's' : '')
         : when + ' — rien'));
       if (opts.onPick) rect.addEventListener('click', function () { opts.onPick(d); });
@@ -461,6 +508,7 @@
     tabs: tabs, accordion: accordion, table: table, kv: kv, note: note, chip: chip,
     btn: btn, stat: stat, bar: bar,
     hotkeys: hotkeys, keyhint: keyhint,
-    ring: ring, metric: metric, modTile: modTile, empty: empty, heatmap: heatmap
+    ring: ring, metric: metric, modTile: modTile, empty: empty, heatmap: heatmap,
+    bring: bring
   };
 })();

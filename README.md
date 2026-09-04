@@ -90,9 +90,9 @@ moi » : choisissez la durée, le reste est déjà décidé.
 
 Deux entrées de moins sans rien retirer : la **séance du jour** est rendue sur l'accueil (son module garde
 sa page, où il explique comment le plan est tiré), et **Réviser** réunit les quatre façons
-de travailler un contenu — fiches mémo, QCM, examen blanc, cours — sous une seule entrée, avec un onglet
+de travailler un contenu — fiches mémo, atelier de calcul, cours — sous une seule entrée, avec un onglet
 d'accueil qui dit à quoi sert chacun, quand l'ouvrir, et propose un point de départ calé sur le semestre
-déclaré : les fiches dues du jour, une série de QCM sur le thème le plus faible, une épreuve limitée aux
+déclaré : les fiches dues du jour, une lecture de bilan, une épreuve limitée aux
 thèmes du semestre, le chapitre de cours de l'UE la plus en retard. Les quatre modules restent accessibles
 directement (recherche, plan de révision, séance du jour) : ils sont simplement rendus dans un onglet.
 Le module **Guide** (groupe *Références* — ou menu *Aide → Guide de démarrage*) explique
@@ -109,8 +109,8 @@ Les dix premières minutes, dans l'ordre :
 4. **Mode patient** — une consultation complète ; c'est vous qui choisissez les examens, et chacun
    coûte s'il n'apporte rien.
 
-Ensuite : l'objectif du jour (fiches et QCM) affiché sur l'accueil, une consultation par semaine,
-un examen blanc avant les partiels. `Ctrl/Cmd + K` cherche dans tout le contenu à tout moment.
+Ensuite : l'objectif du jour (fiches revues) affiché sur l'accueil, une consultation par semaine.
+`Ctrl/Cmd + K` cherche dans tout le contenu à tout moment.
 
 ---
 
@@ -130,9 +130,9 @@ volume horaire, répartition CM / TD / TP, crédits, part de stage. En face de c
 indique ce qu'elle permet d'en travailler, sous forme de raccourcis cliquables :
 
 ```
-UE3 · Réfraction            70 h (30 CM / 40 TD) · 4 ECTS       maîtrise ●●●○○
+UE03 · Réfraction            70 h (30 CM / 40 TD) · 4 ECTS       maîtrise ●●●○○
    🩻 Lecture de bilan   🩺 Mode patient   🧮 Transposition   🧮 Distance de sommet
-   📚 Réfraction & accommodation           ❓ Réviser cette UE  → série de QCM sur les thèmes de l'UE
+   📚 Réfraction & accommodation           🎧 Réviser cette UE  → récitation, cartes Anki, calculs
 ```
 
 #### D’où vient ce contenu, et ce qu’il vaut
@@ -256,9 +256,9 @@ temps de lecture (« 6 parties · 4 min ») : de quoi décider si on l'ouvre mai
 prochain cours.
 
 En tête de fiche, **Réviser cette UE** donne le parcours en six étapes — lire le cours, mémoriser les
-chiffres, se faire interroger, répondre aux QCM des thèmes de l'UE, traiter ses cas, composer un examen
+chiffres, se faire interroger, traiter ses cas, poser les calculs de l'UE
 blanc limité à ces thèmes — chacune avec un bouton et l'état d'avancement (chiffres mémorisés, items
-à revoir aujourd'hui, taux de réussite aux QCM).
+à revoir aujourd'hui).
 
 **Se faire interroger : on écrit sa réponse avant de la voir.** Découvrir la réponse puis se dire
 « je le savais » est le biais central de toute révision. L'écran de récitation l'interdit : un champ
@@ -314,7 +314,7 @@ question comme elle vient, il reconnaît ce qu'on demande, et il répond.
 | *montre-moi le schéma de la rétine* | la figure — avec ses curseurs quand elle est vivante |
 | *interroge-moi sur l'UE 9* | cinq questions, **dans le fil**, comptées dans les mêmes boîtes que la récitation |
 | *l'astigmatisme, c'est dans quelle UE ?* | l'UE, le semestre, le volume, votre maîtrise, et **votre prochain cours dessus**, daté |
-| *qu'est-ce qui tombe en UE3 ?* | le plan type de la question classique, dans l'ordre où il faut la dire |
+| *qu'est-ce qui tombe en UE03 ?* | le plan type de la question classique, dans l'ordre où il faut la dire |
 | *prentice 4 3* | le calcul posé, avec sa formule |
 | *je fais quoi aujourd'hui ?* | ce qui est dû, les UE les plus en retard, et votre prochain cours |
 
@@ -438,6 +438,30 @@ directement la série du jour, sans passer par la fiche. Les chiffres partagent 
 les fiches mémo qui en sont tirées : **un même fait n'a qu'une mémoire**, qu'on le révise en
 récitation ou en paquet de fiches.
 
+**Cette promesse n'était pas tenue.** Mesure faite sur le paquet complet : **seize fiches** y
+entraient deux ou trois fois. La raison est légitime — un même chiffre appartient à plusieurs UE.
+L'AC/A est posé en UE08, réutilisé en UE09 puis en UE11 ; la période sensible revient en UE09, UE14 et
+UE24 ; le dépistage de la rétinopathie diabétique en UE16, UE17 et UE35. Dans les fiches d'UE c'est
+juste, et ça doit y rester : l'étudiant qui révise l'UE11 a besoin de l'AC/A sous les yeux. Dans un
+**paquet**, non — on révisait le même fait trois fois dans la même séance, le compteur du jour
+comptait trois cartes pour une seule mémoire, et trois boîtes de Leitner suivaient séparément
+quelque chose qu'on ne sait qu'une fois. Le taux de mémorisation s'en trouvait gonflé d'autant.
+
+Le paquet ne garde donc qu'une occurrence par question : la première, c'est-à-dire une fiche livrée
+si elle existe, sinon le semestre où la notion est **enseignée en premier**. Rien n'est supprimé des
+données — les doublons restent dans leur UE, ils ne sont simplement plus tirés deux fois. Et rien
+n'est perdu de la progression : au démarrage, une fiche écartée **rend sa boîte** à celle qui reste
+— la plus avancée des deux l'emporte, les passages s'additionnent. Un étudiant qui avait monté
+« AC/A normal ? » en boîte 4 par l'UE09 la retrouve en boîte 4. Les fiches qu'il a écrites lui-même
+échappent à la règle : elles sont voulues, et sa formulation vaut mieux que la nôtre.
+
+Deux cas n'étaient pas légitimes, eux, et ont été corrigés dans les données : **UE21** déclarait deux
+fois l'intervalle de confiance usuel, et **UE41** deux fois la durée de rinçage d'une brûlure
+chimique — avec **deux valeurs différentes** (« ≥ 15 à 20 min » et « ≥ 15 min, immédiat »). Le même
+étudiant pouvait donc tomber sur deux réponses inconciliables pour le même geste d'urgence. La fiche
+conservée dit maintenant « ≥ 15 à 20 min, immédiat ». `npm run audit` refuse désormais qu'une UE
+répète son propre chiffre, et nomme la contradiction quand les deux valeurs diffèrent.
+
 **Rien ne se lit passivement.** Trois cartes qui, jusqu'ici, s'offraient à la relecture demandent
 maintenant un effort de rappel — c'est le geste qu'on fait avec sa main sur un poly, en plus fiable :
 
@@ -494,23 +518,20 @@ l'emporter dans un carnet ou la partager avec la promo.
 
 **Une maîtrise calculée, pas déclarée.** Pour chaque UE, l'application estime votre niveau à partir
 de ce que vous avez réellement fait : ce que vous tenez en mémoire item par item (le signal le plus
-lourd, parce qu'il vient d'un rappel actif), réussite **et** volume de QCM sur ses thèmes, scores
+lourd, parce qu'il vient d'un rappel actif), scores
 obtenus dans les modules liés. Le compte est honnête : réciter parfaitement 20 items sur 46 ne fait
 pas une UE sue, et un item rappelé une fois hier ne vaut pas un item tenu depuis trois semaines —
-c'est la boîte de chaque item qui donne sa valeur. Répondre juste à tous les QCM de réfraction fait
-passer l'UE3 de *Non travaillée* à *Solide* ; y ajouter deux bonnes lectures de bilan sur la
+c'est la boîte de chaque item qui donne sa valeur. Réciter une fois toute l'UE de réfraction fait
+passer l'UE03 de *Non travaillée* à *Solide* ; y ajouter deux bonnes lectures de bilan sur la
 réfraction la fait passer *Maîtrisée*. Les UE hors du champ de l'application (anglais, statistiques,
 TFE) se cochent à la main. La moyenne pondérée par les ECTS donne la **préparation du semestre**.
 
 **Un plan de révision daté.** Vous indiquez la date de vos partiels : l'application découpe le temps
 restant en semaines et distribue les UE par priorité — *ce qui pèse lourd en ECTS et qui n'est pas
 maîtrisé d'abord*, une UE dont rien n'est dû aujourd'hui passant derrière. Chaque semaine liste deux à trois UE avec des actions concrètes et cliquables
-(série de QCM ciblée, séance pratique, chapitre à relire, fiche d'UE), cochables et
-mémorisées. La dernière semaine bascule en « dernière ligne droite » avec examen blanc et fiches
+(récitation ciblée, séance pratique, chapitre à relire, fiche d'UE), cochables et
+mémorisées. La dernière semaine bascule en « dernière ligne droite » avec fiches
 mémo. Le plan **se réordonne** au fur et à mesure que votre maîtrise progresse.
-
-Un **examen blanc ciblé sur une UE** se lance depuis sa fiche : les QCM sont alors tirés uniquement
-dans ses thèmes, les postes de calcul et de lecture restant transversaux.
 
 On indique **son semestre** une fois : l'accueil affiche alors la préparation du semestre, le
 compte à rebours jusqu'aux partiels et les trois UE à travailler en priorité, et un anneau suit les
@@ -534,7 +555,7 @@ repère     Le décentrement se compte en centimètres : 3 mm = 0,3 cm. C'est l'
 Les explications viennent d'un **registre de 20 formules** partagé par toute l'application, si bien
 que le même calcul est expliqué de la même façon partout : dans les 11 calculatrices (14 blocs de
 démonstration), dans le calcul instantané de `Ctrl+K` (formule appliquée sous le résultat), et dans
-la section **« Les formules de cette UE »** des fiches — 12 UE en portent, de l'UE2 Optique à l'UE27
+la section **« Les formules de cette UE »** des fiches — 12 UE en portent, de l'UE02 Optique à l'UE27
 Basse vision.
 
 ### Outils — 11 calculatrices
@@ -543,6 +564,49 @@ loi de Prentice · Hirschberg / Krimsky / angle kappa · transposition cylindriq
 vergence et distances · accommodation et addition (Hofstetter) · rapport AC/A (gradient et hétérophorie) ·
 demande de convergence, normes de Morgan, critère de Sheard · distance de sommet et basse vision ·
 stéréo-acuité.
+
+### L'atelier de calcul — poser le calcul soi-même
+
+Les onze calculatrices donnaient le résultat, la formule et le raisonnement. Personne ne calculait.
+Or en TP comme à l'examen, c'est l'étudiant qui tient le crayon : l'application savait calculer, elle
+ne faisait jamais **calculer**.
+
+L'atelier tire des énoncés à valeurs neuves sur **quatorze calculs** — logMAR dans les deux sens, loi
+de Prentice à l'endroit et à l'envers, dioptries prismatiques en degrés, Hirschberg, équivalent
+sphérique, transposition cylindrique, Hofstetter, AC/A, demande de convergence, punctum remotum,
+distance de sommet, Kestenbaum. Deux jeux de valeurs : **rondes**, qui se calculent de tête et servent
+à installer la formule ; **quelconques**, qui obligent à poser le calcul, comme en clinique. Un
+chronomètre facultatif (60 s, ou 30 s en conditions d'examen) ne rapporte **aucun point** — en
+clinique il faut être juste, puis rapide, et pas l'inverse.
+
+**La solution n'est jamais accessible avant d'avoir répondu.** Il n'y a pas de bouton « voir la
+méthode » tant qu'on n'a pas validé : un calcul qu'on relit n'est pas un calcul qu'on sait faire, et
+rien ne permet à l'application de distinguer les deux si elle laisse regarder d'abord.
+
+**Et la correction ne dit pas « faux ».** C'est la seule partie qui vaille : « faux » n'a jamais rien
+appris à personne. Chaque calcul déclare ses **pièges** — non pas des erreurs imaginaires, mais les
+fautes qu'on fait réellement, chacune écrite comme un calcul concurrent. Si la réponse tombe dessus,
+l'application nomme la faute :
+
+```
+Un verre de +3 D est décentré de 6 mm. Quel prisme cela induit-il ?
+vous 18 Δ            attendu 1,8 Δ
+
+Ce que vous avez fait. Vous avez gardé les millimètres. La loi de Prentice veut
+le décentrement en centimètres : 6 mm = 0,6 cm. Votre résultat est dix fois trop grand.
+```
+
+Le signe oublié du logMAR, le MAR pris pour le logMAR, l'amplitude maximale servie à la place de la
+moyenne, l'axe non tourné, la DIP laissée en millimètres, le signe inversé au dénominateur de la
+distance de sommet — chacune a sa phrase, et sa raison. À la fin, le compte rendu **regroupe les
+fautes par type** : c'est là qu'on découvre qu'on a perdu six points sur une seule habitude, et un
+bouton relance une série sur les seuls calculs qui ont coincé.
+
+Rien n'est recalculé dans l'atelier : les réponses sortent des **mêmes fonctions d'`Optics`** que les
+calculatrices, donc les deux ne peuvent pas se contredire. `npm run atelier` le vérifie sur
+**11 200 tirages**, et surtout il contrôle qu'**aucun piège ne tombe sur la bonne réponse** — un
+piège trop proche du résultat ferait dire à l'application « vous avez gardé les millimètres » à un
+étudiant qui a juste. Là où la tolérance masque un piège, il est simplement écarté pour ce tirage.
 
 ### Lecture de bilan — l'exercice noté
 
@@ -634,6 +698,177 @@ Trois exercices sont **démontrés visuellement** : le cordon de Brock (avec la 
 et le croisement des deux cordons sur la perle fixée), les stéréogrammes (les trois images perçues,
 celle du centre en relief) et les cartes de Hart.
 
+### Vision Lab — mesurer un phénomène sur soi
+
+Le reste de l'application enseigne ce que d'autres ont mesuré. Ici, l'étudiant le mesure —
+sur lui, avec un protocole qui tient, et il obtient des chiffres qui sont les siens.
+
+**La première expérience est la recherche visuelle.** Une pastille rouge parmi des pastilles
+bleues se repère immédiatement, qu'il y en ait quatre ou seize : la couleur est traitée en
+parallèle sur tout le champ. Cherchez le disque **rond et rouge** parmi des carrés rouges et
+des ronds bleus, et il faut lier deux attributs sur un même objet — objet par objet. La
+conséquence se chiffre : une **pente, en millisecondes par élément**, plate dans le premier
+cas, franche dans le second, et à peu près doublée quand la cible est absente — puisque
+conclure à l'absence oblige à tout examiner, alors qu'on trouve en moyenne à mi-parcours.
+
+**Rien ne se mesure sans calibrer l'écran.** « 40 pixels » ne veut rien dire : c'est 0,6° sur
+un portable à 50 cm et 0,3° sur un 27 pouces à un mètre. On fait donc ajuster une **carte
+bancaire** — format ISO 7810, normalisé à 85,60 × 53,98 mm, et tout le monde en a une — puis
+on saisit sa distance à l'écran, et l'application compte des images réelles pour estimer la
+fréquence de rafraîchissement. La calibration est rangée **par écran** : rebrancher un moniteur
+externe en redemande une, plutôt que de réutiliser en silence celle du portable et de rendre
+des degrés faux que rien ne signalerait. La conversion est exacte — `θ = 2·atan(taille/2·distance)`,
+pas l'approximation des petits angles, qui décroche là où on ira ensuite.
+
+**Trois modes.** *Démonstration* (une minute, deux tailles d’ensemble) pour sentir le phénomène ;
+*Mesure* (48 essais, quatre tailles, les deux conditions) pour obtenir une pente ; *Personnalisé*
+pour voir ce que change un paramètre. Dans tous les cas, la passation commence par des essais
+**d'entraînement corrigés et non mesurés** : les premiers essais d'une tâche nouvelle mesurent
+surtout la compréhension de la consigne, et les compter gonflerait les petites tailles
+d'ensemble — celles qui tombent en premier dans un ordre mélangé — donc la pente elle-même.
+
+**L'écran de passation sort du thème.** Fond neutre, croix de fixation, stimuli ; pas de barre
+latérale, pas de transition, et le compteur d'essais s'efface pendant l'affichage. Tout ce qui
+bouge autour d'une mesure de temps de réaction entre dans la mesure. `Échap` met en pause sans
+rien perdre ; sortir du plein écran met en pause aussi, parce que les stimuli changent de taille
+apparente et que ce ne serait plus la même expérience.
+
+**Le rapport dit ses réserves avant ses conclusions.** Trop peu d’essais, exactitude sous 80 %,
+temps trop dispersés, cellules trop maigres : chaque réserve est affichée **en tête**, parce que,
+lue après les chiffres, elle ne sert plus à rien. Viennent ensuite l'exactitude, les faux positifs
+et faux négatifs, les temps médians par condition et par taille, les pentes, un graphique à quatre
+courbes, et une explication **écrite à partir des chiffres obtenus** — y compris quand le résultat
+est l'inverse de l'attendu, ce qu'un texte de cours recopié ne dirait jamais.
+
+**Les temps ne sont calculés que sur les essais justes ; tous les essais sont conservés.** Un
+temps de réaction sur une réponse fausse ne décrit pas une recherche menée à son terme, mais un
+jeu de données amputé de ses erreurs ne se vérifie plus. Les essais écartés du calcul le sont
+nommément, et figurent dans les données brutes comme dans les exports.
+
+**Chaque passation est reproductible.** Une **graine** est tirée puis enregistrée, et tout ce qui
+relève du hasard en descend : ordre des essais, position de chaque élément, place de la cible.
+Rejouer la graine régénère exactement la même passation. Les positions sont tirées en coordonnées
+normalisées, donc indépendantes de la résolution : la même graine donne la même disposition sur
+un autre écran. Le rapport affiche la graine, la version de l'expérience et les conditions
+réelles — distance, densité en pixels par degré, taille des éléments en degrés, champ effectif
+(réduit s'il ne tenait pas à l'écran), et si la mesure s'est faite en plein écran ou en fenêtre.
+Une mesure sans ses conditions ne se compare à rien.
+
+Historique local, comparaison de deux passations, essais bruts, export **CSV** (une ligne par
+essai) et **JSON** (session complète et analyse). Tout reste sur la machine. L'expérience est
+rattachée à **UE04**, **UE05** et **UE18**, et apparaît dans leurs fiches — la liste est déclarée
+par l'expérience elle-même, pas recopiée dans le référentiel, pour qu'elle ne puisse pas diverger.
+
+`Ctrl+K` atteint le laboratoire, chaque expérience et chaque mode. La barre accepte aussi une
+commande : `/lab recherche visuelle 4 8 12` lance la recherche visuelle sur ces trois tailles
+d'ensemble. Une seule taille ne donnant pas de pente, la commande bascule alors sur le protocole
+complet plutôt que de lancer une mesure boiteuse.
+
+> **Outil pédagogique et expérimental — ne constitue pas un examen clinique ou un dispositif
+> médical.** L'avertissement est répété sur l'accueil, avant de commencer et dans le rapport.
+
+**Ce que les bancs d'essai ont trouvé.** Le noyau est éprouvé hors navigateur (`npm run lab`) et
+l'écran par une passation réellement jouée au clavier (`npm run lab:ecran`). Ce second banc a
+relevé un identifiant de session lu sous le mauvais nom — chaque rapport serait retombé sur
+l'accueil — un historique affiché à l'envers, un retour dans le module qui rouvrait le dernier
+rapport au lieu de la page d’accueil, et un refus de plein écran qui remontait en erreur non gérée
+dans la console. Trois des cinq premiers échecs venaient du banc lui-même : il lisait le panneau
+*après* avoir frappé la touche qui le fermait, et il exigeait une courbe d'un robot répondant au
+hasard — alors que ne rien tracer était la bonne réponse. Un banc qui pilote une interface se
+trompe aussi, et il faut le vérifier comme le reste.
+
+#### L’encombrement — pourquoi une lettre isolée se lit, et la même entourée non
+
+Une lettre isolée en périphérie se lit sans peine ; **entourée de voisines, elle devient illisible** —
+alors qu’elle n’a changé ni de taille, ni de contraste, ni de place. Ce n’est donc pas un problème de
+résolution : le système visuel n’arrive plus à isoler l’objet de ce qui l’entoure. Le phénomène obéit
+à une règle simple, et c’est elle qu’on mesure : l’**espacement critique** — la distance en dessous de
+laquelle les voisines gênent — vaut environ **la moitié de l’excentricité**, et ne dépend pas de la
+taille des lettres. C’est la loi de Bouma.
+
+Pourquoi cela intéresse une orthoptiste plus qu’un curieux :
+
+- c’est le **phénomène d’entassement**. Un optotype isolé donne une meilleure acuité qu’une ligne
+  serrée, et l’écart n’est pas un artefact de mesure — d’où l’importance de dire sur quelle échelle une
+  acuité a été prise ;
+- **l’amblyope** s’effondre sur une échelle serrée bien plus que sur des optotypes isolés : son
+  espacement critique est élargi, et l’écart entre les deux est un signe en soi ;
+- en **fixation excentrique** — scotome central, maculopathie — c’est encore l’encombrement qui
+  ralentit la lecture, plus que l’acuité résiduelle.
+
+**Le protocole.** Cible : un **anneau de Landolt**, l’optotype normalisé, dont la brisure regarde en
+haut, à droite, en bas ou à gauche — quatre choix, quatre flèches. Deux flanqueurs l’encadrent
+**radialement**, l’un vers la fixation, l’autre vers l’extérieur : c’est la configuration où
+l’encombrement est le plus fort. L’affichage dure **200 ms**, moins qu’une saccade — sans cela l’œil
+irait se poser sur la cible, l’excentricité tomberait à zéro et il n’y aurait plus rien à mesurer.
+
+La **taille suit l’excentricité** : l’acuité se dégrade en périphérie — l’angle minimum de résolution
+double environ tous les 2,5° — et une lettre de taille fixe serait illisible à 10° pour une raison qui
+n’a rien à voir avec l’encombrement. On prend donc quatre fois le seuil d’acuité attendu là où la cible
+apparaît. Des essais **sans flanqueur**, glissés dans la série, vérifient que ce choix tient : si la
+cible isolée n’est pas lue, le rapport refuse de faire passer le résultat pour de l’encombrement.
+
+**Un œil à la fois.** L’expérience demande lequel avant de commencer et l’enregistre. C’est le seul
+phénomène du laboratoire où les deux yeux d’une même personne peuvent franchement différer, et c’est
+la comparaison des deux rapports qui a de la valeur — pas une valeur isolée.
+
+**Ce que le rapport donne** : l’espacement critique à chaque excentricité, son rapport à celle-ci, la
+droite ajustée et sa pente — la constante de Bouma —, un graphique où la prédiction classique est
+tracée en repère, l’exactitude sur cible isolée, et une explication écrite à partir de ces chiffres-là.
+Un escalier qui a buté sur une borne est marqué comme tel : ce n’est pas un seuil, c’est une limite du
+protocole, et le confondre donnerait un chiffre net et faux.
+
+#### L’escalier adaptatif
+
+Mesurer un seuil sur une grille de valeurs fixes gaspille presque tous les essais : ceux qui sont trop
+faciles et ceux qui sont trop difficiles n’apprennent rien. Un **escalier** passe son temps près du
+seuil, là où la réponse est incertaine — donc informative. Règle « deux bonnes, on durcit ; une fausse,
+on relâche » : elle converge vers le point où l’on réussit **70,7 %** du temps. Ce n’est pas 50 % — un
+seuil à 50 % n’aurait aucun sens dans une tâche à quatre choix, où l’on obtient déjà 25 % au hasard.
+
+Le niveau est tenu en **logarithme** de la grandeur physique : un pas multiplicatif traite de la même
+façon un doublement près du seuil et loin de lui, et évite qu’un pas fixe soit énorme en bas d’échelle
+et négligeable en haut. Le seuil se lit sur la moyenne des dernières **inversions**, les deux premières
+écartées et un nombre pair moyenné — pour ne pas privilégier le côté par lequel on est arrivé.
+
+La **reproductibilité** tient toujours, mais autrement : la suite des essais d’une expérience
+adaptative ne découle pas de la seule graine, elle découle de la graine **et des réponses**. Les deux
+sont enregistrées, et `Lab.rejouer` les rejoue pour reconstituer exactement la même passation.
+
+**Éprouvé sur un observateur simulé** dont on connaît le seuil à l’avance : sur quarante escaliers, la
+médiane des seuils retrouvés tombe à moins de 15 % du vrai, et l’expérience complète retrouve la
+constante de Bouma autour de 0,5. Un escalier mal réglé produirait un chiffre net et faux — rien à
+l’écran ne dirait que ce n’est pas le seuil.
+
+#### Une surveillance par webcam, tentée puis retirée
+
+La question posée était : peut-on contrôler la fixation et la distance par la caméra ? La réponse,
+mesurée puis abandonnée, mérite d’être gardée — elle évitera de refaire le chemin.
+
+Une webcam donne 640 × 480 à 30 images par seconde. Le visage y occupe environ 200 pixels, donc
+l’iris une vingtaine. Une rotation de l’œil de 10° déplace le centre de la pupille de
+r·sin(10°) ≈ 2 mm, soit **trois pixels** : un degré de regard vaut trois dixièmes de pixel, alors que
+l’encombrement mesure des seuils de 1,25°. Pire, déplacer la tête d’un centimètre déplace la pupille
+de **treize pixels** — un suivi de pupille mesure donc la tête, pas le regard. C’est la raison d’être
+des reflets cornéens infrarouges sur les vrais oculomètres.
+
+Quatre mesures de regard ont été essayées, toutes internes à l’œil donc insensibles aux mouvements de
+tête : comptage de sclère claire, bande-passante de sclère, place de l’iris entre les commissures, et
+vecteur iris–reflet. Sur un visage réel, l’écart entre deux repères séparés de vingt degrés est resté
+entre **0,02 et 0,11**, là où il en aurait fallu 0,20. Une recherche automatique des yeux, tentée pour
+éviter de cliquer, a trouvé la **pièce** : une fenêtre de toit et des bandes murales offrent de
+meilleurs contrastes « sombre entre deux clairs » que des yeux.
+
+Restaient la **distance** — l’écart inter-pupillaire s’est révélé stable à 0,5 % près — et la
+**stabilité de la tête**. Une demi-fonction, qui demandait pourtant d’ouvrir une caméra, de désigner
+ses pupilles et de passer un étalonnage : l’appareillage ne valait pas le service rendu, et tout a
+été retiré.
+
+**Ce qui reste, parce qu’il vaut par lui-même** : `main.js` accordait jusque-là TOUTES les
+permissions du navigateur — Electron le fait par défaut dès qu’aucun gestionnaire n’est posé, et
+une sonde a confirmé que `getUserMedia` passait sans rien demander. Un gestionnaire explicite
+refuse désormais tout : caméra, micro, géolocalisation, notifications. L’application n’a l’usage d’aucune.
+
 ### Révision
 
 **Emploi du temps.** Les séances de l'année, importées depuis l'emploi du temps CELCAT de
@@ -642,6 +877,23 @@ jours avec le prochain cours mis en avant, la semaine navigable, et un tableau p
 programmé, prochaine séance, maîtrise estimée. L'accueil affiche ce qui tombe dans la journée et
 désigne l'UE à survoler avant. Le groupe se déduit du semestre déclaré (S1–S2 → 1ère année, etc.)
 et reste forçable pour qui suit les cours d'une autre promotion.
+
+**Une séance ne dit pas que son UE et sa salle.** La description CELCAT est une pile de lignes sans
+étiquettes : la catégorie, les groupes, l'UE, la salle — et parfois autre chose. Le lecteur prenait
+la ligne en UEnn pour l'UE et versait **tout le reste dans « salle »**. Une remarque d'enseignant s'y
+affichait donc comme un lieu, et une seconde UE aussi : trois séances de l'année en portent deux, et
+la deuxième était présentée à l'étudiant comme une adresse — « UE08 : Physiologie appareil
+oculomoteur » en guise de salle.
+
+Les lignes se départagent maintenant sur ce que dit la donnée, plutôt que par défaut. Relevé sur les
+584 séances de l'année : les **dix-sept** libellés de salle commencent tous par leur code — `D101`,
+`M002`, `G103`, `E113`, `H22` — sans exception. Ce qui ne suit pas cette forme n'est pas une salle.
+Une séance porte donc deux champs de plus, émis seulement lorsqu'ils existent : `aussi` pour les UE
+supplémentaires, et `note` pour la remarque, affichée sous l'intitulé plutôt que dans la ligne des
+lieux — c'est du contenu, pas une adresse.
+
+`npm run seances` éprouve les huit formes de description observées sans toucher au réseau, et relit
+le fichier livré pour vérifier qu'aucune UE n'y traîne encore déguisée en salle.
 
 **Deux façons de mettre à jour**, pour deux publics.
 
@@ -668,78 +920,79 @@ L'API ne renvoie que ce qui est déjà saisi : à relancer quand la scolarité p
 semaines. En cas de divergence, l'emploi du temps de l'université fait foi.
 
 **Séance du jour.** Un plan de travail quotidien, construit automatiquement et figé pour la journée :
-les fiches réellement dues (dans la limite de l'objectif quotidien), une série de QCM sur le thème où le
+les fiches réellement dues (dans la limite de l'objectif quotidien), une lecture de bilan, l'UE où le
 taux de réussite est le plus bas, une lecture de bilan sur un dossier différent chaque jour,
 l'UE prioritaire du semestre déclaré (ECTS × ce qui reste à maîtriser) et une consultation dès que la
 dernière remonte à deux jours. Chaque étape s'exécute dans son module habituel, en surimpression, et
 l'avancement se lit dans les compteurs du jour : rien n'est à cocher à la main. Le plan se reconstruit
 à minuit, ou dès que le semestre ou l'objectif quotidien change.
 
-QCM (**216 questions, 23 thèmes** — en mode entraînement / examen blanc / points faibles) ·
-**268 fiches mémo** en répétition espacée (Leitner 5 boîtes) · tableau de progression avec courbe
-et analyse des points faibles.
+### Ce que les retraits avaient laissé derrière
 
-**Les trente-neuf UE peuvent désormais s’entraîner.** Dix d’entre elles n’étaient reliées à aucun
-thème de QCM : leur onglet « S’entraîner » était vide, et l’examen blanc ne pouvait pas les couvrir —
-l’hygiène, les urgences, la coordination, la méthodologie, la statistique. Huit thèmes ont été
-ouverts et quatre-vingt-quatre questions écrites à partir de ce que disent les fiches : chiffres,
-notions à retenir, pièges. Un QCM raté renvoie ainsi à un passage précis du cours.
+Retirer les QCM, les fiches livrées et l'import a laissé du code sans appelant et des écrans qui
+promettaient ce qui n'existait plus. Du code mort n'est pas neutre : il se lit, il se maintient, et
+il fait croire que la fonction existe encore.
 
-**Et la banque était biaisée.** Mesure faite sur les 216 questions : la bonne réponse était en **B**
-dans 150 cas, et **jamais en D**. Un étudiant qui coche toujours B obtenait 69 % sans rien savoir, et
-l’examen blanc devenait un exercice de reconnaissance de forme. Les propositions ont été **tournées**
-— une rotation, pas un brassage : elle conserve l’ordre relatif, donc la lisibilité d’une liste qui
-progresse. Les vingt-six listes de valeurs numériques déjà rangées ont été laissées telles quelles :
-les mélanger produirait « 24 mm / 20 mm / 28 mm », plus difficile à lire sans rien apprendre de plus.
-Répartition finale : **54 / 54 / 54 / 54**, sans qu’aucune bonne réponse ne change. Deux explications
-qui désignaient une proposition par son rang (« la 1re proposition décrit Sherrington ») ont été
-réécrites par leur contenu, ce qui les rend insensibles à tout réordonnancement futur.
-**Et un second biais, de la même famille.** La bonne réponse était aussi la plus longue dans 45 % des
-cas — le hasard en donnerait 25. La raison est toujours la même : la bonne réponse est complète, avec
-ses qualificatifs, et les distracteurs sont expédiés en trois mots. Le remède n’est pas de rembourrer,
-c’est de rendre les distracteurs **aussi précis** que la bonne réponse : un distracteur spécifique est
-plus plausible, donc moins facile à écarter par la forme — et il enseigne, parce qu’il nomme une
-erreur réelle. Quarante-neuf questions ont été retravaillées ainsi.
+| Trouvé en mesurant | Retiré |
+|---|---|
+| L'analyseur d'import de `cards.js` — CSV, JSON, question/réponse, blocs, sept séparateurs — sans aucun consommateur depuis le retrait de l'onglet « Coller / fichier » | **286 lignes**, `cards.js` passe de 474 à 188 |
+| `Cards.add()`, `Cards.parse()`, `Cards.decks()`, `Cards.ankiParUE()` — aucun appelant (la dernière, je l’avais écrite sans jamais m’en servir) | 4 méthodes publiques |
+| `guessModelName()`, `guessBackField()` — restes du chemin d'envoi vers Anki | 2 fonctions |
+| Classes CSS jamais employées : `deck-*` (arborescence retirée), `exam-*` (examen blanc), `ue-mem-*` | **15 classes**, 0 sur 417 restantes |
 
-Le chiffre qui compte n’est pas « la plus longue est la bonne » — un écart de deux caractères ne se
-voit pas — mais **« la bonne dépasse la deuxième plus longue d’au moins un quart »**, seul indice
-qu’un candidat puisse réellement exploiter : il passe de **25 % à 8 %**. Les listes de valeurs
-numériques sont exclues du traitement : allonger « 5 minutes » pour l’aligner sur « 15 à 20 minutes »
-n’aurait servi à rien.
+**Et deux incohérences que le nettoyage a fait apparaître.**
 
+Le compte rendu partagé par la lecture de bilan et l'atelier de calcul portait le vocabulaire du
+premier : l'atelier annonçait « **Aucun bilan lu pour l'instant** » et comptait des « Bilans lus ».
+Chaque exercice nomme désormais le sien.
 
-**Les chiffres des UE deviennent des fiches.** Les 207 valeurs à connaître par cœur des fiches d'UE
-sont converties en cartes de révision, rangées en un paquet par semestre (« Chiffres · Semestre 3 »),
-avec le rappel de l'UE d'origine au dos. Elles rejoignent la même répétition espacée et le même
-export Anki que les fiches livrées et importées — sans rien avoir à saisir.
+Surtout, **l'objectif du jour portait sur des fiches qui n'existent plus** : « 20 fiches par jour »
+pour un paquet de zéro. Une consigne qu’on ne peut pas satisfaire est pire qu’aucune consigne — elle
+fait croire qu’on est en retard. Ce qui reste en répétition espacée, c’est la **récitation d’UE** :
+chiffres, questions d’oral, lignes de tableau, mnémotechniques, dans les mêmes cinq boîtes. C’est
+elle qui redevient le squelette de la séance du jour, et l’étape envoie sur l’UE qui en a le plus à
+revoir — c’est là que la séance rapporte le plus, et l’étudiant n’a pas à choisir lui-même.
 
-**Examen blanc chronométré.** Une épreuve à postes, dans le format d'un partiel ou d'une station
-d'ECOS : 6 à 16 postes tirés au sort sous un chronomètre unique (10 à 45 minutes), qu'on parcourt
-librement, sans aucune correction avant la fin.
+L'ancien réglage n'est pas perdu : un profil enregistré avant le changement porte encore
+`goal.cards`, qui est relu comme objectif d’items.
 
-| Nature du poste | Ce qu'il demande | Notation |
-|---|---|---|
-| **QCM** | une question de la banque | tout ou rien |
-| **Calcul clinique** | un énoncé chiffré **généré à la volée** (logMAR, Δ ↔ degrés, Prentice, Hirschberg, transposition, Hofstetter, équivalent sphérique, convergence, punctum remotum, AC/A par gradient, distance de sommet, Snellen) | 100 dans la tolérance, 55 si approchant, 0 sinon |
-| **Lecture de bilan** | un **vrai dossier** tiré du générateur de cas — identité, âge, plainte — dont un examen est à interpréter | la part d’items justes ; un poste ouvert mais **non validé** compte 0 |
+### Les QCM ont été retirés
 
-Le tableau clinique choisi pour chaque poste de lecture correspond à l'examen demandé : une
-paralysie du VI ou du IV pour la motilité et le Lancaster, une DMLA ou un glaucome pour le fond
-d'œil et le champ visuel, une insuffisance de convergence pour le PPC… La copie corrigée rappelle,
-en face de chaque poste, **le tableau clinique du patient que vous aviez devant vous**.
+Deux cent seize questions, un examen blanc chronométré, huit thèmes ouverts, deux biais mesurés et
+corrigés : tout cela a été **supprimé**. Non parce que c’était mal fait, mais parce que c’était
+inutile. Les questions portaient sur un contenu que l’étudiant n’avait pas encore vu en cours, et
+qui n’est adossé à aucune source (voir plus haut) : on le testait sur ce que l’application avait
+écrit, pas sur ce que son école enseigne.
 
-Le chronomètre tourne aussi pendant les postes de lecture. La copie corrigée détaille chaque
-poste (votre réponse, l'attendu, la note), la moyenne par nature de poste, le temps utilisé, et
-reprend les corrections commentées de tout ce qui a été manqué.
+Ce qui reste tient debout parce que la matière vient de lui : la **récitation d’UE**, l’**atelier
+de calcul** — où les mathématiques ne se discutent pas — et ses **cartes Anki**, qu’il a écrites
+en comprenant son cours.
 
-**Objectif du jour et régularité.** L'accueil affiche deux anneaux — fiches revues et QCM répondus
+Le retrait a touché cinq fichiers (131 Ko) et cent dix-huit renvois dans dix autres : la séance du
+jour, l’accueil, la progression, le plan de révision, la recherche rapide, l’onglet « S’entraîner »
+des fiches d’UE, les objectifs quotidiens et l’audit. L’import « Coller / fichier » (NotebookLM,
+dossier local, Google Drive) et son arborescence sont partis avec — 403 lignes de plus : les fiches
+viennent maintenant d’Anki, où elles sont déjà écrites.
+
+**Deux incidents, pendant ce retrait, valent d’être écrits.**
+
+Une borne de coupe allant de `recordQuiz` jusqu’à `reciteHistory` a emporté au passage
+`boxIntervals` et `reviewCard` — **le moteur de répétition espacée entier**. Le contrôle de syntaxe
+ne voyait rien : le fichier restait du JavaScript valide. Restauré depuis git, puis vérifié par la
+présence explicite des symboles plutôt que par la seule compilation.
+
+Et `npm run smoke` annonçait « épreuve blanche » **au vert alors que le module n’existait plus** :
+`App.go()` sur un identifiant inconnu affiche un toast et rend la main sans lever d’erreur. Le banc
+d’essai refuse désormais d’ouvrir un module absent — une étape qui ne peut pas échouer ne teste rien.
+
+**Objectif du jour et régularité.** L'accueil affiche l'anneau des fiches revues
 sur l'objectif quotidien — la **série de jours consécutifs** travaillés, et une **carte de chaleur**
 des dix-sept dernières semaines. « Ma progression » reprend l'année complète avec le record de
 série, le nombre de jours travaillés sur trente et le réglage des objectifs. Une journée est
-comptée dès la première fiche, le premier QCM ou le premier exercice noté ; la journée en cours ne
+comptée dès la première fiche revue ou le premier exercice noté ; la journée en cours ne
 casse pas la série tant qu'elle n'est pas finie.
 
-L'écran **Fiches mémo** est organisé en quatre onglets : *Réviser*, *Importer*, *Mes fiches*, *Anki*.
+L'écran **Mes cartes Anki** s'ouvre directement sur vos paquets. Deux onglets de révision s'y ajoutent tant qu'il reste des fiches créées dans l'application.
 
 **Importer ses propres fiches** — ouvrir un fichier, le glisser sur la zone de texte ou coller le
 contenu : l'application reconnaît seule le format et affiche un aperçu avant l'ajout. Sont acceptés :
@@ -753,7 +1006,7 @@ contenu : l'application reconnaît seule le format et affiche un aperçu avant l
 
 La notation mathématique (`$Pitx2$`, `$90\%$`), les puces et le gras markdown sont nettoyés au
 passage. Les doublons sont écartés.
-Les fiches importées rejoignent la même répétition espacée et le même export Anki que celles
+Les fiches importées rejoignent la même répétition espacée que celles
 livrées avec l'application, et se modifient ou se suppriment depuis l'onglet *Mes fiches*.
 
 > **NotebookLM.** Google ne publie aucune API pour NotebookLM et n'expose aucun moyen d'y connecter
@@ -764,8 +1017,8 @@ livrées avec l'application, et se modifient ou se suppriment depuis l'onglet *M
 l'application recrée la hiérarchie en paquets :
 
 ```
-Orthoptie/ L1/ UE2 — Optique physiologique/ cristallin.csv
-      →  paquet « Orthoptie::L1::UE2 — Optique physiologique::cristallin »
+Orthoptie/ L1/ UE02 — Optique physiologique/ cristallin.csv
+      →  paquet « Orthoptie::L1::UE02 — Optique physiologique::cristallin »
       →  dans Anki : sous-paquets imbriqués, sans réglage supplémentaire
 ```
 
@@ -784,48 +1037,145 @@ Deux sources :
   > fois pour toutes) : Google ne permet pas de distribuer un identifiant générique pour ce type
   > d'accès. La marche à suivre est détaillée dans l'application.
 
-**Export vers Anki** — deux voies, depuis l'onglet *Anki* :
+### Les fiches livrées ont été retirées, elles aussi
 
-**Sous-paquets** — Anki hiérarchise avec `::`. Trois modes d'organisation, avec aperçu de
-l'arborescence avant l'envoi :
+Deux cent soixante-huit fiches mémo écrites à la main, et deux cent cinquante et une dérivées
+automatiquement des chiffres des UE : **cinq cent dix-neuf cartes supprimées**, soit 62 Ko de
+banque. Pour la même raison que les QCM — elles portaient un contenu qui ne s’adosse à aucune
+source, et l’étudiant écrit les siennes dans Anki, en comprenant son cours.
 
-| Mode | Résultat pour un parent `L1` |
+Avec elles disparaît toute la machinerie qu’elles justifiaient : `Cards.generated()`, la
+déduplication `Cards.dedoubler()` — qui empêchait un même chiffre déclaré par trois UE d’entrer
+trois fois dans le paquet — la reprise de progression `Cards.reprendre()`, et le test
+`npm run doublons` qui les éprouvait. Ces mécanismes étaient justes ; ils n’ont simplement plus
+de sujet, puisqu’il ne reste dans le paquet que les fiches créées par l’étudiant, qui en étaient
+déjà exemptées.
+
+**Et « Fiches mémo » est devenu « Mes cartes Anki ».** Les cartes étaient jusque-là enterrées sous
+*Réviser → Fiches mémo → onglet Anki* : deux niveaux d’onglets, introuvables. Le module prend
+maintenant sa propre entrée dans la barre latérale, sous **Mon travail**, et s’ouvre directement
+sur les cartes. Les onglets de révision ne s’affichent que s’il reste des fiches créées dans
+l’application — sinon ils montreraient un écran vide, ce qui n’apprend rien à personne.
+
+### Anki — dans un seul sens, et c'est structurel
+
+L'application faisait l'inverse : elle **envoyait** ses fiches dans Anki, créait des paquets,
+écrivait des notes. Ce chemin a été retiré — `createDeck`, `addNotes`, `canAddNotes`, et les
+cent soixante lignes qui allaient avec. Elle ne fait plus que **lire**.
+
+Le sens compte, parce que la matière n'est pas la même. Ce que l'étudiant écrit dans Anki, c'est
+son cours, pris par lui, en le comprenant. Le contenu livré avec l'application ne s'adosse à
+aucune source (voir plus haut). Entre les deux, c'est le sien qui fait autorité : l'application
+vient s'y appuyer, pas l'écraser.
+
+**La lecture seule n'est pas une intention, c'est une liste fermée.** AnkiConnect expose
+`deleteDecks` aussi volontiers que `deckNames` : rien, dans le protocole, ne distingue lire de
+détruire. Le pont ([`anki.js`](anki.js), à la racine, à côté de `celcat.js`) n'autorise que
+quatre actions — `version`, `deckNames`, `findCards`, `cardsInfo` — et refuse toute autre
+**avant** le moindre appel réseau. La page, elle, ne parle jamais au port 8765 : elle ne parle
+qu'à ce fichier, par IPC. Même modifiée, elle ne peut pas faire supprimer un paquet.
+
+`npm run anki` éprouve cette garantie plutôt que de la déclarer : il tente pour de bon
+`deleteDecks`, `addNotes`, `sync`, `storeMediaFile` et six autres, et exige que le refus vienne
+**de la liste** — pas d'un hasard réseau, sans quoi le test passerait au vert simplement parce
+qu'Anki n'écoute pas.
+
+**Ce qui arrive dans l'application.** L'onglet *Anki* des fiches mémo montre l'état de
+l'extension, récupère les cartes, et affiche votre arborescence telle que vous l'avez rangée :
+
+```
+Orthoptie › L1 › S1 › UE04_Physiologie_visuelle › CM01_Voir_ne_suffit_pas   [23 cartes]
+```
+
+Un clic sur un paquet montre ses cartes, question et réponse lisibles d'un coup.
+
+**L'écran a été refait une fois, parce qu'il était mauvais.** La première version empilait un
+onglet unique, un bandeau « AnkiConnect répond (version 6) », un paragraphe d'explication de trois
+lignes et trois pavés de statistiques — dont un « 1 PAQUETS » et une date en gros caractères. Il
+fallait traverser près de **900 px de chrome** avant la première carte, sur un écran dont les cartes
+sont le seul contenu.
+
+Ce qui a changé, et pourquoi :
+
+| Avant | Maintenant |
 |---|---|
-| Un sous-paquet par thème | `L1::Chiffres clés`, `L1::Muscles`, `L1::UE Neuro`… |
-| Un seul sous-paquet, nommé | `L1::UE2 — Optique physiologique` |
-| Tout dans le parent | `L1` |
+| Une barre d'onglets à un seul onglet | Rien — une barre d'onglets qui n'en contient qu'un n'est pas une barre |
+| « AnkiConnect répond (version 6) · 17 paquets » | Rien : la liste qui s'affiche le dit mieux. On ne parle d'Anki que lorsqu'il manque |
+| Trois pavés de statistiques | Une ligne : `23 cartes · 1 paquet · lues le 3 septembre` |
+| Un paragraphe répété à chaque visite | Le sous-titre de la page, écrit une fois |
+| `Orthoptie / L1 / S1 / UE04_…` — quatre lignes annonçant chacune « 23 cartes » | Un fil d'Ariane, et l'arbre commence là où il se ramifie vraiment |
+| `UE04_Physiologie_visuelle` | `UE04` en couleur, puis `Physiologie visuelle` |
+| Des blocs sur toute la largeur | Une mesure de 78 caractères, un filet entre question et réponse |
 
-Le champ parent accepte lui-même un chemin (`L1::Semestre 1`), et propose en autocomplétion les
-paquets déjà présents dans votre collection. Les paquets manquants sont créés automatiquement, et
-le compte rendu détaille le nombre de fiches ajoutées par sous-paquet. L'export de fichier écrit
-une colonne `#deck column:4`, si bien que l'import manuel recrée la même arborescence.
+**Et un paquet qui s'ouvrait sans pouvoir se refermer.** La règle par défaut du navigateur,
+`[hidden] { display: none }`, perd contre n'importe quelle règle d'auteur qui pose un `display` —
+et le conteneur des cartes était en `display: flex`. L'attribut `hidden` était bien posé à chaque
+clic ; il n'avait simplement aucun effet. La feuille de style porte désormais un
+`[hidden] { display: none !important }` global, qui protège aussi tout usage futur.
 
-- **Envoi direct** : si Anki est ouvert avec l'add-on gratuit **AnkiConnect**
-  (code `2055492159`), les fiches partent dans les paquets choisis en un clic. Tout se passe
-  en local sur `127.0.0.1`, aucun identifiant AnkiWeb n'est demandé. Les doublons sont ignorés.
-  Le **type de note et les deux champs sont lus dans votre collection** puis choisis dans des menus
-  (`Basic`/`Front`/`Back`, `Basique`/`Recto`/`Verso`… selon la langue d'Anki) : rien n'est deviné.
-  Le port est réglable si vous avez modifié celui d'AnkiConnect.
+Le défaut se voyait sur mes propres captures — le chevron indiquait « fermé » pendant que les
+cartes s'affichaient — et je ne l'ai pas vu. Le banc d'essai non plus : il cliquait **une** fois et
+vérifiait que les cartes apparaissaient, jamais qu'elles disparaissaient. `npm run anki:ecran`
+ouvre, referme, et rouvre deux paquets côte à côte, en mesurant la **visibilité réelle**
+(`offsetParent`) plutôt que l'attribut — puisque c'est précisément l'attribut qui mentait.
 
-  > **Note technique.** Le serveur HTTP d'AnkiConnect ferme la socket après chaque réponse sans
-  > l'annoncer. Avec le keep-alive par défaut de Node, environ une requête sur trois échoue en
-  > `ECONNRESET`. L'application ouvre donc une socket neuve par requête (`agent: false` +
-  > `Connection: close`) et retente jusqu'à trois fois sur erreur réseau — jamais sur une erreur
-  > applicative d'Anki (type de note absent, doublon…).
-- **Export de fichier** : produit un `.txt` au format « notes en texte brut » d'Anki, avec les
-  en-têtes `#separator`, `#notetype` et `#tags column` déjà renseignés — il n'y a rien à régler à
-  l'import, et ça marche aussi pour AnkiDroid et AnkiMobile.
+Le repli des niveaux inutiles se règle tout seul : on descend tant qu'un niveau n'a qu'un enfant et
+aucune carte à lui. Aujourd'hui, avec un seul cours rempli, l'arbre s'ouvre directement sur `CM01`.
+Dès qu'une deuxième UE aura des cartes, la descente s'arrêtera à `S1` et les UE reprendront leur
+place — sans qu'il y ait rien à régler.
 
-Seul le contenu des fiches part vers Anki : la progression OrthoStudent (les cinq boîtes) reste
-locale, et Anki applique son propre planning.
+**Elles ne sont pas révisées ici, et c'est le point important.** Anki révise déjà, avec un planning
+meilleur que les cinq boîtes de Leitner de cette application. Les remettre dans le paquet de
+révision, ce serait faire le travail deux fois, avec deux calendriers qui ne se parlent jamais — et
+le nôtre serait le moins bon.
+
+Elles servent à ce qu'Anki ne fait pas : **se relire par UE**, et **se retrouver au `Ctrl+K`** —
+c'est même la seule façon de remettre la main sur une carte quand on ne sait plus dans quelle UE
+on l'a rangée. Un résultat de recherche ouvre l'onglet Anki, déplie le bon paquet et amène la
+carte sous les yeux.
+
+Le HTML des champs est **ramené à du texte** dans le processus principal : l'application n'injecte
+jamais de balisage venu d'ailleurs, et les images pointent vers un dossier média qu'elle n'a pas.
+Les sauts de ligne et les puces sont conservés, eux, parce qu'ils portent la structure d'une
+réponse. Les entités sont décodées — `&eacute;`, `&agrave;`, `&times;` — et les espaces
+insécables ramenés à des espaces ordinaires : deux défauts que le test a trouvés, et qui
+rendaient illisible toute fiche écrite en français.
+
+**Rien ne repart.** Ni carte, ni réponse, ni planning. La révision faite ici alimente les cinq
+boîtes de cette application ; Anki garde les siennes et reste seul maître de son calendrier.
+
+**Installation, une fois.** Dans Anki : *Outils → Extensions → Télécharger des extensions…*,
+coller le code `2055492159`, redémarrer Anki et le laisser ouvert. L'application le dit elle-même
+quand elle ne trouve rien. Le port se règle par la variable `ORTHO_ANKI_PORT` si vous avez changé
+celui d'AnkiConnect.
+
+> **Note technique conservée du code retiré.** Le serveur HTTP d'AnkiConnect ferme la socket après
+> chaque réponse sans l'annoncer. Avec le keep-alive par défaut de Node, environ une requête sur
+> trois échoue en `ECONNRESET`. Le pont ouvre donc une socket neuve par requête (`agent: false` +
+> `Connection: close`). La leçon venait du chemin d'envoi ; elle reste vraie en lecture.
+
+**L'export en fichier reste** : l'onglet produit toujours un `.txt` au format « notes en texte
+brut » d'Anki (en-têtes `#separator`, `#notetype`, `#tags column` renseignés). Il écrit un
+fichier sur le disque et ne touche pas à la collection — ce n'est pas une interaction avec Anki.
 
 ---
+
+### Le paquet ne contenait pas tout
+
+En lançant la fabrication, un défaut est apparu que **aucun banc d'essai ne pouvait voir** :
+`main.js` charge `./anki.js`, mais ce fichier ne figurait pas dans la liste `build.files` de
+`package.json`. Il ne partait donc pas dans l'installateur, et l'application **installée**
+s'arrêtait au démarrage sur « Cannot find module ». Les bancs d'essai partent tous des sources ;
+le seul endroit où ce défaut se montre, c'est chez l'utilisateur.
+
+`npm run audit` compare désormais les `require('./…')` de `main.js` et `preload.js` à la liste
+des fichiers empaquetés, et refuse tout écart.
 
 ## Raccourcis
 
 | Raccourci | Action |
 |---|---|
-| `Ctrl/Cmd + K` | Recherche rapide (modules, cours, glossaire, cas cliniques, QCM, fiches mémo) |
+| `Ctrl/Cmd + K` | Recherche rapide (modules, cours, glossaire, cas cliniques, fiches mémo) |
 | `Ctrl/Cmd + 1…5` | Accueil, lecture de bilan, mode patient, mes UE, calculatrices |
 | `Alt + ←` / `Alt + →` | Écran précédent / suivant — aussi sur les boutons latéraux de la souris |
 | `Ctrl/Cmd + J` | Le répétiteur : poser une question en français, depuis n'importe quel écran |
@@ -836,7 +1186,6 @@ locale, et Anki applique son propre planning.
 | `Ctrl/Cmd + P` | Imprimer l'écran affiché — feuille de style dédiée (voir ci-dessous) |
 | `Espace`, `1` `2` `3` | Fiches mémo : retourner la carte, puis oublié / difficile / su |
 | `Entrée`, `1` `2` `3` | Récitation d'une UE : vérifier sa réponse, puis oublié / presque / su — `Entrée` valide la note proposée, `Échap` quitte |
-| `A`–`D` ou `1`–`4`, `Entrée` | QCM et examen blanc : répondre, puis question suivante |
 | `Espace`, `→` `←`, `N` | Écoute sans écran : lecture / pause, item suivant / précédent, « je ne savais pas » — `Échap` quitte |
 
 **Calcul instantané.** Taper un calcul dans la recherche rapide affiche le résultat en tête de liste,
@@ -848,12 +1197,12 @@ sphérique, méridiens, intervalle de Sturm). `Entrée` ouvre la calculatrice co
 **Recherche rapide.** Les mots saisis sont cherchés dans le désordre et sans accents (`paralysie iv`,
 `acuite logmar`) ; un mot trouvé dans un titre pèse plus lourd qu'un mot trouvé dans le corps du
 texte, et la portion correspondante est surlignée. Un résultat ouvre directement l'endroit visé :
-la **section de cours** dépliée, le **terme du glossaire** mis en évidence, la **question de QCM**
+la **section de cours** dépliée, le **terme du glossaire** mis en évidence, la **fiche mémo**
 seule avec sa correction, la **fiche mémo** seule — ces deux dernières sans compter comme une série
 dans les statistiques. Champ vide, la liste propose les modules récemment consultés.
 
 **Tout au clavier.** Chaque élément cliquable est atteignable par `Tab` et annoncé comme un bouton :
-tuiles, onglets (flèches gauche/droite), sections dépliables, planches d'anatomie, options de QCM.
+tuiles, onglets (flèches gauche/droite), sections dépliables, planches d'anatomie.
 Les flèches haut/bas déplacent la sélection dans la barre latérale. Une fenêtre ouverte en
 surimpression retient le focus tant qu'elle est ouverte et le rend à son point de départ à la
 fermeture. Le réglage système « réduire les animations » est respecté.
@@ -876,6 +1225,28 @@ scripts/
                      profil Electron jetable : le test ne touche pas votre progression
   repet-essai.js     pose au répétiteur 36 questions écrites comme on les écrit (npm run repet)
                      et rapporte, pour chacune, l’intention reconnue et la provenance
+  anki-ecran.js      l'écran des cartes (npm run anki:ecran) : un paquet s'ouvre, se referme, et
+                     n'entraîne pas les autres — mesuré sur la visibilité réelle, pas sur l'attribut
+  anki-essai.js      tente pour de bon dix actions destructrices sur le pont Anki (npm run anki)
+                     et exige qu'elles soient refusées par la liste, pas par le réseau
+  edt-essai.js       éprouve la lecture d'une séance CELCAT (npm run seances) : salle, remarque,
+                     seconde UE — chaque ligne de la description doit être rangée où il faut
+  atelier-essai.js   11 200 tirages de l'atelier de calcul (npm run atelier) : réponses finies,
+                     pièges reconnus, et surtout aucun piège confondu avec la bonne réponse
+  saut-essai.js      refait le geste complet Ctrl+K → clic sur un résultat (npm run saut) et
+                     vérifie que l'élément visé arrive vraiment sous les yeux, pas seulement
+                     son module. Trois passages par cible : le défaut d'origine ne se montrait
+                     pas à tous les coups
+  lab-essai.js       le noyau du Vision Lab hors navigateur (npm run lab) : reproductibilité par
+                     la graine, équilibrage des cellules, composition des stimuli — dont le piège
+                     de la conjonction, où aucun distracteur ne doit être un disque rouge —,
+                     statistiques sur des valeurs connues à la main, conversion angle/pixels,
+                     sauvegarde et exports
+  lab-ecran.js       deux passations réellement jouées au clavier (npm run lab:ecran) : calibration,
+                     consigne, entraînement, mesure, rapport, historique, suppression. Vérifie
+                     aussi ce qu'aucun nombre ne dit — qu'un stimulus s'affiche SEUL, qu'aucun
+                     « undefined » ne traîne dans le rapport, et que le calque plein écran est
+                     bien démonté à la sortie
   build-cli.js       lanceur d'electron-builder pour la fabrication depuis l'application :
                      rétablit le drapeau que yargs attend sous Electron en mode Node
 src/
@@ -896,15 +1267,30 @@ src/
     cards.js         fiches mémo — banque livrée, import, fiches dérivées des UE
     uebank.js        items d'oral et cas d'application extraits des fiches d'UE,
                      avec leur identifiant stable et leur état de mémoire
+    lab-calib.js     calibration de l'écran : carte bancaire, distance déclarée, fréquence
+                     mesurée sur des images réelles — et toutes les conversions pixels ↔ degrés,
+                     à un seul endroit, rangées par écran
+    lab.js           le moteur d'expérience : graine et tirage reproductibles, positions sans
+                     chevauchement, équilibrage des conditions, statistiques (médiane, pente,
+                     nettoyage), sessions, exports CSV et JSON
+    lab-recherche.js la recherche visuelle : composition des stimuli, analyse et explication
+                     écrite à partir des chiffres obtenus. Chaque expérience porte aussi sa
+                     moitié « écran » — dessin, consigne, rapport —, si bien qu’en ajouter une
+                     ne demande pas de rouvrir le module
+    lab-encombrement.js  l’encombrement : anneaux de Landolt, escaliers entrelacés par
+                     excentricité, loi de Bouma, et le contrôle sur cible isolée sans lequel
+                     le seuil ne serait qu’une acuité déguisée
     uefigs.js        les 84 schémas du cours, dessinés en SVG dans le thème — dont onze
                      « vivants », qui déclarent des curseurs et se redessinent à chaud
-  js/data/           contenus : théorie, glossaire, QCM, fiches, cas cliniques, référentiel des UE
+  js/data/           contenus : théorie, glossaire, cas cliniques, référentiel des UE
     uecours.js       la couche « cours vivant » : image, exemple clinique, erreur et phrase clé
                      pour chaque partie de cours — alignée sur le plan, vérifiée par npm run audit ;
                      les phrases clés alimentent aussi la banque d'interrogation (uebank.js)
     casegen.js       générateur de cas inédits (10 archétypes paramétrés)
     edt.js           emploi du temps de l'année — fichier généré, ne pas éditer
   js/modules/        un fichier par module, enregistré dans window.Modules
+    vision.js        l'écran du Vision Lab : explication, calibration, consigne, passation en
+                     plein écran, rapport, historique et comparaison
     chat.js          l'écran du répétiteur : le fil, les blocs de réponse, l'interrogation
                      déroulée dans la bulle, et la provenance sous chacune
   js/app.js          routeur, historique, recherche, thème, IPC

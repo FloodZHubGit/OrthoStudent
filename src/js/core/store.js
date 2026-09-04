@@ -13,16 +13,19 @@
        edtAnnee : annee suivie dans l'emploi du temps (1, 2 ou 3), null = deduite du semestre */
     settings: {
       testDistance: 5,     // metres
-      goal: { cards: 20, quiz: 10 },  // objectif quotidien de revision
+      goal: { items: 20 },   // items d'UE a reciter par jour
       anki: {}             // paquet, type de note et champs choisis par l'utilisateur
     },
     scores: {},            // moduleId -> { attempts, best, last, sum }
-    quiz: {},              // questionId -> { seen, ok, ko, lastAt }
     srs: {},               // cardId -> { box, due, seen, ok }
     cases: {},             // caseId -> { done, score, at }
     customCards: [],       // fiches importées ou créées par l'utilisateur
+    /* Les cartes lues dans Anki. Copie locale : la révision faite ici ne
+       remonte JAMAIS vers Anki, et Anki reste seul maître de son planning. */
+    ankiCards: [],
+    ankiImport: null,      // { at, n } du dernier import
     log: [],               // historique d'activite
-    days: {},              // 'AAAA-MM-JJ' -> { cards, quiz, sims, cases }
+    days: {},              // 'AAAA-MM-JJ' -> { cards, sims, cases }
     studies: {             // suivi du referentiel de formation
       examDates: {},       // 'S3' -> 'AAAA-MM-JJ' (date des partiels)
       ueDone: {},          // 'S3:UE25' -> horodatage de la revision
@@ -165,17 +168,6 @@
       if (state.log.length > 400) state.log.length = 400;
     },
 
-    /* --- QCM --- */
-    recordQuiz: function (qid, ok) {
-      var q = state.quiz[qid] || { seen: 0, ok: 0, ko: 0 };
-      q.seen += 1;
-      if (ok) q.ok += 1; else q.ko += 1;
-      q.lastAt = Date.now();
-      state.quiz[qid] = q;
-      Store.bump('quiz');
-      save();
-    },
-
     /* --- Repetition espacee (Leitner 5 boites) --- */
     boxIntervals: [0, 1, 2, 5, 10, 25],
 
@@ -229,7 +221,7 @@
     bump: function (kind, n) {
       var k = Store.dayKey();
       if (!state.days) state.days = {};
-      var d = state.days[k] || { cards: 0, quiz: 0, sims: 0, cases: 0, ecoute: 0 };
+      var d = state.days[k] || { cards: 0, sims: 0, cases: 0, ecoute: 0 };
       d[kind] = (d[kind] || 0) + (n === undefined ? 1 : n);
       state.days[k] = d;
       // on garde deux ans d'historique, pas plus
@@ -240,16 +232,19 @@
     },
 
     day: function (key) {
-      return (state.days && state.days[key || Store.dayKey()]) || { cards: 0, quiz: 0, sims: 0, cases: 0, ecoute: 0 };
+      return (state.days && state.days[key || Store.dayKey()]) || { cards: 0, sims: 0, cases: 0, ecoute: 0 };
     },
 
     goal: function () {
       var g = (state.settings && state.settings.goal) || {};
-      return { cards: g.cards === undefined ? 20 : g.cards, quiz: g.quiz === undefined ? 10 : g.quiz };
+      /* « cards » est l'ancien nom : un profil enregistré avant le retrait
+         des fiches le porte encore, et on le relit plutôt que de le perdre. */
+      var n = g.items === undefined ? g.cards : g.items;
+      return { items: n === undefined ? 20 : n };
     },
 
-    setGoal: function (cards, quiz) {
-      state.settings.goal = { cards: Math.max(0, cards | 0), quiz: Math.max(0, quiz | 0) };
+    setGoal: function (items) {
+      state.settings.goal = { items: Math.max(0, items | 0) };
       save();
       return state.settings.goal;
     },
@@ -259,7 +254,7 @@
       /* l'ecoute compte comme du travail : elle n'installe rien dans les
          boites, mais une journee passee a reviser en marchant n'est pas
          une journee vide */
-      return d.cards + d.quiz + d.sims + d.cases + (d.ecoute || 0);
+      return d.cards + d.sims + d.cases + (d.ecoute || 0);
     },
 
     /* série de jours consécutifs travaillés ; la journée en cours ne casse
@@ -302,9 +297,9 @@
         var d = new Date(now - i * DAY);
         var key = Store.dayKey(d);
         var day = Store.day(key);
-        var total = day.cards + day.quiz + day.sims + day.cases + (day.ecoute || 0);
+        var total = day.cards + day.sims + day.cases + (day.ecoute || 0);
         out.push({
-          key: key, date: d, total: total, cards: day.cards, quiz: day.quiz, sims: day.sims, cases: day.cases,
+          key: key, date: d, total: total, cards: day.cards, sims: day.sims, cases: day.cases,
           level: total === 0 ? 0 : total < 5 ? 1 : total < 15 ? 2 : total < 30 ? 3 : 4
         });
       }
@@ -349,6 +344,16 @@
        plutôt que de se rappeler à chaque révision « attention, ici c'est
        faux ». Une correction prime ensuite partout : sur la fiche, dans le
        répétiteur, à l'impression. */
+    /* ---- Cartes venues d'Anki ---- */
+    anki: function (cartes) {
+      if (cartes === undefined) return state.ankiCards || [];
+      state.ankiCards = cartes || [];
+      state.ankiImport = { at: Date.now(), n: state.ankiCards.length };
+      save();
+      return state.ankiCards;
+    },
+    ankiInfo: function () { return state.ankiImport || null; },
+
     correction: function (code, i, value) {
       var s = Store.studies(), k = code + ':' + i;
       if (value === undefined) return (s.corrections[k] && s.corrections[k].t) || '';
@@ -420,9 +425,6 @@
 
     /* --- Statistiques globales --- */
     stats: function () {
-      var qids = Object.keys(state.quiz);
-      var seen = 0, ok = 0;
-      qids.forEach(function (id) { seen += state.quiz[id].seen; ok += state.quiz[id].ok; });
       var simIds = Store.scoredIds();
       var simAvg = 0;
       if (simIds.length) {
@@ -433,9 +435,6 @@
       var written = caseKeys.filter(function (k) { return k.indexOf('gen:') !== 0; }).length;
       var generated = caseKeys.length - written;
       return {
-        quizSeen: seen,
-        quizOk: ok,
-        quizRate: seen ? Math.round((ok / seen) * 100) : 0,
         simModules: simIds.length,
         simAvg: simAvg,
         cardsMastered: mastered,

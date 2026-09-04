@@ -148,7 +148,7 @@
           var hit = focusTerm && g.t === focusTerm;
           var card = entryCard(g, toks, hit);
           list.appendChild(card);
-          if (hit) setTimeout(function () { card.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 60);
+          if (hit) UI.bring(card);
         });
       }
 

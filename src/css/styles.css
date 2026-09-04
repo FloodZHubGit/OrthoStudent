@@ -95,6 +95,13 @@
 }
 
 * { box-sizing: border-box; }
+
+/* La règle par défaut du navigateur — [hidden] { display: none } — perd
+   contre n’importe quelle règle d’auteur qui pose un display. Un conteneur
+   en « display: flex » masqué par son attribut hidden restait donc affiché :
+   le paquet de cartes Anki se dépliait sans jamais pouvoir se replier, et
+   rien ne le signalait puisque l’attribut, lui, était bien posé. */
+[hidden] { display: none !important; }
 html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
 
 body {
@@ -870,19 +877,6 @@ td .mus-dot { margin-right: 8px; }
 }
 
 /* --- aperçu de l'arborescence Anki --- */
-.deck-tree {
-  background: var(--surface-2); border: 1px solid var(--line-soft);
-  border-radius: var(--r-s); padding: 10px 13px; max-height: 220px; overflow-y: auto;
-  font-family: var(--mono); font-size: 12.2px;
-}
-.deck-line { display: flex; align-items: center; gap: 6px; padding: 3px 0; }
-.deck-indent { color: var(--txt-3); width: 18px; flex: none; }
-.deck-parent { color: var(--txt-3); }
-.deck-leaf { color: var(--accent); font-weight: 650; }
-.deck-count {
-  margin-left: auto; color: var(--txt-3); background: var(--surface-3);
-  border-radius: 20px; padding: 0 9px; font-size: 11px;
-}
 
 .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--txt-2); }
 .legend i { width: 11px; height: 11px; border-radius: 3px; display: inline-block; margin-right: 6px; vertical-align: -1px; }
@@ -1140,7 +1134,6 @@ td .mus-dot { margin-right: 8px; }
 }
 .uc-som-i > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-
 .ue-figures { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 2px 22px; }
 @media (max-width: 760px) { .ue-figures { grid-template-columns: minmax(0,1fr); } }
 .ue-figure { display: flex; gap: 12px; padding: 6px 0; border-bottom: 1px solid var(--line-soft); font-size: 13px; }
@@ -1331,10 +1324,6 @@ input.ue-find { width: clamp(180px, 22vw, 260px); }
    Un pourcentage seul ne dit pas où en est l'étudiant : la barre
    montre la répartition dans les cinq boîtes, la légende la chiffre.
    ------------------------------------------------------------ */
-.ue-mem { margin-top: 12px; }
-.ue-mem-head { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--txt-2); margin-bottom: 8px; }
-.ue-mem-delta { font-family: var(--mono); font-size: 11.5px; font-weight: 650; }
-.ue-mem .small.muted { margin-top: 8px; }
 .ue-boxbar .legend { margin-top: 8px; gap: 13px; font-size: 10.8px; color: var(--txt-3); }
 
 /* --- mes notes sur une UE --- */
@@ -1534,18 +1523,6 @@ input.rc-in {
 .stack-bar > i { display: block; height: 100%; transition: width .5s var(--ease); }
 
 /* --- examen blanc --- */
-.exam-bar {
-  position: sticky; top: 0; z-index: 20;
-  background: color-mix(in srgb, var(--surface) 92%, transparent);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--line-soft); border-radius: var(--r);
-  padding: 12px 16px; margin-bottom: 14px; box-shadow: var(--shadow-s);
-}
-.exam-timer {
-  font-size: 26px; font-weight: 700; letter-spacing: -.02em;
-  color: var(--accent); font-variant-numeric: tabular-nums;
-}
-.exam-timer.warn { color: var(--red); animation: pulse 1s var(--ease) infinite; }
 @keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: .55 } }
 
 /* --- objectif du jour --- */
@@ -1640,6 +1617,13 @@ input.rc-in {
 .edt-type { font-weight: 650; font-size: 11.4px; text-transform: uppercase; letter-spacing: .03em; }
 .edt-ti { font-size: 13.2px; font-weight: 600; margin-top: 1px; }
 .edt-m { font-size: 11.4px; color: var(--txt-3); margin-top: 2px; }
+/* La remarque de l’enseignant : c’est du contenu, pas un lieu. Elle se lit
+   donc plus haut que la salle, et se distingue par un filet plutôt que par
+   une couleur — le type de séance en porte déjà une. */
+.edt-note {
+  font-size: 12px; color: var(--txt-2); margin-top: 3px;
+  padding-left: 8px; border-left: 2px solid var(--line-hard);
+}
 .edt-act { margin-left: auto; display: flex; align-items: center; gap: 8px; flex: none; }
 
 .edt-nav { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
@@ -1735,7 +1719,6 @@ input.rc-in {
 .q-opt:focus-visible,
 .flashcard:focus-visible,
 .search-item:focus-visible,
-.deck-line:focus-visible,
 .metric:focus-visible,
 .pill-stat:focus-visible {
   outline: 2px solid var(--accent);
@@ -2086,7 +2069,6 @@ input.rc-in {
   @page { margin: 14mm; }
   html, body { height: auto; overflow: visible; background: #fff; color: #000; }
   #sidebar, #overlay, #modal, #toast, .tabs, .btn, .btn-row, .keyhint,
-  .plan-act .plan-check, .exam-bar, .side-foot { display: none !important; }
   #app, #main, #view { display: block; height: auto; overflow: visible; background: #fff; }
   .page { padding: 0; max-width: 100%; animation: none; }
   .card {
@@ -2241,7 +2223,7 @@ input.rc-in {
 .sc-v.real b { color: var(--txt-2); }
 .sc-lab {
   font-size: 9.5px; text-transform: uppercase; letter-spacing: .1em;
-  color: var(--txt-3); font-weight: 700; flex: none; width: 44px;
+  color: var(--txt-3); font-weight: 700; flex: none; width: 54px;
 }
 .sc-mark { font-size: 14px; font-weight: 700; line-height: 1; align-self: center; }
 .sc-row.ok .sc-mark { color: var(--green); }
@@ -2330,21 +2312,6 @@ input.rc-in {
 .rc-arrow { color: var(--accent); margin: 0 8px; }
 
 /* examen blanc : postes oraux */
-.exam-oral-q {
-  font-size: 16px; line-height: 1.55; font-weight: 550;
-  padding: 22px 20px; text-align: center;
-  background: linear-gradient(150deg, var(--surface-3), var(--surface-2));
-  border: 1px solid var(--line-soft); border-radius: var(--r);
-}
-.exam-oral-a {
-  margin-top: 14px; border-top: 1px solid var(--line-soft); padding-top: 12px;
-  animation: fadeIn .2s var(--ease);
-}
-.exam-oral-a .k {
-  font-size: 9.5px; text-transform: uppercase; letter-spacing: .12em;
-  color: var(--accent); font-weight: 750;
-}
-.exam-oral-a p { margin: 5px 0 0; color: var(--txt); font-size: 15px; line-height: 1.6; }
 
 /* fiche d'UE : courbe des récitations */
 .ue-spark-wrap { margin: 4px 0 12px; }
@@ -2396,3 +2363,148 @@ input.rc-in {
   .ue-mnemo-row .m { color: #000 !important; }
   .ue-cas-r .k, .ue-tab h4 { color: #000 !important; }
 }
+
+/* --- Cartes Anki --- */
+
+/* Une seule ligne pour tout ce qui n'est pas une carte : combien, d'où,
+   quand, et le bouton pour recommencer. Trois pavés de statistiques pour
+   « 23 · 1 · une date » repoussaient le contenu sous la ligne de flottaison. */
+.ak-bar {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  padding: 10px 14px; margin-bottom: 18px; max-width: 78ch;
+  background: var(--surface-2); border: 1px solid var(--line-soft); border-radius: 10px;
+}
+.ak-bar .n { font-weight: 680; color: var(--txt); }
+.ak-bar .sep { color: var(--txt-3); }
+.ak-bar .grow { margin-left: auto; }
+
+/* Le chemin qu'on a sauté : « Orthoptie › L1 › S1 » ne mérite pas trois
+   lignes annonçant chacune le même total. */
+.ak-fil {
+  font-size: 11.6px; color: var(--txt-3); letter-spacing: .02em;
+  margin: 0 0 10px 2px;
+}
+
+/* Même mesure que les cartes : sans cela, le compteur aligné à droite se
+   retrouve à un mètre du nom du paquet quand il n’y en a qu’un. */
+.ak-arbre { display: flex; flex-direction: column; gap: 2px; max-width: 78ch; }
+
+.ak-noeud {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 10px; border-radius: 8px; min-width: 0;
+  border: 1px solid transparent;
+}
+.ak-noeud.cliquable { cursor: pointer; }
+.ak-noeud.cliquable:hover { background: var(--surface-2); border-color: var(--line-soft); }
+.ak-noeud .fl {
+  flex: none; width: 14px; text-align: center;
+  color: var(--txt-2); font-size: 11px; transition: transform .12s ease;
+}
+.ak-noeud.ouvert .fl { transform: rotate(90deg); }
+.ak-noeud .nom { font-weight: 600; font-size: 13.6px; overflow-wrap: anywhere; }
+.ak-noeud .code { color: var(--accent); font-weight: 700; }
+.ak-noeud .n {
+  margin-left: auto; flex: none;
+  font-size: 11.4px; color: var(--txt-3); font-variant-numeric: tabular-nums;
+}
+
+/* Les cartes : une mesure lisible plutôt que toute la largeur de l'écran,
+   et un vrai départ entre la question et la réponse. */
+/* Un filet à gauche relie les cartes au paquet qui les porte. */
+.ak-cartes {
+  display: flex; flex-direction: column; gap: 8px;
+  margin: 6px 0 14px; padding-left: 14px;
+  border-left: 1px solid var(--line-soft);
+}
+.ak-carte {
+  max-width: 78ch; padding: 12px 15px;
+  background: var(--surface-2); border: 1px solid var(--line-soft);
+  border-left: 2px solid var(--line); border-radius: 9px;
+}
+.ak-carte.flash { border-left-color: var(--accent); background: var(--accent-soft); }
+.ak-q { font-size: 14px; font-weight: 620; line-height: 1.45; }
+.ak-r {
+  font-size: 13px; color: var(--txt-2); line-height: 1.55;
+  margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--line-soft);
+  white-space: pre-wrap;
+}
+.ak-vide { padding: 22px 4px; }
+
+/* ============================================================
+   Vision Lab — l'écran de passation
+   ------------------------------------------------------------
+   Volontairement hors du thème. Les couleurs de l'application
+   sont réglées pour être agréables à lire pendant une heure ;
+   celles-ci sont réglées pour ne rien ajouter à un stimulus
+   qu'on chronomètre. Aucune transition, aucune ombre, aucun
+   dégradé : tout ce qui change d'aspect pendant une mesure de
+   temps de réaction entre dans la mesure.
+
+   z-index 300 : au-dessus de la palette de commandes (200),
+   qui est le calque le plus haut de l'application.
+   ============================================================ */
+.lab-scene {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: #101216;
+  overflow: hidden;
+  cursor: none;             /* le pointeur est un élément de plus dans le champ */
+  user-select: none;
+  animation: none;
+}
+.lab-scene * { animation: none !important; transition: none !important; }
+
+.lab-toile { display: block; position: absolute; inset: 0; }
+
+/* Le compte des essais. Assez lisible pour situer, assez discret pour ne pas
+   attirer l'œil hors du centre — et vidé pendant l'affichage du stimulus. */
+.lab-compteur {
+  position: absolute;
+  left: 0; right: 0; bottom: 18px;
+  text-align: center;
+  font: 12px/1 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  letter-spacing: .08em;
+  color: rgba(233,239,246,.30);
+  pointer-events: none;
+}
+
+/* Consignes, corrections d'entraînement, pause. Même fond que les stimuli :
+   un panneau clair ferait un éblouissement entre deux essais, et la première
+   mesure qui suit serait faussée par l'adaptation. */
+.lab-pause {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #101216;
+  cursor: default;
+}
+.lab-pause[hidden] { display: none !important; }
+
+.lab-msg {
+  max-width: 620px;
+  padding: 0 28px;
+  text-align: center;
+  color: #e9eff6;
+  font-size: 15px;
+  line-height: 1.7;
+}
+.lab-msg h2 {
+  margin: 0 0 10px;
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -.01em;
+}
+.lab-msg p { margin: 0; color: #9dadbf; }
+.lab-msg kbd {
+  display: inline-block;
+  padding: 1px 6px;
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 5px;
+  background: rgba(255,255,255,.06);
+  font: 12px/1.5 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  color: #e9eff6;
+}
+.lab-msg .btn-row { justify-content: center; }

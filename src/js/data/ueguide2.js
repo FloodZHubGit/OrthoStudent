@@ -315,8 +315,7 @@
       ['Intervalle de confiance usuel', '95 %'],
       ['Puissance visée', '80 %'],
       ['SnNout / SpPin', 'sensible → éliminer / spécifique → confirmer'],
-      ['Niveau de preuve maximal', 'méta-analyse d’essais randomisés'],
-      ['Intervalle de confiance usuel', '95 %']
+      ['Niveau de preuve maximal', 'méta-analyse d’essais randomisés']
     ],
     notions: [
       'Les valeurs prédictives dépendent de la prévalence, pas la sensibilité ni la spécificité.',
@@ -670,10 +669,9 @@
     chiffres: [
       ['Compressions thoraciques', '100 à 120/min, 5-6 cm'],
       ['Cycle', '30 compressions / 2 insufflations'],
-      ['Rinçage d’une brûlure chimique', '≥ 15 à 20 min'],
+      ['Rinçage d’une brûlure chimique', '≥ 15 à 20 min, immédiat'],
       ['Numéros', '15 (SAMU) · 112 (Europe)'],
-      ['Validité AFGSU', '4 ans'],
-      ['Rinçage d’une brûlure chimique', '≥ 15 min, immédiat']
+      ['Validité AFGSU', '4 ans']
     ],
     notions: [
       'Brûlure chimique : on rince d’abord, longuement, on examine ensuite.',

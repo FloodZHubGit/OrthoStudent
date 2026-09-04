@@ -7,7 +7,7 @@
   var M = window.Modules;
 
   /* L'ordre est celui de l'apprentissage, pas celui du code : on révise une UE,
-     on mémorise ses fiches, on se teste au QCM, on compose, et l'on relit le cours
+     on récite ce qu'elle contient, on pose ses calculs, et l'on relit le cours
      quand il manque quelque chose. Le reste — mise en situation, simulateurs,
      outils — vient après, et les références se consultent au besoin. */
   /* « Mes UE » n'est pas une entrée parmi d'autres : c'est le programme de
@@ -22,11 +22,11 @@
        Deux entrées pour la même question — que faire maintenant ? — obligeaient
        à choisir entre deux écrans qui se répondaient l'un l'autre. Le module
        garde sa page, atteignable depuis l'accueil et depuis la recherche. */
-    { group: 'Mon travail', items: ['home', 'chat', 'edt', 'revise', 'progress'] },
+    { group: 'Mon travail', items: ['home', 'chat', 'edt', 'flashcards', 'revise', 'progress'] },
     /* « Lecture de bilan » avant « Mode patient » : c'est le plus court des
        deux, celui par lequel le guide fait entrer, et celui que Ctrl+2
        ouvre. La consultation vient après, elle demande de choisir. */
-    { group: 'Pratiquer', items: ['reading', 'patient', 'rehab'] },
+    { group: 'Pratiquer', items: ['reading', 'patient', 'rehab', 'atelier', 'vision'] },
     { group: 'Références', items: ['converters', 'anatomy', 'glossary', 'help'] }
   ];
 
@@ -56,7 +56,7 @@
   }
 
   /* Certaines entrées de la barre en hébergent d'autres (« Réviser » contient
-     les fiches, les QCM, l'examen blanc et le cours) : ouvrir un module hébergé
+     l'atelier de calcul et le cours) : ouvrir un module hébergé
      par un lien direct doit allumer l'entrée qui le contient. */
   function navHolds(navId, id) {
     if (navId === id) return true;
@@ -171,7 +171,8 @@
 
   function updateFoot() {
     var s = Store.stats();
-    document.getElementById('footStat').textContent = s.simAvg + ' % · ' + s.quizSeen + ' QCM';
+    document.getElementById('footStat').textContent =
+      s.simAvg + ' % · ' + s.cardsMastered + ' item(s) su(s)';
   }
 
   /* ---------------- Historique de navigation ---------------- */
@@ -346,6 +347,29 @@
         function () { go('muscles'); }));
     }
 
+    /* Le Vision Lab : chaque expérience et chaque mode sont atteignables
+       directement. Passer par l'accueil du module pour relancer la même
+       mesure qu'hier fait trois clics de trop. */
+    if (window.Lab && M.vision) {
+      Lab.toutes().forEach(function (d) {
+        idx.push(entry('module', 'Vision Lab', d.nom, d.court || '',
+          'vision lab experience psychophysique mesure ' + (d.ue || []).join(' '),
+          (d.mesures || []).join(' '),
+          function () { go('vision', { exp: d.id }); }));
+        [['demo', 'Démonstration', 'la version courte, pour voir le phénomène'],
+         ['mesure', 'Mesure', 'le protocole complet, celui dont le résultat compte']
+        ].forEach(function (m) {
+          idx.push(entry('module', 'Vision Lab · ' + d.nom, d.nom + ' — ' + m[1], m[2],
+            'lancer passation experience ' + m[0], '',
+            function () { go('vision', { exp: d.id, mode: m[0] }); }));
+        });
+      });
+      idx.push(entry('module', 'Vision Lab', 'Calibrer l’écran',
+        'Taille d’un pixel, distance des yeux, fréquence',
+        'calibration ecran carte bancaire degre angle visuel pixel distance hertz',
+        '', function () { go('vision', { vue: 'calib' }); }));
+    }
+
     /* les abréviations comptent comme mots-clés : « AC/A », « DVD », « BUT »
        doivent tomber sur l'entrée même quand le titre est en clair */
     GLOSSARY.forEach(function (g) {
@@ -371,7 +395,7 @@
        ou même une notion de la fiche (« Kestenbaum ») */
     (window.CURRICULUM || []).forEach(function (sem) {
       sem.ues.forEach(function (u) {
-        if (u.code === 'UE6' || u.code === 'UE libre') return;   // anglais et libre : rien à indexer
+        if (u.code === 'UE06' || u.code === 'UE libre') return;  // anglais et libre : rien à indexer
         var g = (window.UE_GUIDE || {})[u.code];
         var blob = g ? (g.objectifs.join(' ') + ' ' + g.notions.join(' ') + ' ' + g.pieges.join(' ')).replace(/<[^>]+>/g, ' ') : '';
         idx.push(entry('ue', 'Programme · ' + sem.id, u.code + ' — ' + u.title,
@@ -381,14 +405,17 @@
       });
     });
 
-    (window.QUIZ || []).forEach(function (q) {
-      idx.push(entry('qcm', 'QCM · ' + q.cat, q.q, q.exp || '', q.cat, (q.opts || []).join(' ') + ' ' + (q.exp || ''),
-        function () { go('quiz', { qid: q.id }); }));
-    });
-
     Cards.all().forEach(function (c) {
       idx.push(entry('fiche', 'Fiche mémo · ' + c.deck, c.f, c.b, c.deck, c.b,
         function () { go('flashcards', { cardId: c.id }); }));
+    });
+
+    /* Les cartes d'Anki ne sont plus dans le paquet de révision — elles se
+       consultent. Elles restent cherchables : c'est même la seule façon de
+       retrouver une carte quand on ne sait plus dans quelle UE on l'a mise. */
+    Cards.anki().forEach(function (c) {
+      idx.push(entry('anki', 'Anki · ' + c.hint, c.f, c.b, c.chemin, c.b,
+        function () { go('flashcards', { carte: c.id }); }));
     });
 
     return idx;
@@ -398,7 +425,7 @@
   var INDEX_SIG = null;
 
   function indexSignature() {
-    return Cards.custom().length + '/' + (window.QUIZ || []).length + '/' + CASES.length +
+    return Cards.custom().length + '/' + Cards.anki().length + '/' + CASES.length +
            '/' + (window.CURRICULUM || []).length;
   }
 
@@ -468,6 +495,74 @@
     };
   }
 
+  /* « /lab recherche visuelle 4 8 12 » lance une expérience avec les tailles
+     d'ensemble données. La palette sert déjà de ligne de commande pour les
+     calculs ; refaire la même mesure qu'hier mérite le même raccourci.
+
+     Les nombres deviennent des tailles d'ensemble, le reste sert à retrouver
+     l'expérience. En dessous de deux tailles il n'y a pas de pente à tracer :
+     on garde alors le protocole complet plutôt que d'en lancer un boiteux. */
+  /* Les nombres d'une commande /lab ne veulent pas dire la même chose selon
+     l'expérience : des tailles d'ensemble pour une recherche visuelle, des
+     excentricités pour un encombrement. C'est l'expérience qui le déclare —
+     la barre de recherche ne peut pas le deviner. */
+  function parametres(exp, nombres) {
+    var champ = exp.champNombres;
+    if (!champ) return {};
+    var o = {};
+    o[champ] = nombres;
+    return o;
+  }
+
+  function labHit(q) {
+    var m = /^\/lab\b\s*(.*)$/i.exec(String(q || '').trim());
+    if (!m || !M.vision || !window.Lab) return null;
+    var reste = m[1];
+    /* Les décimales comptent : une excentricité de 2,5° n’est pas « 2 » et
+       « 5 ». On accepte le point comme la virgule. */
+    var tailles = (reste.match(/\d+(?:[.,]\d+)?/g) || [])
+      .map(function (x) { return Number(String(x).replace(',', '.')); })
+      .filter(function (n) { return n >= 1 && n <= 48; })
+      .sort(function (a, b) { return a - b; })
+      .filter(function (n, i, l) { return l.indexOf(n) === i; });
+    var mots = norm(reste.replace(/\d+/g, ' '));
+
+    var exp = null, meilleur = 0;
+    Lab.toutes().forEach(function (d) {
+      var n = norm(d.nom).split(' ').filter(function (w) { return w.length > 2; });
+      var sc = n.filter(function (w) { return mots.indexOf(w) >= 0; }).length;
+      if (sc > meilleur) { meilleur = sc; exp = d; }
+    });
+    /* « /lab » tout court, ou un nom qu'on ne reconnaît pas : on ouvre le
+       laboratoire plutôt que de deviner une expérience. */
+    if (!exp) {
+      return {
+        kind: 'module', cat: 'Commande', t: 'Vision Lab',
+        d: mots.trim() ? 'Expérience non reconnue — ouvrir le laboratoire' : 'Ouvrir le laboratoire',
+        act: function () { go('vision'); }
+      };
+    }
+    var perso = tailles.length >= 2;
+    return {
+      kind: 'module', cat: 'Commande · Vision Lab',
+      /* Le mot qui désigne ces nombres appartient à l'expérience : des
+         tailles d'ensemble ici, des excentricités là. */
+      t: exp.nom + (perso ? ' — ' + (exp.uniteNombres || 'valeurs') + ' ' +
+        tailles.map(function (x) { return String(x).replace('.', ','); }).join(', ')
+        : ' — protocole complet'),
+      d: perso
+        ? tailles.length + ' ' + (exp.uniteNombres || 'valeurs') + ' au protocole'
+        : (tailles.length === 1
+            ? 'Une seule valeur ne donne pas de pente : protocole complet à la place'
+            : 'Mode Mesure'),
+      act: function () {
+        go('vision', perso
+          ? { exp: exp.id, params: parametres(exp, tailles) }
+          : { exp: exp.id, mode: 'mesure' });
+      }
+    };
+  }
+
   function renderSearch(q) {
     UI.clear(searchRes);
     var toks = tokens(q);
@@ -479,8 +574,14 @@
         .sort(function (a, b) { return b.sc - a.sc; })
         .slice(0, 40)
         .map(function (x) { return x.i; });
-      var c = calcHit(q);
-      if (c) hits.unshift(c);
+      /* Une commande explicite remplace la liste : mélanger « /lab » avec des
+         résultats de glossaire ferait passer la commande pour une suggestion. */
+      var l = labHit(q);
+      if (l) hits = [l];
+      else {
+        var c = calcHit(q);
+        if (c) hits.unshift(c);
+      }
     }
     hlIndex = 0;
     hits.forEach(function (h, i) {

@@ -10,15 +10,19 @@ const channels = ['menu:export', 'menu:import', 'menu:reset', 'menu:theme',
   /* le journal de fabrication arrive ligne par ligne, plusieurs minutes durant */
   'build:log',
   /* la réponse du modèle local arrive mot à mot */
-  'ia:flux'];
+  'ia:flux',
+  /* l'import Anki avance paquet par paquet */
+  'anki:progres'];
 
 contextBridge.exposeInMainWorld('ortho', {
   exportData: (json) => ipcRenderer.invoke('data:export', json),
   importData: () => ipcRenderer.invoke('data:import'),
   ankiExportFile: (payload) => ipcRenderer.invoke('anki:exportFile', payload),
-  ankiInspect: (opts) => ipcRenderer.invoke('anki:inspect', opts),
-  ankiFields: (modelName) => ipcRenderer.invoke('anki:fields', modelName),
-  ankiSend: (payload) => ipcRenderer.invoke('anki:send', payload),
+  /* Anki, en LECTURE SEULE : l'état de l'extension, et les cartes.
+     Les appels d'écriture — anki:send, anki:fields — ont été retirés :
+     l'application ne crée plus de paquet et n'écrit plus de note. */
+  ankiEtat: () => ipcRenderer.invoke('anki:etat'),
+  ankiCartes: (d) => ipcRenderer.invoke('anki:cartes', d),
   /* fabrication d'un exécutable depuis l'application en développement */
   buildEtat: () => ipcRenderer.invoke('build:etat'),
   buildLancer: (cible) => ipcRenderer.invoke('build:lancer', cible),

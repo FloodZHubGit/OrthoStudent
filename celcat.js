@@ -78,12 +78,26 @@ function decode(s) {
     .replace(/&(amp|lt|gt|quot|apos|nbsp);/g, (_, n) => nommees[n]);
 }
 
+const EST_UE = /^UE\s?\d+/i;
+
+/* Une salle commence toujours par son code : D101, M002, G103, E113, H22…
+   Relevé sur les 584 séances de l'année, les dix-sept libellés de salle
+   suivent tous cette forme, sans exception.
+
+   La distinction compte, parce que le code précédent versait dans « salle »
+   TOUT ce qui n'était pas l'UE. Une remarque d'enseignant — « Méthodologie de
+   travail, 1ère partie » — s'affichait donc comme un lieu, et une seconde UE
+   aussi : trois séances de l'année portent deux UE, et la deuxième était
+   présentée à l'étudiant comme une salle. */
+const EST_SALLE = /^[A-Z]{1,2}\s?\d{2,3}\b/;
+
 /* La description est une pile de lignes séparées par <br /> : la catégorie,
    puis un ou plusieurs groupes — un cours mutualisé en cite plusieurs, un
-   examen commun aux trois années aussi —, puis l'intitulé d'UE quand il y en
-   a un, puis zéro, une ou deux salles. On écarte la catégorie et les groupes,
-   qu'on reconnaît à leur code entre parenthèses, et ce qui reste se départage :
-   la ligne en UEnn est l'UE, les autres sont des salles. */
+   examen commun aux trois années aussi —, puis les intitulés d'UE, les salles,
+   et le cas échéant une remarque. On écarte la catégorie et les groupes, qu'on
+   reconnaît à leur code entre parenthèses ; le reste se départage en trois :
+   les lignes en UEnn, les salles à leur code, et ce qui n'est ni l'un ni
+   l'autre — la remarque. */
 function parseEvenement(ev) {
   const lignes = decode(ev.description || '')
     .split(/<br\s*\/?>/i)
@@ -92,18 +106,28 @@ function parseEvenement(ev) {
     .slice(1)
     .filter((l) => !/\([A-Z0-9]+\/\d+\)$/.test(l));
 
-  const ligneUE = lignes.find((l) => /^UE\s?\d+/i.test(l));
-  const codeUE = ligneUE ? ligneUE.match(/^UE\s?(\d+)/i)[1] : null;
+  const ues = lignes.filter((l) => EST_UE.test(l));
+  const reste = lignes.filter((l) => !EST_UE.test(l));
+  /* CELCAT écrit « UE4 », le référentiel « UE04 » : on complète à deux
+     chiffres pour que les deux se rejoignent sans table de correspondance. */
+  const code = (l) => 'UE' + String(l.match(/^UE\s?(\d+)/i)[1]).padStart(2, '0');
+
+  const notes = reste.filter((l) => !EST_SALLE.test(l));
 
   return {
     d: ev.start.slice(0, 10),
     s: ev.start.slice(11, 16),
     e: (ev.end || '').slice(11, 16),
     t: ev.eventCategory || '',
-    ue: codeUE ? 'UE' + codeUE : null,
-    titre: ligneUE ? ligneUE.replace(/^UE\s?\d+\s*:?\s*/i, '').trim() : '',
-    salle: lignes.filter((l) => l !== ligneUE).join(' / '),
-    site: (ev.sites || [])[0] || ''
+    ue: ues.length ? code(ues[0]) : null,
+    titre: ues.length ? ues[0].replace(/^UE\s?\d+\s*:?\s*/i, '').trim() : '',
+    salle: reste.filter((l) => EST_SALLE.test(l)).join(' / '),
+    site: (ev.sites || [])[0] || '',
+    /* Émis seulement quand ils existent : JSON.stringify laisse tomber les
+       undefined, le fichier de données ne s'alourdit donc pas d'un champ vide
+       répété six cents fois. */
+    aussi: ues.length > 1 ? ues.slice(1).map(code) : undefined,
+    note: notes.length ? notes.join(' · ') : undefined
   };
 }
 

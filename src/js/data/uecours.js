@@ -31,7 +31,7 @@ window.UE_COURS = {
 
 /* ============================ SEMESTRE 1 ============================ */
 
-UE1: [
+UE01: [
   { img: 'Le photorécepteur est un tapis roulant : il fabrique des disques à la base de son segment externe et l’épithélium pigmentaire mange les plus vieux au sommet. Le tapis se renouvelle en dix jours environ, à vie.',
     cle: 'Dans l’œil, chaque cellule a sacrifié quelque chose pour une fonction : le photorécepteur sa forme banale, la fibre du cristallin son noyau, l’endothélium sa capacité à se diviser.',
     ex: 'C’est ce sacrifice qui explique qu’aucune des trois ne se remplace : une rétinopathie pigmentaire, une cataracte, une cornea guttata ne se « rattrapent » jamais spontanément.' },
@@ -60,7 +60,7 @@ UE1: [
     err: 'Traiter une leucocorie comme une curiosité photographique. C’est un rétinoblastome tant qu’on n’a pas prouvé le contraire, et le pronostic est vital avant d’être visuel.' }
 ],
 
-UE2: [
+UE02: [
   { fig: 'vergence', img: 'La vergence est la « courbure » du faisceau. Loin, les rayons arrivent plats (vergence nulle) ; plus l’objet se rapproche, plus ils divergent, et plus il faut de puissance pour les remettre au point.',
     cle: 'V = 1/d en mètres : 1 m → 1 D, 50 cm → 2 D, 33 cm → 3 D, 25 cm → 4 D. Ces quatre couples se sachent par cœur, ils reviennent tout le temps.',
     err: 'Oublier que la distance se compte en mètres. 33 cm donne 3 D, pas 0,03 D — l’erreur d’unité est la première cause de résultat aberrant.' },
@@ -94,7 +94,7 @@ UE2: [
     err: 'Appliquer la correction de distance de sommet sous ±4 D : l’écart y est inférieur au quart de dioptrie, donc invisible. Au-delà, l’ignorer devient une faute.' }
 ],
 
-UE3: [
+UE03: [
   { fig: 'skiascopie',
     img: 'La skiascopie, c’est lire le sens d’une ombre : la lueur pupillaire se déplace comme votre main (ombre directe, il manque du plus) ou à contresens (ombre inverse, il y a trop de plus). Le neutre, c’est le moment où toute la pupille s’allume d’un coup.',
     cle: 'Ombre directe → ajouter du plus ; ombre inverse → ajouter du moins ; puis retrancher la distance de travail.',
@@ -127,7 +127,7 @@ UE3: [
     ex: 'Le patient qui lit à 33 cm et le musicien qui lit sa partition à 70 cm n’ont pas la même addition, même au même âge. On mesure la distance, on ne la suppose pas.' }
 ],
 
-UE4: [
+UE04: [
   { fig: 'phototransduction',
     img: 'Dans le noir, le photorécepteur est bavard : ses canaux sont ouverts, il libère du glutamate en continu. La lumière le fait taire. Le signal visuel, c’est un silence.',
     cle: 'Le photorécepteur s’hyperpolarise à la lumière — c’est le seul neurone qui répond à son stimulus en se taisant.',
@@ -158,7 +158,7 @@ UE4: [
     err: 'Attendre d’un PEV qu’il localise une lésion : il dit qu’il y a un retard ou une perte d’amplitude, il ne dit pas où.' }
 ],
 
-UE5: [
+UE05: [
   { fig: 'acuites', img: 'Quatre acuités, quatre questions : je vois qu’il y a quelque chose (visible), je vois que c’est deux choses (séparable), je sais ce que c’est (reconnaissable), je vois que ce n’est pas aligné (Vernier).',
     cle: 'L’acuité mesurée en clinique est le minimum séparable : un pouvoir de résolution, pas une qualité de vision.',
     err: 'Confondre acuité et vision. Un patient à 10/10 peut être très gêné : contraste, éblouissement et champ ne sont pas dans le chiffre.' },
@@ -188,7 +188,7 @@ UE5: [
     ex: 'Le patient qui ne reconnaît plus les visages dans un couloir sombre, ou qui ne distingue plus la marche blanche sur le carrelage blanc, décrit une perte de sensibilité aux contrastes — Pelli-Robson la mesure, l’échelle d’acuité non.' }
 ],
 
-UE7: [
+UE07: [
   { fig: 'orbite',
     img: 'Une orbite est une pyramide couchée, sommet en arrière : tout ce qui entre ou sort de l’œil passe par ce sommet, dans un espace de la taille d’un ongle.',
     cle: 'Sept os, quatre parois, un sommet où tout se croise — et deux parois fragiles : le plancher et la paroi médiale.',
@@ -217,7 +217,7 @@ UE7: [
     err: 'Confondre le ptosis du III (majeur, avec déviation et souvent mydriase) et celui de Horner (léger, avec myosis).' }
 ],
 
-UE8: [
+UE08: [
   { fig: 'positions',
     img: 'Un muscle oculomoteur n’a pas une action, il en a trois — et leur importance dépend de la position du regard. Les obliques et les droits verticaux échangent leurs rôles selon l’abduction ou l’adduction.',
     cle: 'Les droits verticaux sont surtout élévateurs/abaisseurs en abduction ; les obliques le deviennent en adduction. C’est le fondement du test des trois pas.',
@@ -246,7 +246,7 @@ UE8: [
     ex: 'Ce seul rapport oriente la prise en charge : excès de convergence par AC/A élevé → addition ; insuffisance de convergence avec AC/A bas → rééducation.' }
 ],
 
-UE9: [
+UE09: [
   { fig: 'covertest',
     img: 'La phorie est une déviation qui attend : la fusion la tient, il suffit de couper la fusion pour la voir apparaître. La tropie, elle, est déjà là.',
     cle: 'Cover test unilatéral : je vois bouger l’œil découvert → tropie. Cover test alterné : ça ne bouge qu’à la dissociation → phorie.',

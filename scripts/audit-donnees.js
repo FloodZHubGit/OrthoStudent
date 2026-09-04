@@ -1,7 +1,7 @@
 /* Audit des renvois entre les données : tout identifiant cité quelque part
    doit exister ailleurs. Rien n'est modifié, on ne fait que lister. */
 global.window = {};
-['glossary', 'theory', 'quizbank', 'quizbank2', 'quizbank3', 'flashbank', 'cases', 'formulas',
+['glossary', 'theory', 'cases', 'formulas',
   'curriculum', 'ueguide', 'ueguide2', 'uecours', 'uexpand', 'uedeep', 'uedeep2', 'uecas', 'uecas2']
   .forEach(n => require(require('path').join(__dirname, '../src/js/data/' + n + '.js')));
 
@@ -9,19 +9,12 @@ const W = window;
 const out = [];
 const has = (o, k) => Object.prototype.hasOwnProperty.call(o || {}, k);
 
-// thèmes de QCM cités par le référentiel
-const cats = {};
-(W.QUIZ || []).forEach(q => { cats[q.cat] = (cats[q.cat] || 0) + 1; });
 const chaps = {};
 (W.THEORY || []).forEach(c => { chaps[c.id] = true; });
 
-const seenCats = {}, seenChaps = {};
+const seenChaps = {};
 (W.CURRICULUM || []).forEach(sem => sem.ues.forEach(u => {
   const l = u.links || {};
-  (l.cats || []).forEach(c => {
-    seenCats[c] = true;
-    if (!cats[c]) out.push(sem.id + '/' + u.code + ' : thème de QCM inconnu « ' + c + ' »');
-  });
   (l.chap || []).forEach(c => {
     seenChaps[c] = true;
     if (!chaps[c]) out.push(sem.id + '/' + u.code + ' : chapitre de cours inconnu « ' + c + ' »');
@@ -29,7 +22,7 @@ const seenCats = {}, seenChaps = {};
   (l.formulas || []).forEach(f => {
     if (!has(W.FORMULAS, f)) out.push(sem.id + '/' + u.code + ' : formule inconnue « ' + f + ' »');
   });
-  if (u.code !== 'UE6' && u.code !== 'UE libre' && !has(W.UE_GUIDE, u.code)) {
+  if (u.code !== 'UE06' && u.code !== 'UE libre' && !has(W.UE_GUIDE, u.code)) {
     out.push(sem.id + '/' + u.code + ' : aucune fiche d’UE');
   }
 
@@ -53,7 +46,6 @@ const seenCats = {}, seenChaps = {};
   }
 }));
 
-Object.keys(cats).forEach(c => { if (!seenCats[c]) out.push('thème de QCM « ' + c + ' » (' + cats[c] + ' questions) rattaché à aucune UE'); });
 Object.keys(chaps).forEach(c => { if (!seenChaps[c]) out.push('chapitre de cours « ' + c + ' » rattaché à aucune UE'); });
 
 // fiches d'UE : codes qui ne sont dans aucun semestre
@@ -63,22 +55,6 @@ const codes = {};
   .forEach(([name, bank]) => {
     Object.keys(bank || {}).forEach(c => { if (!codes[c]) out.push(name + ' : « ' + c +' » n’est dans aucun semestre'); });
   });
-
-// QCM : réponse dans les bornes, identifiants uniques
-const qids = {};
-(W.QUIZ || []).forEach(q => {
-  if (qids[q.id]) out.push('QCM : identifiant en double « ' + q.id + ' »');
-  qids[q.id] = true;
-  if (!q.opts || q.a == null || q.a < 0 || q.a >= q.opts.length) out.push('QCM ' + q.id + ' : réponse hors bornes');
-  if (!q.exp) out.push('QCM ' + q.id + ' : sans explication');
-});
-
-// Fiches mémo : identifiants uniques
-const cids = {};
-(W.FLASHCARDS || []).forEach(c => {
-  if (cids[c.id]) out.push('Fiche : identifiant en double « ' + c.id + ' »');
-  cids[c.id] = true;
-});
 
 // Cas cliniques : cohérence interne
 const TESTS = ['acuity', 'phoropter', 'covertest', 'prism', 'motility', 'lancaster',
@@ -103,6 +79,54 @@ const titles = {};
 (W.GLOSSARY || []).forEach(g => {
   if (titles[g.t]) out.push('Glossaire : entrée en double « ' + g.t + ' »');
   titles[g.t] = true;
+});
+
+// Une UE qui répète son propre chiffre, ou sa propre question d'oral.
+// Deux fois le même fait dans une seule fiche, c'est toujours une erreur :
+// l'étudiant le révise deux fois, et rien ne garantit que les deux valeurs
+// concordent — c'est ainsi qu'UE41 a longtemps donné « ≥ 15 à 20 min » puis
+// « ≥ 15 min » pour le même rinçage.
+const nq = (t) => String(t).toLowerCase().replace(/[^a-z0-9àâäéèêëïîôöùûüç]+/g, ' ').trim();
+const jumeaux = (code, liste, quoi) => {
+  const vu = {};
+  (liste || []).forEach((e, i) => {
+    const k = nq(e[0]);
+    if (vu[k] === undefined) { vu[k] = i; return; }
+    const meme = liste[vu[k]][1] === e[1];
+    out.push(code + ' : ' + quoi + ' « ' + e[0] + ' » deux fois (rangs ' + vu[k] + ' et ' + i + ')'
+      + (meme ? '' : ' — ET DEUX VALEURS DIFFÉRENTES : « ' + liste[vu[k]][1] + ' » / « ' + e[1] + ' »'));
+  });
+};
+Object.keys(W.UE_GUIDE || {}).forEach(c => jumeaux(c, W.UE_GUIDE[c].chiffres, 'chiffre'));
+Object.keys(W.UE_EXTRA || {}).forEach(c => jumeaux(c, W.UE_EXTRA[c].qr, 'question d’oral'));
+
+/* ------------------------------------------------------------
+   Ce que le paquet livré embarque
+   ------------------------------------------------------------
+   Un fichier chargé par le processus principal mais absent de la
+   liste `build.files` ne part pas dans l'installateur : l'appli
+   installée s'arrête au démarrage sur « Cannot find module ».
+
+   C'est arrivé avec anki.js, et aucun banc d'essai ne pouvait le
+   voir : ils partent tous des sources, jamais du paquet. Le seul
+   moment où le défaut apparaît, c'est chez l'utilisateur.
+   ------------------------------------------------------------ */
+const fsx = require('fs');
+const pth = require('path');
+const racine = pth.join(__dirname, '..');
+const livres = ((require(pth.join(racine, 'package.json')).build || {}).files) || [];
+['main.js', 'preload.js'].forEach((f) => {
+  let src;
+  try { src = fsx.readFileSync(pth.join(racine, f), 'utf8'); } catch (e) { return; }
+  const locaux = (src.match(/require\((["'])\.\/[^"']+\1\)/g) || [])
+    .map((m) => m.replace(/^require\(['"]\.\//, '').replace(/['"]\)$/, ''))
+    .map((m) => (/\.[cm]?js$/.test(m) ? m : m + '.js'));
+  locaux.forEach((dep) => {
+    if (livres.indexOf(dep) < 0) {
+      out.push('Paquet : ' + f + ' charge « ./' + dep + ' », absent de build.files — ' +
+        'l’application installée ne démarrerait pas');
+    }
+  });
 });
 
 console.log(out.length ? out.length + ' anomalie(s) :' : 'Aucune anomalie.');

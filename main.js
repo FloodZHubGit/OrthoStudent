@@ -26,6 +26,22 @@ function createWindow() {
     }
   });
 
+  /* ------------------------------------------------------------
+     Les permissions du navigateur
+     ------------------------------------------------------------
+     Electron les accorde TOUTES par défaut dès qu’aucun gestionnaire
+     n’est posé : une sonde a confirmé que getUserMedia passait sans rien
+     demander. On refuse donc tout — caméra, micro, géolocalisation,
+     notifications : l’application n’a l’usage d’aucune.
+
+     Ce durcissement est arrivé avec une fonction de surveillance par
+     webcam depuis retirée. Il reste, parce qu’il vaut par lui-même.
+     ------------------------------------------------------------ */
+  const sess = mainWindow.webContents.session;
+  sess.setPermissionRequestHandler((_wc, _demandee, accorder) => accorder(false));
+  if (sess.setPermissionCheckHandler) sess.setPermissionCheckHandler(() => false);
+  if (sess.setDevicePermissionHandler) sess.setDevicePermissionHandler(() => false);
+
   mainWindow.loadFile(path.join(__dirname, 'src', 'index.html'));
 
   mainWindow.once('ready-to-show', () => {
@@ -345,6 +361,18 @@ ipcMain.handle('ia:stop', async () => {
   return true;
 });
 
+/* Le pont Anki vit dans anki.js, à la racine, à côté de celcat.js.
+   Deux raisons : la page ne doit jamais parler au port 8765, et le banc
+   d'essai doit pouvoir charger EXACTEMENT le même code que l'application
+   — sans quoi un test ne prouve rien. La liste fermée des actions de
+   lecture y est posée ; il ne reste ici que le branchement. */
+const anki = require('./anki');
+
+ipcMain.handle('anki:etat', async () => anki.etat());
+
+ipcMain.handle('anki:cartes', async (evt, d) => anki.cartes((d && d.requete) || 'deck:*',
+  (pr) => evt.sender.send('anki:progres', pr)));
+
 ipcMain.handle('data:export', async (_evt, json) => {
   const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
     title: 'Exporter la progression',
@@ -381,165 +409,13 @@ ipcMain.handle('anki:exportFile', async (_evt, payload) => {
   return { ok: true, path: filePath };
 });
 
-/* ------------------------------------------------------------------
-   Dialogue local avec l'add-on AnkiConnect.
+/* Le chemin inverse — créer des paquets et écrire des notes DANS Anki —
+   a été retiré : createDeck, addNotes, canAddNotes, et le port réglable
+   qui allait avec. L'application ne fait plus que lire, et il ne reste
+   plus une ligne capable d'enfreindre la règle posée par ANKI_LECTURE.
 
-   Deux précautions indispensables, découvertes à l'usage :
-
-   1. `agent: false` + `Connection: close`. Le serveur HTTP d'AnkiConnect
-      ferme la socket après chaque réponse sans l'annoncer. Avec l'agent
-      Node par défaut (keep-alive), la requête suivante réutilise une
-      socket déjà fermée et échoue en ECONNRESET — environ une requête
-      sur trois. Une socket neuve par requête supprime le problème.
-
-   2. Une reprise automatique sur erreur réseau : les erreurs applicatives
-      d'Anki (type de note absent, doublon…) ne sont jamais retentées.
-------------------------------------------------------------------- */
-let ANKI_PORT = 8765;
-
-function ankiRequest(action, params, timeoutMs) {
-  return new Promise((resolve, reject) => {
-    const http = require('http');
-    const body = JSON.stringify({ action, version: 6, params: params || {} });
-    const req = http.request(
-      {
-        host: '127.0.0.1', port: ANKI_PORT, path: '/', method: 'POST',
-        agent: false,
-        headers: {
-          'Content-Type': 'application/json',
-          'Content-Length': Buffer.byteLength(body),
-          Connection: 'close',
-          Origin: 'http://localhost'
-        }
-      },
-      (res) => {
-        let data = '';
-        res.on('data', (c) => { data += c; });
-        res.on('end', () => {
-          let parsed;
-          try { parsed = JSON.parse(data); }
-          catch (e) { reject(Object.assign(new Error('Réponse illisible d’AnkiConnect'), { net: true })); return; }
-          if (parsed.error) reject(new Error(parsed.error));
-          else resolve(parsed.result);
-        });
-      }
-    );
-    req.setTimeout(timeoutMs || 5000, () => { req.destroy(Object.assign(new Error('délai dépassé'), { net: true })); });
-    req.on('error', (e) => { e.net = true; reject(e); });
-    req.write(body);
-    req.end();
-  });
-}
-
-async function ankiConnect(action, params, timeoutMs) {
-  let last;
-  for (let attempt = 0; attempt < 3; attempt++) {
-    try {
-      return await ankiRequest(action, params, timeoutMs);
-    } catch (e) {
-      last = e;
-      const retryable = e.net || /ECONNRESET|socket hang up|EPIPE|ECONNABORTED|délai dépassé/i.test(e.message || '');
-      if (!retryable) throw e;
-      await new Promise((r) => setTimeout(r, 120 * (attempt + 1)));
-    }
-  }
-  throw last;
-}
-
-// Inspection complète : version, paquets, types de notes et leurs champs.
-// Rien n'est deviné côté application, tout vient de la collection de l'utilisateur.
-ipcMain.handle('anki:inspect', async (_evt, opts) => {
-  const steps = [];
-  if (opts && opts.port) ANKI_PORT = opts.port;
-  try {
-    const version = await ankiConnect('version', {}, 4000);
-    steps.push('version = ' + version);
-    const decks = await ankiConnect('deckNames', {}, 4000);
-    steps.push(decks.length + ' paquet(s)');
-    const modelNames = await ankiConnect('modelNames', {}, 6000);
-    steps.push(modelNames.length + ' type(s) de note');
-    return { ok: true, version, decks, modelNames, port: ANKI_PORT, steps };
-  } catch (e) {
-    return { ok: false, error: String(e.message || e), port: ANKI_PORT, steps };
-  }
-});
-
-// Les champs sont demandés uniquement pour le type de note choisi :
-// une requête au lieu d'une par type, donc beaucoup moins d'occasions d'échouer.
-ipcMain.handle('anki:fields', async (_evt, modelName) => {
-  try {
-    const fields = await ankiConnect('modelFieldNames', { modelName }, 5000);
-    return { ok: true, fields };
-  } catch (e) {
-    return { ok: false, error: String(e.message || e) };
-  }
-});
-
-ipcMain.handle('anki:send', async (_evt, payload) => {
-  const steps = [];
-  try {
-    const fallbackDeck = (payload.deck || 'OrthoStudent').trim();
-    const model = payload.model;
-    const fFront = payload.frontField;
-    const fBack = payload.backField;
-    if (!model || !fFront || !fBack) {
-      return { ok: false, error: 'Type de note ou champs non renseignés.', steps };
-    }
-
-    // chaque note porte son propre paquet : « L1::UE1 Anatomie » crée
-    // le sous-paquet et son parent, c'est la convention d'Anki
-    const wanted = [];
-    payload.notes.forEach((n) => {
-      const d = (n.deck || fallbackDeck).trim();
-      if (wanted.indexOf(d) < 0) wanted.push(d);
-    });
-    for (const d of wanted) await ankiConnect('createDeck', { deck: d }, 6000);
-    steps.push(wanted.length + ' paquet(s) prêt(s) : ' + wanted.join(' · '));
-
-    const notes = payload.notes.map((n) => {
-      const fields = {};
-      fields[fFront] = n.front;
-      fields[fBack] = n.back;
-      return {
-        deckName: (n.deck || fallbackDeck).trim(),
-        modelName: model,
-        fields,
-        tags: n.tags || ['OrthoStudent'],
-        options: { allowDuplicate: false, duplicateScope: 'deck' }
-      };
-    });
-
-    // canAddNotes signale les refus avant l'envoi (doublons, champ vide…)
-    let canAdd = [];
-    try {
-      canAdd = await ankiConnect('canAddNotes', { notes }, 15000);
-      steps.push(canAdd.filter(Boolean).length + '/' + notes.length + ' ajoutables');
-    } catch (e) {
-      steps.push('canAddNotes indisponible (' + e.message + ')');
-    }
-
-    const res = await ankiConnect('addNotes', { notes }, 30000);
-    const added = res.filter((x) => x !== null).length;
-    steps.push(added + ' note(s) créée(s)');
-
-    // détail par paquet, pour le compte rendu
-    const perDeck = {};
-    notes.forEach((n, i) => {
-      if (!perDeck[n.deckName]) perDeck[n.deckName] = { added: 0, skipped: 0 };
-      if (res[i] !== null) perDeck[n.deckName].added++;
-      else perDeck[n.deckName].skipped++;
-    });
-
-    return {
-      ok: true, added, skipped: res.length - added, model,
-      deck: wanted.length === 1 ? wanted[0] : wanted.length + ' paquets',
-      decks: wanted, perDeck,
-      duplicates: canAdd.length ? canAdd.filter((x) => !x).length : null, steps
-    };
-  } catch (e) {
-    return { ok: false, error: String(e.message || e), steps };
-  }
-});
+   L'export en fichier texte, lui, reste : il écrit un fichier que
+   l'étudiant importe s'il le veut. Il ne touche jamais à la collection. */
 
 /* ==================================================================
    Import d'une arborescence de fiches

@@ -320,7 +320,10 @@
         }),
         modeRow,
         root,
-        Drill.history('reading')
+        Drill.history('reading', {
+          vide: 'Aucun bilan lu pour l’instant.<br>La note compare votre interprétation à celle du dossier.',
+          compte: 'Bilans lus', recents: 'dernières lectures'
+        })
       ]);
     }
   };

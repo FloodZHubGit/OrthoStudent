@@ -38,7 +38,7 @@
   function slug(code) { return String(code).replace(/\s+/g, ''); }
 
   /* Le préfixe d'identifiant d'une UE dépend de son semestre : c'est la
-     convention posée par Cards.generated(), qu'on ne change pas sous
+     convention héritée des fiches dérivées des chiffres, qu'on ne change pas sous
      peine de perdre l'historique de répétition espacée. */
   function prefix(code) {
     var l = UEBank.locate(code);
@@ -141,6 +141,31 @@
       });
       cache = out;
       return out;
+    },
+
+    /* Ce qui est à revoir aujourd'hui, sur un semestre ou sur tout.
+       C'est ce compteur qui porte désormais l'objectif du jour : les fiches
+       livrées ont disparu, la récitation est ce qui reste en répétition
+       espacée. Les items jamais vus comptent comme dus — c'est aussi du
+       travail à faire, et les ignorer donnerait « rien à revoir » à un
+       étudiant qui n'a encore rien récité. */
+    dues: function (codes) {
+      var srs = (window.Store && Store.state && Store.state.srs) || {};
+      var now = Date.now();
+      var n = 0;
+      UEBank.all().forEach(function (it) {
+        if (codes && codes.indexOf(it.code) < 0) return;
+        var c = srs[it.id];
+        if (!c || c.due <= now) n++;
+      });
+      return n;
+    },
+
+    /* les codes d'UE du semestre déclaré, ou null pour « tout » */
+    codesDuSemestre: function () {
+      var id = window.Store && Store.state.profile.semester;
+      var s = (window.CURRICULUM || []).filter(function (x) { return x.id === id; })[0];
+      return s ? s.ues.map(function (u) { return u.code; }) : null;
     },
 
     /* ------------------------------------------------------------

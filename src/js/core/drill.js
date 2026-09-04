@@ -154,12 +154,15 @@
     return g;
   }
 
+  /* Le vocabulaire vient de l'appelant : ce composant sert la lecture de
+     bilan comme l'atelier de calcul, et « Bilans lus » n'a aucun sens dans
+     le second. Les valeurs par défaut restent neutres. */
   function history(id, opts) {
     opts = opts || {};
     var sc = Store.score(id);
     if (!sc) {
       return UI.card(opts.title || 'Votre historique',
-        UI.empty('📊', 'Aucun bilan lu pour l’instant.<br>La note compare votre interprétation à celle du dossier.'));
+        UI.empty('📊', opts.vide || 'Rien de fait pour l’instant.'));
     }
     var list = scores(id, 14);
     var trend = null;
@@ -174,13 +177,14 @@
     }
     return UI.card(opts.title || 'Votre historique', [
       el('div', { class: 'grid g4' }, [
-        UI.stat(sc.attempts, 'Bilans lus'),
+        UI.stat(sc.attempts, opts.compte || 'Essais'),
         UI.stat(sc.avg + ' %', 'Moyenne', scoreColor(sc.avg)),
         UI.stat(sc.best + ' %', 'Meilleur', 'var(--green)'),
         UI.stat(sc.last + ' %', 'Dernier', scoreColor(sc.last))
       ]),
       list.length >= 2 ? el('div', { class: 'sim-hist' }, [
-        spark(list), el('span', { class: 'muted small', text: 'Les ' + list.length + ' dernières lectures' })
+        spark(list), el('span', { class: 'muted small',
+          text: 'Les ' + list.length + ' ' + (opts.recents || 'derniers essais') })
       ]) : null,
       trend ? UI.chip(trend.t, trend.c) : null
     ].filter(Boolean), opts.right ? { right: opts.right } : undefined);
@@ -201,6 +205,7 @@
 
   window.Drill = {
     begin: begin, peek: peek, grade: grade,
+    compare: compare,
     debrief: debrief, history: history, brief: brief
   };
 })();

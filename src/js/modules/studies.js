@@ -214,13 +214,21 @@
      filtre, un module retiré de l'application resterait compté dans la
      maîtrise avec une note de 0 : l'UE ne pourrait plus jamais atteindre
      100 %, et le plan de révision la remonterait indéfiniment. */
+  /* Les modules déclarés par le référentiel, plus ceux qui se déclarent
+     eux-mêmes. Une expérience du Vision Lab nomme les UE qu'elle éclaire,
+     et c'est cette déclaration qui fait foi : tenir la liste des deux côtés
+     finirait par la faire diverger, et personne ne s'en apercevrait. */
   function linkedMods(u) {
-    return (((u.links || {}).mod) || []).filter(function (id) { return M[id]; });
+    var ids = (((u.links || {}).mod) || []).filter(function (id) { return M[id]; });
+    if (window.Lab && M.vision && ids.indexOf('vision') < 0 && Lab.toutes().some(function (d) {
+      return (d.ue || []).indexOf(u.code) >= 0;
+    })) ids = ids.concat('vision');
+    return ids;
   }
 
   function isCovered(u) {
     var l = u.links || {};
-    return !!(linkedMods(u).length || (l.calc && l.calc.length) || (l.chap && l.chap.length) || (l.cats && l.cats.length));
+    return !!(linkedMods(u).length || (l.calc && l.calc.length) || (l.chap && l.chap.length));
   }
 
   /* ============================================================
@@ -251,25 +259,6 @@
             ' sur ' + mem.total + (mem.due ? ' · ' + mem.due + ' à revoir aujourd’hui' : ' · rien à revoir aujourd’hui')
           : mem.total + ' items à réciter, jamais fait',
         act: 'recite'
-      });
-    }
-
-    /* 2 — les QCM : il faut du volume ET de la réussite */
-    if (l.cats && l.cats.length) {
-      var pool = (window.QUIZ || []).filter(function (q) { return l.cats.indexOf(q.cat) >= 0; });
-      var seen = 0, ok = 0;
-      pool.forEach(function (q) {
-        var r = Store.state.quiz[q.id];
-        if (r) { seen += r.seen; ok += r.ok; }
-      });
-      var cov = Math.min(1, seen / Math.max(1, pool.length));
-      var rate = seen ? ok / seen : 0;
-      parts.push({ w: 1.2, v: cov * rate });
-      detail.push({
-        k: 'QCM', pct: Math.round(cov * rate * 100), w: 1.2,
-        hint: seen ? seen + ' réponses sur ' + pool.length + ' questions, ' + Math.round(rate * 100) + ' % de réussite'
-                   : pool.length + ' questions disponibles, aucune tentée',
-        act: 'qcm'
       });
     }
 
@@ -831,10 +820,6 @@
              : due ? 'Se faire interroger — ' + due + ' item' + (due > 1 ? 's' : '') + ' à revoir'
              : 'Se faire interroger — ' + mem.total + ' items, tous à jour',
         run: function () { recite(u); } });
-    }
-    if (l.cats && l.cats.length) {
-      acts.push({ id: 'qcm', label: 'Série de 15 QCM — ' + l.cats.join(', '),
-        run: function () { App.go('quiz', { cats: l.cats, n: 15 }); } });
     }
     var mid = linkedMods(u)[0];
     if (mid) {
@@ -1642,7 +1627,7 @@
                 el('div', { style: { fontSize: '17px', fontWeight: '650', color: masteryColor(m.pct) }, text: masteryLabel(m.pct) }),
                 el('div', { class: 'small muted', text: m.pct === null
                   ? 'Cette UE n’a pas d’équivalent dans l’application : cochez-la quand vous l’avez révisée.'
-                  : 'Calculée sur ce que vous tenez en mémoire, vos QCM et vos scores dans les modules liés.' })
+                  : 'Calculée sur ce que vous tenez en mémoire et vos scores dans les modules liés.' })
               ]),
               el('span', { class: 'spacer' }),
               (function () {
@@ -1780,8 +1765,6 @@
               .map(function (c) { return c.id; });
             var items = reciteItems(u).length;
             var cases = casList(u.code).length;
-            var qcmPool = (l.cats && l.cats.length)
-              ? (window.QUIZ || []).filter(function (q) { return l.cats.indexOf(q.cat) >= 0; }).length : 0;
             var det = {};
             (m.detail || []).forEach(function (d) { det[d.act] = d; });
             var steps = [];
@@ -1827,21 +1810,23 @@
                 run: function () { reciteMode(sem, u, dueItems ? { dueOnly: true, limit: 20 } : { limit: 20 }); }
               });
             }
-            if (qcmPool) steps.push({
-              ic: '❓', t: 'Répondre aux QCM de ses thèmes',
-              d: qcmPool + ' questions sur ' + l.cats.join(', ') + '.',
-              state: det.qcm ? UI.chip(det.qcm.pct + ' %', det.qcm.pct >= 70 ? 'green' : det.qcm.pct ? 'amber' : '') : null,
-              btn: 'Répondre', run: function () { App.go('quiz', { cats: l.cats, n: 15 }); }
-            });
             if (cases) steps.push({
               ic: '🩺', t: 'Traiter les cas d’application',
               d: cases + ' cas : énoncé, questions, puis le raisonnement attendu.',
               btn: 'S’entraîner', run: function () { casMode(sem.id, u.code, function () { ueSheet(sem, u); }); }
             });
-            if (qcmPool) steps.push({
-              ic: '⏱', t: 'Passer l’épreuve',
-              d: 'Un examen blanc chronométré, limité aux thèmes de cette UE.',
-              btn: 'Composer', run: function () { App.go('exam', { cats: l.cats, label: u.code + ' — ' + u.title }); }
+
+            /* Les cartes que l'étudiant a écrites pour CETTE UE dans Anki.
+               C'est son cours à lui : il passe devant le nôtre. On ne les
+               fait pas réviser ici — Anki s'en charge, mieux — on les rend
+               relisables à l'endroit où il travaille l'UE. */
+            var ankiUE = Cards.ankiDeUE(u.code);
+            if (ankiUE.length) steps.push({
+              ic: '⚡', t: 'Relire vos cartes Anki',
+              d: ankiUE.length + ' carte' + (ankiUE.length > 1 ? 's' : '') + ' que vous avez écrite' +
+                 (ankiUE.length > 1 ? 's' : '') + ' pour cette UE. La révision reste dans Anki.',
+              state: UI.chip(ankiUE.length + ' à vous', 'green'),
+              btn: 'Relire', run: function () { App.go('flashcards', { ue: u.code }); }
             });
             /* UE sans contenu dans l'application (anglais, UE libre) : le dire,
                plutôt que de laisser une fiche muette. */
@@ -2206,7 +2191,7 @@
           })(),
 
           g && g.chiffres ? (function () {
-            /* Ces mêmes chiffres existent déjà en fiches mémo (Cards.generated) :
+            /* Ces mêmes chiffres alimentent la récitation de l'UE :
                les réviser ici, c'est les faire entrer dans la répétition espacée. */
             var prefix = cardPrefix(sem, u);
             var ids = Cards.all().filter(function (c) { return c.id.indexOf(prefix) === 0; })
@@ -2651,8 +2636,8 @@
               ].filter(Boolean)),
               items,
               w.last ? el('div', { class: 'btn-row', style: { marginTop: '10px' } }, [
-                UI.btn('⏱ Examen blanc de révision', function () { App.go('exam'); }, 'primary'),
-                UI.btn('🗂 Réviser les fiches mémo', function () { App.go('flashcards'); })
+                UI.btn('🗂 Réviser les fiches mémo', function () { App.go('flashcards'); }, 'primary'),
+                UI.btn('✏️ Atelier de calcul', function () { App.go('atelier'); })
               ]) : null
             ].filter(Boolean)));
           });
@@ -2682,9 +2667,6 @@
           linkedMods(u).slice(0, 2).forEach(function (id) {
             mini.push(el('span', { class: 'chip', text: (M[id].icon || '') + ' ' + M[id].title, onClick: function (e) { e.stopPropagation(); App.go(id); } }));
           });
-          if (l.cats && l.cats.length) {
-            mini.push(el('span', { class: 'chip on', text: '❓ QCM', onClick: function (e) { e.stopPropagation(); App.go('quiz', { cats: l.cats, n: 15 }); } }));
-          }
           if (Store.ueNote(ueKey(sem, u))) {
             mini.push(el('span', { class: 'chip', text: '📝 mes notes', title: 'Vous avez pris des notes sur cette UE' }));
           }
@@ -2994,7 +2976,7 @@
                 /* ses propres notes se cherchent comme le reste : c'est
                    souvent par elles qu'on se souvient d'une UE */
                 Store.ueNote(ueKey(sem, u)),
-                (u.links && u.links.cats || []).join(' ')
+                ''
               ].join(' ').replace(/<[^>]+>/g, ' '))
             });
           });

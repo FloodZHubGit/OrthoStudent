@@ -63,6 +63,11 @@ async function main() {
     '     ue      : code d\'UE, tel qu\'employé par window.CURRICULUM',
     "     titre   : intitulé de l'UE dans l'emploi du temps",
     '     salle, site : localisation',
+    '   Et, seulement quand CELCAT les donne :',
+    "     aussi   : les autres UE de la séance, quand elle en couvre plusieurs",
+    "     note    : la remarque de l'enseignant (« Méthodologie de travail,",
+    "               1ère partie ») — ni un lieu ni une UE, longtemps versée",
+    '               dans « salle » faute de savoir quoi en faire',
     '   ============================================================ */',
     ''
   ].join('\n');

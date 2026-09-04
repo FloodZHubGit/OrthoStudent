@@ -56,10 +56,10 @@ const QUESTIONS = [
 
   // programme, examen, pièges
   ['ou', "l'astigmatisme c'est dans quelle UE ?"],
-  ['ou', 'où en suis-je sur UE9 ?'],
-  ['plan', "qu'est-ce qui tombe en UE3 ?"],
-  ['plan', 'comment répondre à la question classique de UE1'],
-  ['piege', 'les pièges de UE8'],
+  ['ou', 'où en suis-je sur UE09 ?'],
+  ['plan', "qu'est-ce qui tombe en UE03 ?"],
+  ['plan', 'comment répondre à la question classique de UE01'],
+  ['piege', 'les pièges de UE08'],
   ['piege', 'quelle erreur on fait sur le cover test'],
 
   // chiffres et calculs
@@ -70,13 +70,13 @@ const QUESTIONS = [
   ['calcul', 'transposition -2,50 -1,00 90'],
 
   // interrogation et conduite de la révision
-  ['interro', 'interroge-moi sur UE9'],
+  ['interro', 'interroge-moi sur UE09'],
   ['interro', 'teste moi sur les prismes'],
   ['faire', 'je fais quoi aujourd’hui ?'],
   ['faire', 'par où commencer ?'],
 
   // cas, conversation, et le cas honnête
-  ['cas', 'un cas clinique sur UE1'],
+  ['cas', 'un cas clinique sur UE01'],
   ['aide', 'que sais-tu faire ?'],
   ['bonjour', 'bonjour'],
   ['vide', 'quelle est la capitale de la mongolie'],
@@ -170,7 +170,7 @@ app.whenReady().then(async () => {
       ['un schéma', { q: 'montre moi le schéma de la rétine' }],
       ['une comparaison', { q: 'différence entre ésotropie et exotropie' }],
       ['un calcul', { q: '12 delta' }],
-      ['une interrogation', { q: 'interroge-moi sur UE9' }]
+      ['une interrogation', { q: 'interroge-moi sur UE09' }]
     ].forEach(function (cas) {
       try {
         var n = window.Modules.chat.render({ params: cas[1], go: function () {} });

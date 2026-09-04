@@ -69,7 +69,7 @@ const SANS_VOCABULAIRE = {
 };
 
 /* Les UE sans contenu disciplinaire propre n'ont pas de fiche à remplir. */
-const HORS = { UE6: 'anglais', 'UE libre': 'UE libre' };
+const HORS = { UE06: 'anglais', 'UE libre': 'UE libre' };
 
 /* Les seuils au-dessous desquels une rubrique est « maigre ». Ils viennent de
    ce que les fiches les mieux fournies contiennent déjà, pas d'une norme. */
