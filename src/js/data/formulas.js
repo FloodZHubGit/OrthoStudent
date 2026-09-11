@@ -11,6 +11,72 @@
    ============================================================ */
 window.FORMULAS = {
 
+  descartes: {
+    t: 'Lois de Descartes',
+    f: 'i′ = i₁ (réflexion) · n₁ sin i₁ = n₂ sin i₂ (réfraction)',
+    w: 'L’indice n d’un milieu est le rapport de la célérité de la lumière dans le vide à celle qu’elle y prend : ' +
+       'un milieu plus réfringent est un milieu où la lumière va plus lentement. Le rayon s’y casse comme un coureur ' +
+       'qui passe du bitume au sable — il pivote vers la <b>normale</b>. Les sinus, et non les angles, parce que c’est ' +
+       'le chemin optique qui est stationnaire, pas la trajectoire.',
+    r: 'Vers un milieu plus réfringent, on se rapproche de la normale ; vers un moins réfringent, on s’en éloigne. ' +
+       'Le rapport porte sur les <b>sinus</b> : confondre angle et sinus n’est acceptable qu’en deçà de quelques degrés.'
+  },
+
+  reflexion_totale: {
+    t: 'Angle limite et réflexion totale',
+    f: 'sin λ = n₂ / n₁, avec n₁ > n₂',
+    w: 'Quand on va vers un milieu moins réfringent, sin i₂ = (n₁/n₂) sin i₁ grandit plus vite que sin i₁. ' +
+       'À l’angle limite, i₂ atteint 90° : le rayon réfracté rase la surface. Au-delà, l’égalité de Descartes ' +
+       'n’a plus de solution — il n’existe aucun angle dont le sinus dépasse 1 — et toute l’énergie repart dans ' +
+       'le milieu de départ. Ce n’est pas une impasse de calcul, c’est le phénomène.',
+    r: 'Air/verre 1,5 → λ = 41,8° ; air/eau 1,33 → λ = 48,8°. Un prisme n’émerge que si A &lt; 2λ : attaqué sur son ' +
+       'angle droit, il réfléchit tout. C’est aussi ce qui guide la lumière dans une fibre optique.'
+  },
+
+  prisme_exact: {
+    t: 'Prisme — les formules exactes',
+    f: 'sin i = n sin r · n sin r′ = sin i′ · A = r + r′ · D = i + i′ − A',
+    w: 'Un prisme est un dioptre pris deux fois. Si les deux faces étaient parallèles, les deux réfractions ' +
+       's’annuleraient ; comme elles font un angle A, elles <b>s’ajoutent</b>. Le −A vient du triangle : sans lui ' +
+       'on compterait deux fois la géométrie du verre. Au minimum de déviation le trajet devient symétrique ' +
+       '(r = r′ = A/2), ce qui donne la mesure d’indice sin((Dm+A)/2) = n sin(A/2).',
+    r: 'Aux petits angles tout se réduit à <b>D = (n−1)A</b> — la seule forme utile en orthoptie, puisqu’un prisme ' +
+       'de correction travaille à incidence quasi nulle. Un prisme de 8° en verre n’est pas 8 Δ : il dévie de 4°, soit 7 Δ.'
+  },
+
+  dioptre_spherique: {
+    t: 'Dioptre sphérique',
+    f: 'n′/SA′ − n/SA = (n′−n)/SC · V = (n′−n)/SC · f + f′ = SC · f/f′ = −n/n′',
+    w: 'C’est la brique élémentaire de toute l’optique : une surface courbe entre deux indices. Une lentille en est ' +
+       'deux dos à dos, un œil quatre à la suite. Il faut <b>deux</b> choses pour dévier — un saut d’indice ET une ' +
+       'courbure : une lentille plongée dans un liquide de même indice devient invisible. Valable dans les conditions ' +
+       'de Gauss seulement : rayons proches de l’axe et peu inclinés.',
+    r: 'SC est une mesure <b>algébrique</b> depuis le sommet, négative si le centre est en amont. C’est la première ' +
+       'cause de vergence trouvée à l’envers. Vérifiez toujours f + f′ = SC : si ça tombe faux, c’est un signe, pas un calcul.'
+  },
+
+  miroir_spherique: {
+    t: 'Miroir sphérique',
+    f: 'SF = SC/2 · 2/SC = 1/SA + 1/SA′ · γ = −SA′/SA',
+    w: 'Un miroir est un dioptre où la lumière fait demi-tour au lieu de traverser : mêmes constructions, mêmes foyers, ' +
+       'seul le sens du retour change. Le foyer est au <b>milieu</b> du rayon, et non au centre — c’est la seule chose ' +
+       'à retenir pour ne jamais se tromper de moitié. Trois rayons suffisent : celui par C n’est pas dévié, celui qui ' +
+       'arrive parallèle repart par F, celui qui passe par F repart parallèle.',
+    r: 'Concave, objet en deçà du foyer → image virtuelle, droite, agrandie : le miroir de dentiste. Convexe → toujours ' +
+       'virtuelle, droite, rétrécie, quelle que soit la distance : le miroir de sortie de parking. Son centre est ' +
+       '<b>derrière</b> le miroir, donc SC &gt; 0.'
+  },
+
+  lentille_mince: {
+    t: 'Lentille mince — conjugaison',
+    f: '1/OA′ − 1/OA = 1/f′ · C = 1/f′ (en m⁻¹) · γ = OA′/OA',
+    w: 'La relation de conjugaison ne combine pas les distances mais leurs <b>inverses</b> — c’est toute la raison ' +
+       'd’être de la dioptrie. L’origine est au centre optique O, et les mesures sont algébriques : un objet réel est ' +
+       'en amont, donc OA &lt; 0, ce qui transforme la soustraction en addition d’un terme négatif.',
+    r: 'Objet au-delà du foyer → image réelle et renversée (l’œil, sur la rétine). En deçà → virtuelle, droite, ' +
+       'agrandie (la loupe, le verre de lecture). Au foyer → à l’infini. Les distances ne s’<b>ajoutent</b> jamais.'
+  },
+
   logmar: {
     t: 'Acuité décimale → logMAR',
     f: 'logMAR = −log₁₀(acuité décimale)',

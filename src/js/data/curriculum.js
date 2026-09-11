@@ -17,7 +17,7 @@ window.CURRICULUM = [
       { code: 'UE01', title: 'Biologie moléculaire et cellulaire, génétique, histologie', h: 50, cm: 40, td: 10, tp: 0, ects: 3,
         links: { chap: ['anatomie'] } },
       { code: 'UE02', title: 'Optique géométrique, optique physiologique', h: 50, cm: 30, td: 20, tp: 0, ects: 3,
-        links: { formulas: ['vergence', 'prisme', 'prentice', 'transposition', 'equivalent', 'vertex'], mod: ['converters'], calc: ['vergence', 'transpose', 'vertex'], chap: ['refraction'] } },
+        links: { formulas: ['descartes', 'reflexion_totale', 'prisme_exact', 'dioptre_spherique', 'miroir_spherique', 'lentille_mince', 'vergence', 'prisme', 'prentice', 'transposition', 'equivalent', 'vertex'], mod: ['converters'], calc: ['vergence', 'transpose', 'vertex'], chap: ['refraction'] } },
       { code: 'UE03', title: 'Réfraction', h: 70, cm: 30, td: 40, tp: 0, ects: 4,
         links: { formulas: ['skiascopie', 'transposition', 'equivalent', 'addition', 'vertex'], mod: ['reading'], calc: ['transpose', 'accom', 'vertex'], chap: ['refraction'] } },
       { code: 'UE04', title: 'Physiologie du système visuel, physiologie neurosensorielle', h: 50, cm: 40, td: 10, tp: 0, ects: 3,

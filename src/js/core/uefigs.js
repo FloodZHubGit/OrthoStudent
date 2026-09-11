@@ -4020,7 +4020,562 @@
     return svg(640, 368, 'OCT maculaire et OCT du nerf optique', kids);
   }
 
+  /* ============================================================
+     Optique géométrique — les cinq schémas du cours de M. Bouloy
+     ------------------------------------------------------------
+     Ces cinq-là ne racontent pas l'œil : ils racontent la LUMIÈRE,
+     et c'est le programme du cours d'UE02. On y retrouve les
+     quatre objets que l'optique géométrique manipule — un dioptre
+     plan (Descartes), un prisme, un miroir, un dioptre sphérique,
+     une lentille — et rien d'autre, puisque tout le reste s'en
+     déduit.
+
+     Ils sont VIVANTS parce que ces lois ne se retiennent pas en
+     les lisant. Personne ne retient « sin λ = n₂/n₁ » ; tout le
+     monde retient le moment où, en poussant l'angle, le rayon
+     réfracté disparaît d'un coup.
+
+     Conventions du cours, tenues partout ici : la lumière va de
+     la GAUCHE vers la DROITE, l'origine est au sommet S (ou au
+     centre optique O), et les mesures sont ALGÉBRIQUES — un objet
+     réel est à gauche, donc son abscisse est négative. C'est la
+     source d'erreur numéro un, et la seule façon de ne pas s'y
+     perdre est de ne jamais changer de convention en route.
+     ============================================================ */
+
+  var RAD = Math.PI / 180;
+  function dec1(x) { return (Math.round(x * 10) / 10).toFixed(1).replace('.', ','); }
+  function dec2(x) { return (Math.round(x * 100) / 100).toFixed(2).replace('.', ','); }
+
+  /* Un axe optique avec son sommet : le décor commun à trois figures. */
+  function axeOptique(x1, x2, y, kids) {
+    kids.push(ligne(x1, y, x2, y, { c: 'var(--line-hard)', dash: '4 4', w: 1 }));
+  }
+
+  /* ------------------------------------------------------------
+     1 · Descartes, et le moment où le rayon disparaît
+     ------------------------------------------------------------ */
+  function descartes(p) {
+    var kids = [];
+    var W = 640, H = 300, xi = 300, yi = 150, R = 128;
+    var n1 = p.n1, n2 = p.n2, i1 = p.i1;
+
+    /* les deux milieux */
+    kids.push(S('rect', { x: 0, y: 0, width: W, height: yi,
+      fill: 'color-mix(in srgb, var(--blue) 7%, transparent)' }));
+    kids.push(S('rect', { x: 0, y: yi, width: W, height: H - yi,
+      fill: 'color-mix(in srgb, var(--violet) 12%, transparent)' }));
+    kids.push(ligne(0, yi, W, yi, { c: 'var(--txt-2)', w: 1.6 }));
+    kids.push(txt(14, 24, 'milieu 1 · n₁ = ' + dec2(n1), { size: 12, bold: true, fill: 'var(--blue)' }));
+    kids.push(txt(14, H - 12, 'milieu 2 · n₂ = ' + dec2(n2), { size: 12, bold: true, fill: 'var(--violet)' }));
+
+    /* la normale */
+    kids.push(ligne(xi, 18, xi, H - 18, { c: 'var(--txt-3)', dash: '5 5', w: 1 }));
+    kids.push(txt(xi + 6, 28, 'normale', { size: 10, fill: 'var(--txt-3)' }));
+
+    /* le rayon incident, tracé depuis le point d'incidence vers la gauche */
+    var a = i1 * RAD;
+    kids.push(ligne(xi - R * Math.sin(a), yi - R * Math.cos(a), xi, yi,
+      { c: 'var(--blue)', w: 2, arrow: true }));
+    kids.push(txt(xi - R * Math.sin(a) - 6, yi - R * Math.cos(a) - 6, 'incident',
+      { size: 11, bold: true, anchor: 'end', fill: 'var(--blue)' }));
+
+    /* le réfléchi existe toujours */
+    kids.push(ligne(xi, yi, xi + R * Math.sin(a), yi - R * Math.cos(a),
+      { c: 'var(--txt-3)', w: 1.4, dash: '4 3', arrow: true }));
+    kids.push(txt(xi + R * Math.sin(a) + 6, yi - R * Math.cos(a) - 6, 'réfléchi (i′ = i₁)',
+      { size: 10, fill: 'var(--txt-3)' }));
+
+    /* le réfracté, s'il existe */
+    var s2 = n1 * Math.sin(a) / n2;
+    var totale = Math.abs(s2) > 1;
+    if (!totale) {
+      var i2 = Math.asin(s2);
+      kids.push(ligne(xi, yi, xi + R * Math.sin(i2), yi + R * Math.cos(i2),
+        { c: 'var(--green)', w: 2, arrow: true }));
+      kids.push(txt(xi + R * Math.sin(i2) + 6, yi + R * Math.cos(i2) + 4,
+        'réfracté · i₂ = ' + dec1(i2 / RAD) + '°',
+        { size: 11, bold: true, fill: 'var(--green)' }));
+    } else {
+      kids.push(S('rect', { x: xi - 118, y: yi + 26, width: 236, height: 34, rx: 8,
+        fill: 'color-mix(in srgb, var(--red) 14%, transparent)',
+        stroke: 'var(--red)', 'stroke-width': 1.2 }));
+      kids.push(txt(xi, yi + 48, 'RÉFLEXION TOTALE — plus aucun rayon transmis',
+        { anchor: 'middle', size: 11.5, bold: true, fill: 'var(--red)' }));
+    }
+
+    /* l'angle limite, quand il existe */
+    if (n1 > n2) {
+      var lim = Math.asin(n2 / n1) / RAD;
+      kids.push(ligne(xi - R * Math.sin(lim * RAD), yi - R * Math.cos(lim * RAD), xi, yi,
+        { c: 'var(--amber)', w: 1.2, dash: '3 3' }));
+      kids.push(txt(20, yi - 14, 'angle limite λ = ' + dec1(lim) + '°',
+        { size: 11, bold: true, fill: 'var(--amber)' }));
+    }
+
+    kids.push(txt(xi - 10, yi - 22, 'i₁ = ' + dec1(i1) + '°',
+      { anchor: 'end', size: 12, bold: true, fill: 'var(--blue)' }));
+    return svg(W, H, 'Réfraction selon Descartes, jusqu’à la réflexion totale', kids);
+  }
+
+  /* ------------------------------------------------------------
+     2 · Le prisme, du calcul exact à la dioptrie prismatique
+     ------------------------------------------------------------ */
+  function prismeGeo(p) {
+    var kids = [];
+    var W = 640, H = 300;
+    var A = p.A, n = p.n, i = p.i;
+
+    /* le triangle, arête en haut */
+    var ax = 300, ay = 44, demi = 96 * Math.tan(A / 2 * RAD), by = 214;
+    demi = Math.max(18, Math.min(120, demi));
+    kids.push(S('path', {
+      d: 'M ' + ax + ' ' + ay + ' L ' + (ax + demi) + ' ' + by + ' L ' + (ax - demi) + ' ' + by + ' Z',
+      fill: 'color-mix(in srgb, var(--accent) 12%, transparent)',
+      stroke: 'var(--accent)', 'stroke-width': 1.6
+    }));
+    kids.push(txt(ax, ay - 10, 'A = ' + dec1(A) + '°',
+      { anchor: 'middle', size: 12, bold: true, fill: 'var(--accent)' }));
+    kids.push(txt(ax, by + 18, 'base', { anchor: 'middle', size: 10, fill: 'var(--accent)' }));
+
+    /* le calcul du cours : sin i = n sin r · A = r + r′ · n sin r′ = sin i′ */
+    var r = Math.asin(Math.min(1, Math.sin(i * RAD) / n)) / RAD;
+    var rp = A - r;
+    var sortie = n * Math.sin(rp * RAD);
+    var emerge = Math.abs(sortie) <= 1;
+    var ip = emerge ? Math.asin(sortie) / RAD : null;
+    var D = emerge ? i + ip - A : null;
+
+    /* le trajet, simplifié : entrée à gauche, sortie à droite */
+    var xe = ax - demi * 0.45, ye = (ay + by) / 2;
+    var xs = ax + demi * 0.45;
+    kids.push(ligne(60, ye - 30, xe, ye, { c: 'var(--blue)', w: 2, arrow: true }));
+    kids.push(ligne(xe, ye, xs, ye + (r - rp) * 0.9, { c: 'var(--blue)', w: 2 }));
+    if (emerge) {
+      var chute = D * 2.6;
+      kids.push(ligne(xs, ye + (r - rp) * 0.9, 590, ye + (r - rp) * 0.9 + chute,
+        { c: 'var(--green)', w: 2, arrow: true }));
+      kids.push(txt(586, Math.min(H - 8, ye + (r - rp) * 0.9 + chute + 16),
+        'D = ' + dec1(D) + '°', { anchor: 'end', size: 12, bold: true, fill: 'var(--green)' }));
+    } else {
+      kids.push(txt(ax + demi + 12, ye, 'réflexion totale sur la face de sortie',
+        { size: 11, bold: true, fill: 'var(--red)' }));
+    }
+
+    /* le tableau des angles */
+    var lignes = [
+      ['i', dec1(i) + '°'], ['r', dec1(r) + '°'],
+      ['r′ = A − r', dec1(rp) + '°'],
+      ['i′', emerge ? dec1(ip) + '°' : '—'],
+      ['D = i + i′ − A', emerge ? dec1(D) + '°' : '—']
+    ];
+    kids.push(S('rect', { x: 24, y: 210, width: 190, height: 78, rx: 8,
+      fill: 'var(--surface-2)', stroke: 'var(--line)', 'stroke-width': 1 }));
+    lignes.forEach(function (l, k) {
+      var y = 226 + k * 14;
+      kids.push(txt(34, y, l[0], { size: 10, fill: 'var(--txt-2)' }));
+      kids.push(txt(204, y, l[1], { size: 10, bold: true, anchor: 'end', fill: 'var(--txt)' }));
+    });
+
+    /* le petit-angle, celui de l'orthoptiste */
+    var Dp = (n - 1) * A;
+    kids.push(S('rect', { x: 404, y: 216, width: 212, height: 62, rx: 8,
+      fill: 'color-mix(in srgb, var(--violet) 12%, transparent)',
+      stroke: 'var(--violet)', 'stroke-width': 1.2 }));
+    kids.push(txt(510, 234, 'petits angles : D = (n−1)A',
+      { anchor: 'middle', size: 11, bold: true, fill: 'var(--violet)' }));
+    kids.push(txt(510, 250, '= ' + dec1(Dp) + '°, soit ' + dec1(100 * Math.tan(Dp * RAD)) + ' Δ',
+      { anchor: 'middle', size: 11.5, bold: true, fill: 'var(--violet)' }));
+    kids.push(txt(510, 266, 'c’est la formule des barres de prismes',
+      { anchor: 'middle', size: 9.5, fill: 'var(--txt-3)' }));
+
+    return svg(W, H, 'Le prisme : angles, déviation, et la formule des petits angles', kids);
+  }
+
+  /* ------------------------------------------------------------
+     3 · Le miroir sphérique
+     ------------------------------------------------------------ */
+  function miroirSpherique(p) {
+    var kids = [];
+    var W = 640, H = 280, S0 = 470, y0 = 150, ech = 3.2;
+    var concave = p.type === 'concave';
+    var R = p.R;                       /* rayon, en cm, toujours positif */
+    var SC = concave ? -R : R;         /* le centre est à gauche si concave */
+    var f = SC / 2;
+    var SA = -p.d;                     /* objet réel : à gauche, donc négatif */
+    var inv = 2 / SC - 1 / SA;
+    var SAp = Math.abs(inv) < 1e-6 ? null : 1 / inv;
+    var g = SAp === null ? null : -SAp / SA;
+
+    axeOptique(30, W - 20, y0, kids);
+    /* le miroir, arc de cercle */
+    var sens = concave ? 1 : -1;
+    kids.push(S('path', {
+      d: 'M ' + S0 + ' ' + (y0 - 78) + ' Q ' + (S0 - sens * 34) + ' ' + y0 + ' ' + S0 + ' ' + (y0 + 78),
+      fill: 'none', stroke: 'var(--accent)', 'stroke-width': 2.6
+    }));
+    kids.push(txt(S0 + 8, y0 + 16, 'S', { size: 12, bold: true, fill: 'var(--accent)' }));
+
+    function pose(x, lab, col) {
+      kids.push(S('circle', { cx: x, cy: y0, r: 3, fill: col }));
+      kids.push(txt(x, y0 + 18, lab, { anchor: 'middle', size: 11, bold: true, fill: col }));
+    }
+    pose(S0 + SC * ech, 'C', 'var(--txt-3)');
+    pose(S0 + f * ech, 'F', 'var(--amber)');
+
+    /* l'objet */
+    var xa = S0 + SA * ech, hb = 40;
+    kids.push(ligne(xa, y0, xa, y0 - hb, { c: 'var(--blue)', w: 2.4, arrow: true }));
+    kids.push(txt(xa, y0 + 18, 'A', { anchor: 'middle', size: 11, bold: true, fill: 'var(--blue)' }));
+    kids.push(txt(xa - 4, y0 - hb - 6, 'B', { anchor: 'end', size: 11, bold: true, fill: 'var(--blue)' }));
+
+    /* les deux rayons de construction */
+    kids.push(ligne(xa, y0 - hb, S0, y0 - hb, { c: 'var(--blue)', w: 1.3 }));
+    if (SAp !== null && g !== null) {
+      var xap = S0 + SAp * ech, hbp = -g * hb;
+      var reel = SAp < 0;
+      kids.push(ligne(S0, y0 - hb, xap, y0 - hbp,
+        { c: 'var(--blue)', w: 1.3, dash: reel ? null : '4 3' }));
+      kids.push(ligne(xa, y0 - hb, xap, y0 - hbp,
+        { c: 'var(--txt-3)', w: 1, dash: '3 3' }));
+      kids.push(ligne(xap, y0, xap, y0 - hbp,
+        { c: reel ? 'var(--green)' : 'var(--violet)', w: 2.4, arrow: true }));
+      kids.push(txt(xap, y0 + (hbp > 0 ? 18 : -8), 'A′',
+        { anchor: 'middle', size: 11, bold: true, fill: reel ? 'var(--green)' : 'var(--violet)' }));
+    }
+
+    kids.push(S('rect', { x: 24, y: 210, width: 300, height: 56, rx: 8,
+      fill: 'var(--surface-2)', stroke: 'var(--line)' }));
+    kids.push(txt(36, 228, 'miroir ' + (concave ? 'concave' : 'convexe') +
+      ' · R = ' + R + ' cm · f = SF = ' + dec1(f) + ' cm',
+      { size: 11, fill: 'var(--txt-2)' }));
+    kids.push(txt(36, 244, '2/SC = 1/SA + 1/SA′', { size: 11, bold: true, fill: 'var(--txt)' }));
+    kids.push(txt(36, 259, SAp === null ? 'image à l’infini'
+      : 'SA′ = ' + dec1(SAp) + ' cm · γ = ' + dec2(g) +
+        ' · image ' + (SAp < 0 ? 'réelle' : 'virtuelle') + ', ' +
+        (g < 0 ? 'renversée' : 'droite'),
+      { size: 11, fill: 'var(--txt-2)' }));
+
+    return svg(W, H, 'Miroir sphérique : construction et relation de conjugaison', kids);
+  }
+
+  /* ------------------------------------------------------------
+     4 · Le dioptre sphérique — ce dont l'œil est fait
+     ------------------------------------------------------------ */
+  function dioptreSpherique(p) {
+    var kids = [];
+    var W = 640, H = 280, S0 = 300, y0 = 148, ech = 1.7;
+    var n = p.n, np = p.np;
+    /* Un curseur ne peut pas sauter le zéro, et un rayon nul n’existe pas :
+       on donne donc le sens à part, ce qui reprend le vocabulaire du cours. */
+    var R = p.sens === 'concave' ? -p.Rm : p.Rm;
+    var SA = -p.d;
+    /* relation du cours : n′/SA′ − n/SA = (n′ − n)/SC */
+    var inv = (np - n) / R + n / SA;
+    var SAp = Math.abs(inv) < 1e-9 ? null : np / inv;
+    var g = SAp === null ? null : (n * SAp) / (np * SA);
+    /* Sans saut d’indice il n’y a pas de dioptre : les foyers partent à
+       l’infini et la vergence est nulle. Afficher « f′ = Infinity » serait
+       plus faux qu’utile — on dit simplement qu’il ne se passe rien. */
+    var neutre = Math.abs(np - n) < 1e-9;
+    var fp = neutre ? null : np * R / (np - n);
+    var fo = neutre ? null : -n * R / (np - n);
+    var V = neutre ? 0 : (np - n) / (R / 100);   /* R en cm → dioptries */
+
+    kids.push(S('rect', { x: 0, y: 0, width: S0, height: H,
+      fill: 'color-mix(in srgb, var(--blue) 6%, transparent)' }));
+    kids.push(S('rect', { x: S0, y: 0, width: W - S0, height: H,
+      fill: 'color-mix(in srgb, var(--violet) 8%, transparent)' }));
+    axeOptique(20, W - 20, y0, kids);
+
+    /* le dioptre : un arc dont la concavité suit le signe de R */
+    var sens = R > 0 ? -1 : 1;
+    kids.push(S('path', {
+      d: 'M ' + S0 + ' ' + (y0 - 82) + ' Q ' + (S0 + sens * 30) + ' ' + y0 + ' ' + S0 + ' ' + (y0 + 82),
+      fill: 'none', stroke: 'var(--accent)', 'stroke-width': 2.6
+    }));
+    kids.push(txt(S0 - 6, y0 + 100, 'n = ' + dec2(n), { anchor: 'end', size: 11.5, bold: true, fill: 'var(--blue)' }));
+    kids.push(txt(S0 + 6, y0 + 100, 'n′ = ' + dec2(np), { size: 11.5, bold: true, fill: 'var(--violet)' }));
+    kids.push(txt(S0 + 6, y0 + 16, 'S', { size: 12, bold: true, fill: 'var(--accent)' }));
+
+    function pose(v, lab, col) {
+      var x = S0 + v * ech;
+      if (x < 16 || x > W - 16) return;
+      kids.push(S('circle', { cx: x, cy: y0, r: 3, fill: col }));
+      kids.push(txt(x, y0 - 10, lab, { anchor: 'middle', size: 10.5, bold: true, fill: col }));
+    }
+    pose(R, 'C', 'var(--txt-3)');
+    if (!neutre) { pose(fp, 'F′', 'var(--amber)'); pose(fo, 'F', 'var(--amber)'); }
+
+    var xa = S0 + SA * ech, hb = 34;
+    if (xa > 16) {
+      kids.push(ligne(xa, y0, xa, y0 - hb, { c: 'var(--blue)', w: 2.4, arrow: true }));
+      kids.push(txt(xa, y0 + 18, 'A', { anchor: 'middle', size: 11, bold: true, fill: 'var(--blue)' }));
+    }
+    if (SAp !== null && g !== null) {
+      var xap = S0 + SAp * ech;
+      if (xap > 16 && xap < W - 16) {
+        var reel = SAp > 0;
+        kids.push(ligne(xap, y0, xap, y0 - g * hb,
+          { c: reel ? 'var(--green)' : 'var(--violet)', w: 2.4, arrow: true }));
+        kids.push(txt(xap, y0 + (g > 0 ? 18 : -8), 'A′',
+          { anchor: 'middle', size: 11, bold: true, fill: reel ? 'var(--green)' : 'var(--violet)' }));
+      }
+    }
+
+    kids.push(S('rect', { x: 24, y: 208, width: 328, height: 58, rx: 8,
+      fill: 'var(--surface-2)', stroke: 'var(--line)' }));
+    kids.push(txt(36, 226, 'n′/SA′ − n/SA = (n′−n)/SC',
+      { size: 11, bold: true, fill: 'var(--txt)' }));
+    kids.push(txt(36, 242, neutre ? 'n = n′ : aucun dioptre, la lumière passe tout droit'
+      : 'SC = ' + dec1(R) + ' cm · f′ = ' + dec1(fp) + ' cm · f = ' + dec1(fo) + ' cm',
+      { size: 10.5, fill: 'var(--txt-2)' }));
+    kids.push(txt(36, 257, neutre ? 'V = 0 D' : 'V = ' + dec2(V) + ' D · dioptre ' +
+      (V > 0 ? 'convergent' : 'divergent') +
+      (SAp === null ? '' : ' · γ = ' + dec2(g)), { size: 10.5, fill: 'var(--txt-2)' }));
+
+    return svg(W, H, 'Dioptre sphérique : foyers, vergence et conjugaison', kids);
+  }
+
+  /* ------------------------------------------------------------
+     5 · La lentille mince
+     ------------------------------------------------------------ */
+  function lentilleMince(p) {
+    var kids = [];
+    var W = 640, H = 280, O = 320, y0 = 148, ech = 3.4;
+    /* même raison : le signe vient du type, la valeur du curseur */
+    var fp = p.type === 'divergente' ? -p.fm : p.fm;
+    var OA = -p.d;
+    var inv = 1 / fp + 1 / OA;
+    var OAp = Math.abs(inv) < 1e-9 ? null : 1 / inv;
+    var g = OAp === null ? null : OAp / OA;
+    var conv = fp > 0;
+
+    axeOptique(20, W - 20, y0, kids);
+    /* la lentille : deux pointes vers l'extérieur si convergente */
+    var h = 74;
+    kids.push(ligne(O, y0 - h, O, y0 + h, { c: 'var(--accent)', w: 2.6 }));
+    /* Les pointes s’ouvrent vers l’EXTÉRIEUR pour une convergente, vers
+       l’intérieur pour une divergente : c’est la convention, et une lentille
+       dessinée à l’envers apprend le contraire de ce qu’on veut. */
+    [[-1, y0 - h], [1, y0 + h]].forEach(function (t) {
+      var dy = (conv ? -1 : 1) * t[0] * 9;
+      kids.push(S('path', {
+        d: 'M ' + (O - 9) + ' ' + (t[1] + dy) + ' L ' + O + ' ' + t[1] +
+           ' L ' + (O + 9) + ' ' + (t[1] + dy),
+        fill: 'none', stroke: 'var(--accent)', 'stroke-width': 2.2
+      }));
+    });
+    kids.push(txt(O + 8, y0 + 16, 'O', { size: 12, bold: true, fill: 'var(--accent)' }));
+
+    function pose(v, lab) {
+      var x = O + v * ech;
+      if (x < 16 || x > W - 16) return;
+      kids.push(S('circle', { cx: x, cy: y0, r: 3, fill: 'var(--amber)' }));
+      kids.push(txt(x, y0 - 10, lab, { anchor: 'middle', size: 10.5, bold: true, fill: 'var(--amber)' }));
+    }
+    pose(fp, 'F′');
+    pose(-fp, 'F');
+
+    var xa = O + OA * ech, hb = 38;
+    kids.push(ligne(xa, y0, xa, y0 - hb, { c: 'var(--blue)', w: 2.4, arrow: true }));
+    kids.push(txt(xa, y0 + 18, 'A', { anchor: 'middle', size: 11, bold: true, fill: 'var(--blue)' }));
+    kids.push(txt(xa - 4, y0 - hb - 6, 'B', { anchor: 'end', size: 11, bold: true, fill: 'var(--blue)' }));
+
+    /* les trois rayons du cours */
+    kids.push(ligne(xa, y0 - hb, O, y0 - hb, { c: 'var(--blue)', w: 1.3 }));
+    if (OAp !== null && g !== null) {
+      var xap = O + OAp * ech, hbp = g * hb;
+      var reel = OAp > 0;
+      kids.push(ligne(O, y0 - hb, xap, y0 - hbp,
+        { c: 'var(--blue)', w: 1.3, dash: reel ? null : '4 3' }));
+      /* le rayon par le centre optique, qui ne dévie pas */
+      kids.push(ligne(xa, y0 - hb, xap, y0 - hbp, { c: 'var(--txt-3)', w: 1, dash: '3 3' }));
+      if (xap > 16 && xap < W - 16) {
+        kids.push(ligne(xap, y0, xap, y0 - hbp,
+          { c: reel ? 'var(--green)' : 'var(--violet)', w: 2.4, arrow: true }));
+        kids.push(txt(xap, y0 + (hbp > 0 ? -8 : 18), 'A′',
+          { anchor: 'middle', size: 11, bold: true, fill: reel ? 'var(--green)' : 'var(--violet)' }));
+      }
+    }
+
+    kids.push(S('rect', { x: 24, y: 208, width: 306, height: 58, rx: 8,
+      fill: 'var(--surface-2)', stroke: 'var(--line)' }));
+    kids.push(txt(36, 226, '1/OA′ − 1/OA = 1/f′   ·   γ = OA′/OA',
+      { size: 11, bold: true, fill: 'var(--txt)' }));
+    kids.push(txt(36, 242, 'f′ = ' + dec1(fp) + ' cm · C = ' + dec2(100 / fp) +
+      ' D · lentille ' + (conv ? 'convergente' : 'divergente'),
+      { size: 10.5, fill: 'var(--txt-2)' }));
+    kids.push(txt(36, 257, OAp === null ? 'objet au foyer : image à l’infini'
+      : 'OA′ = ' + dec1(OAp) + ' cm · γ = ' + dec2(g) + ' · image ' +
+        (OAp > 0 ? 'réelle' : 'virtuelle') + ', ' + (g < 0 ? 'renversée' : 'droite'),
+      { size: 10.5, fill: 'var(--txt-2)' }));
+
+    return svg(W, H, 'Lentille mince : les trois rayons et la relation de Descartes', kids);
+  }
+
   var FIGS = {
+    descartes: {
+      f: descartes, t: 'Poussez l’angle : le rayon réfracté finit par disparaître',
+      reglages: [
+        { id: 'i1', label: 'Angle d’incidence', min: 0, max: 88, pas: 1, val: 35, unite: '°' },
+        { id: 'n1', label: 'Indice du milieu 1', min: 1, max: 1.8, pas: 0.05, val: 1.5 },
+        { id: 'n2', label: 'Indice du milieu 2', min: 1, max: 1.9, pas: 0.05, val: 1 }
+      ],
+      lire: function (p) {
+        var s2 = p.n1 * Math.sin(p.i1 * RAD) / p.n2;
+        var sens = p.n1 < p.n2 ? 'se rapproche de' : p.n1 > p.n2 ? 's’éloigne de' : 'suit';
+        if (Math.abs(s2) > 1) {
+          return 'Au-delà de l’angle limite λ = ' + dec1(Math.asin(p.n2 / p.n1) / RAD) + '°, ' +
+            'n₁ sin i₁ dépasse n₂ : il n’existe plus d’angle dont le sinus vaille cela, donc plus ' +
+            'aucun rayon transmis. Toute l’énergie repart dans le milieu 1 — c’est la réflexion ' +
+            'totale, celle qui fait marcher les fibres optiques, et celle qui empêche un prisme ' +
+            'trop ouvert de laisser sortir la lumière.';
+        }
+        var i2 = Math.asin(s2) / RAD;
+        return 'n₁ sin i₁ = n₂ sin i₂ : ' + dec2(p.n1) + ' × sin ' + dec1(p.i1) + '° = ' +
+          dec2(p.n2) + ' × sin ' + dec1(i2) + '°. Le rayon réfracté ' + sens + ' la normale, ' +
+          'parce qu’il ' + (p.n1 < p.n2 ? 'entre dans un milieu plus réfringent, où il va moins vite'
+            : p.n1 > p.n2 ? 'sort vers un milieu moins réfringent, où il va plus vite'
+            : 'ne change pas de milieu') + '.' +
+          (p.n1 > p.n2 ? ' L’angle limite est ici à ' + dec1(Math.asin(p.n2 / p.n1) / RAD) +
+            '° : au-delà, plus rien ne passe.' : '');
+      }
+    },
+    prismeGeo: {
+      f: prismeGeo, t: 'Les formules du prisme, et pourquoi l’orthoptiste n’en garde qu’une',
+      reglages: [
+        /* borne basse à 1° : c’est le régime des prismes de correction,
+           où D = (n−1)A devient la seule formule utile */
+        { id: 'A', label: 'Angle au sommet A', min: 1, max: 75, pas: 1, val: 30, unite: '°' },
+        { id: 'n', label: 'Indice du prisme', min: 1.3, max: 1.9, pas: 0.05, val: 1.5 },
+        { id: 'i', label: 'Incidence i', min: 0, max: 85, pas: 1, val: 45, unite: '°' }
+      ],
+      lire: function (p) {
+        var r = Math.asin(Math.min(1, Math.sin(p.i * RAD) / p.n)) / RAD;
+        var rp = p.A - r;
+        var s = p.n * Math.sin(rp * RAD);
+        var lim = Math.asin(1 / p.n) / RAD;
+        var Dp = (p.n - 1) * p.A;
+        if (Math.abs(s) > 1) {
+          return 'Sur la face de sortie, r′ = A − r = ' + dec1(rp) + '° dépasse l’angle limite ' +
+            dec1(lim) + '° : réflexion totale, rien ne sort. C’est la condition d’émergence du ' +
+            'cours — il faut A < 2λ, soit ici A < ' + dec1(2 * lim) + '°. Un prisme attaqué sur ' +
+            'son angle droit ne laisse jamais passer la lumière.';
+        }
+        var D = p.i + Math.asin(s) / RAD - p.A;
+        return 'A = r + r′ et D = i + i′ − A : la déviation vaut ' + dec1(D) + '°. Aux petits ' +
+          'angles, les sinus se confondent avec les angles et tout se simplifie en D = (n−1)A = ' +
+          dec1(Dp) + '°, soit ' + dec1(100 * Math.tan(Dp * RAD)) + ' Δ. C’est cette formule-là, et ' +
+          'elle seule, qui sert en orthoptie : un prisme de correction travaille à incidence quasi ' +
+          'nulle, et une barre de prismes est graduée en dioptries prismatiques — 1, 2, 4, 6… 40 Δ. ' +
+          'Le rayon part vers la base, l’image vers l’arête, l’œil tourne vers l’arête.';
+      }
+    },
+    miroirSpherique: {
+      f: miroirSpherique, t: 'Déplacez l’objet : l’image bascule de réelle à virtuelle',
+      reglages: [
+        { id: 'type', label: 'Miroir', val: 'concave', options: [
+          { id: 'concave', label: 'Concave (C dans l’espace réel)' },
+          { id: 'convexe', label: 'Convexe (C dans l’espace virtuel)' }
+        ] },
+        { id: 'R', label: 'Rayon R', min: 20, max: 110, pas: 5, val: 60, unite: ' cm' },
+        { id: 'd', label: 'Objet à', min: 5, max: 140, pas: 5, val: 90, unite: ' cm' }
+      ],
+      lire: function (p) {
+        var SC = p.type === 'concave' ? -p.R : p.R;
+        var f = SC / 2, SA = -p.d;
+        var inv = 2 / SC - 1 / SA;
+        if (Math.abs(inv) < 1e-6) {
+          return 'L’objet est au foyer : les rayons ressortent parallèles et l’image part à ' +
+            'l’infini. C’est le principe du réflecteur de phare, pris à l’envers.';
+        }
+        var SAp = 1 / inv, g = -SAp / SA;
+        if (p.type === 'convexe') {
+          return 'Le foyer d’un miroir convexe est dans l’espace virtuel : SF = R/2 = ' + dec1(f) +
+            ' cm. Quelle que soit la position de l’objet, l’image reste virtuelle, droite et ' +
+            'rétrécie — ici γ = ' + dec2(g) + '. C’est le miroir des sorties de parking : on voit ' +
+            'large, mais tout paraît loin.';
+        }
+        return '2/SC = 1/SA + 1/SA′ donne SA′ = ' + dec1(SAp) + ' cm : image ' +
+          (SAp < 0 ? 'RÉELLE' : 'VIRTUELLE') + ' et ' + (g < 0 ? 'renversée' : 'droite') +
+          ', de taille ' + dec2(Math.abs(g)) + ' fois l’objet. ' +
+          (SAp < 0 ? 'Elle se forme devant le miroir : on peut la recueillir sur un écran.'
+                   : 'Elle se forme derrière le miroir — objet plus près que le foyer, image ' +
+                     'droite et agrandie : c’est exactement le miroir de dentiste.');
+      }
+    },
+    dioptreSpherique: {
+      f: dioptreSpherique, t: 'Un seul dioptre — et l’œil n’en est qu’une suite',
+      reglages: [
+        { id: 'n', label: 'Indice objet n', min: 1, max: 1.9, pas: 0.05, val: 1 },
+        { id: 'np', label: 'Indice image n′', min: 1, max: 1.9, pas: 0.05, val: 1.5 },
+        { id: 'sens', label: 'Courbure', val: 'convexe', options: [
+          { id: 'convexe', label: 'Convexe (C après le sommet)' },
+          { id: 'concave', label: 'Concave (C avant le sommet)' }
+        ] },
+        { id: 'Rm', label: 'Rayon', min: 5, max: 90, pas: 5, val: 30, unite: ' cm' },
+        { id: 'd', label: 'Objet à', min: 5, max: 160, pas: 5, val: 60, unite: ' cm' }
+      ],
+      lire: function (p) {
+        if (Math.abs(p.np - p.n) < 1e-9) {
+          return 'Sans saut d’indice, il n’y a pas de dioptre : la lumière traverse sans être ' +
+            'déviée, quelle que soit la courbure. C’est pourquoi une lentille plongée dans un ' +
+            'liquide de même indice devient invisible.';
+        }
+        var R = p.sens === 'concave' ? -p.Rm : p.Rm;
+        var V = (p.np - p.n) / (R / 100);
+        var SA = -p.d;
+        var inv = (p.np - p.n) / R + p.n / SA;
+        var base = 'V = (n′−n)/SC = ' + dec2(V) + ' D : le dioptre est ' +
+          (V > 0 ? 'CONVERGENT' : 'DIVERGENT') + '. Il faut deux choses pour converger — un saut ' +
+          'd’indice et une courbure — et c’est leur signe combiné qui décide, jamais l’un des deux seul.';
+        if (Math.abs(inv) < 1e-9) return base + ' L’objet est au foyer objet : l’image part à l’infini.';
+        var SAp = p.np / inv, g = (p.n * SAp) / (p.np * SA);
+        return base + ' La conjugaison n′/SA′ − n/SA = (n′−n)/SC donne SA′ = ' + dec1(SAp) +
+          ' cm, image ' + (SAp > 0 ? 'réelle' : 'virtuelle') + ' et ' +
+          (g < 0 ? 'renversée' : 'droite') + ' (γ = ' + dec2(g) + '). C’est le calcul qu’on refait ' +
+          'sur la cornée : saut air/larmes de 1 à 1,376 sur un rayon de 7,8 mm, et l’on retrouve ' +
+          'ses +48 D. L’œil entier n’est qu’une suite de quatre dioptres de ce genre.';
+      }
+    },
+    lentilleMince: {
+      f: lentilleMince, t: 'Les trois rayons, et le basculement réel → virtuel au foyer',
+      reglages: [
+        { id: 'type', label: 'Lentille', val: 'convergente', options: [
+          { id: 'convergente', label: 'Convergente (f′ > 0)' },
+          { id: 'divergente', label: 'Divergente (f′ < 0)' }
+        ] },
+        { id: 'fm', label: 'Distance focale', min: 5, max: 50, pas: 1, val: 20, unite: ' cm' },
+        { id: 'd', label: 'Objet à', min: 3, max: 100, pas: 1, val: 60, unite: ' cm' }
+      ],
+      lire: function (p) {
+        var fp = p.type === 'divergente' ? -p.fm : p.fm;
+        var OA = -p.d, inv = 1 / fp + 1 / OA;
+        var C = 100 / fp;
+        if (p.type === 'divergente') {
+          var OAp2 = 1 / inv;
+          return 'Une lentille divergente (C = ' + dec2(C) + ' D) donne toujours, d’un objet réel, ' +
+            'une image virtuelle, droite et rétrécie : ici OA′ = ' + dec1(OAp2) + ' cm et γ = ' +
+            dec2(OAp2 / OA) + '. C’est ce qui fait qu’un myope fort a les yeux visiblement ' +
+            'rapetissés derrière ses verres.';
+        }
+        if (Math.abs(inv) < 1e-9) {
+          return 'L’objet est au foyer objet : les rayons ressortent parallèles, l’image part à ' +
+            'l’infini. C’est le point de bascule entre les deux régimes — au-delà l’image est ' +
+            'réelle et renversée, en deçà elle devient virtuelle et droite.';
+        }
+        var OAp = 1 / inv, g = OAp / OA;
+        if (p.d > p.fm) {
+          return '1/OA′ − 1/OA = 1/f′ donne OA′ = ' + dec1(OAp) + ' cm : objet au-delà du foyer, ' +
+            'donc image RÉELLE et RENVERSÉE (γ = ' + dec2(g) + '). C’est le cas de l’œil — ' +
+            'l’image se forme sur la rétine, à l’envers, et le cortex la remet à l’endroit.';
+        }
+        return 'Objet en deçà du foyer : l’image devient VIRTUELLE, droite et agrandie (OA′ = ' +
+          dec1(OAp) + ' cm, γ = ' + dec2(g) + '). C’est le principe de la loupe, et celui du verre ' +
+          'de lecture du presbyte.';
+      }
+    },
     annonce: { f: annonce, t: 'Ce qui est retenu d’une annonce, c’est l’attitude' },
     pico: { f: pico, t: 'Un sujet trop large est la cause première d’échec' },
     parcours: { f: parcours, t: 'Deux pannes seulement, et le même remède' },

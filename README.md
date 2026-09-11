@@ -552,7 +552,7 @@ repère     Le décentrement se compte en centimètres : 3 mm = 0,3 cm. C'est l'
            un facteur 10.
 ```
 
-Les explications viennent d'un **registre de 20 formules** partagé par toute l'application, si bien
+Les explications viennent d'un **registre de 26 formules** partagé par toute l'application, si bien
 que le même calcul est expliqué de la même façon partout : dans les 11 calculatrices (14 blocs de
 démonstration), dans le calcul instantané de `Ctrl+K` (formule appliquée sous le résultat), et dans
 la section **« Les formules de cette UE »** des fiches — 12 UE en portent, de l'UE02 Optique à l'UE27
@@ -571,13 +571,23 @@ Les onze calculatrices donnaient le résultat, la formule et le raisonnement. Pe
 Or en TP comme à l'examen, c'est l'étudiant qui tient le crayon : l'application savait calculer, elle
 ne faisait jamais **calculer**.
 
-L'atelier tire des énoncés à valeurs neuves sur **quatorze calculs** — logMAR dans les deux sens, loi
+L'atelier tire des énoncés à valeurs neuves sur **vingt et un calculs** — logMAR dans les deux sens, loi
 de Prentice à l'endroit et à l'envers, dioptries prismatiques en degrés, Hirschberg, équivalent
 sphérique, transposition cylindrique, Hofstetter, AC/A, demande de convergence, punctum remotum,
-distance de sommet, Kestenbaum. Deux jeux de valeurs : **rondes**, qui se calculent de tête et servent
+distance de sommet, Kestenbaum, et les sept de l'optique géométrique d'UE02 : Descartes, l'angle
+limite, le prisme exact et le prisme mince, la vergence d'un dioptre, la conjugaison d'un miroir
+et celle d'une lentille. Deux jeux de valeurs : **rondes**, qui se calculent de tête et servent
 à installer la formule ; **quelconques**, qui obligent à poser le calcul, comme en clinique. Un
 chronomètre facultatif (60 s, ou 30 s en conditions d'examen) ne rapporte **aucun point** — en
 clinique il faut être juste, puis rapide, et pas l'inverse.
+
+Les sept postes d'optique sont les premiers à demander une **mesure algébrique** : une image peut se
+former à −30 cm, et le signe fait partie de la réponse. Leurs pièges portent donc sur ce qui se perd
+en chemin — un rayon laissé en centimètres dans une vergence, un SC pris positif pour un miroir
+concave, le facteur 2 du foyer oublié, la formule des petits angles D = (n−1)A appliquée à un prisme
+de soixante degrés, le rapport de Descartes appliqué aux angles au lieu de leurs sinus. Le banc
+vérifie qu'aucune de ces fautes ne tombe dans la tolérance de la bonne réponse : sans quoi l'erreur
+serait comptée juste, et le piège ne servirait à rien.
 
 **La solution n'est jamais accessible avant d'avoir répondu.** Il n'y a pas de bouton « voir la
 méthode » tant qu'on n'a pas validé : un calcul qu'on relit n'est pas un calcul qu'on sait faire, et
@@ -697,6 +707,33 @@ résultat clinique, la pertinence du protocole et le nombre de séances qu'il a 
 Trois exercices sont **démontrés visuellement** : le cordon de Brock (avec la diplopie physiologique
 et le croisement des deux cordons sur la perle fixée), les stéréogrammes (les trois images perçues,
 celle du centre en relief) et les cartes de Hart.
+
+### L’optique géométrique du cours d’UE02
+
+Le cours d’optique de l’UE02 part de la lumière ; le plan de l’application partait de la vergence,
+c’est-à-dire du milieu du sujet. Quatre parties ont donc été insérées **avant** l’optique
+physiologique, dans l’ordre du cours, et chacune porte son schéma vivant — parce que ces lois-là ne
+se retiennent pas en les lisant.
+
+- **Les lois de Descartes** : on pousse l’angle d’incidence et le rayon réfracté finit par
+  disparaître. Personne ne retient « sin λ = n₂/n₁ » ; tout le monde retient l’instant où le rayon
+  s’éteint.
+- **Le prisme, formules exactes** : A = r + r′, D = i + i′ − A, la condition d’émergence A < 2λ — et
+  la bascule vers **D = (n−1)A**, la seule forme dont l’orthoptiste se sert, parce qu’un prisme de
+  correction travaille à incidence quasi nulle.
+- **Le dioptre sphérique** : n′/SA′ − n/SA = (n′−n)/SC, avec les deux vérifications qui sauvent —
+  f + f′ = SC et f/f′ = −n/n′. C’est la brique dont l’œil est fait quatre fois.
+- **Les miroirs sphériques** : SF = SC/2, et le basculement réel → virtuel quand l’objet passe le
+  foyer — le miroir de dentiste.
+
+La **lentille mince** a rejoint la partie qui n’avait pas de schéma. Onze parties, onze schémas.
+
+`npm run optique` vérifie deux choses. Que chaque figure **se dessine** à toutes les positions de ses
+curseurs, bornes comprises — c’est là que les divisions par zéro attendent, et c’est ainsi qu’on a vu
+un dioptre sans saut d’indice afficher « f′ = Infinity ». Et que la **physique est juste**, sur des
+valeurs dont on connaît la réponse : l’angle limite verre/air à 41,8°, le minimum de déviation d’un
+prisme et sa symétrie r = r′, le dioptre air/verre à 1,67 D, la lentille de 20 cm qui donne γ = −0,5
+à 60 cm. Un schéma de cours faux est pire qu’aucun schéma : l’étudiant le croit, et il le révise.
 
 ### Vision Lab — mesurer un phénomène sur soi
 

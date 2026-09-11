@@ -22,6 +22,7 @@
     "seances": "node scripts/edt-essai.js",
     "anki": "node scripts/anki-essai.js",
     "anki:ecran": "electron scripts/anki-ecran.js",
+    "optique": "electron scripts/optique-essai.js",
     "lab": "node scripts/lab-essai.js",
     "lab:ecran": "electron scripts/lab-ecran.js"
   },

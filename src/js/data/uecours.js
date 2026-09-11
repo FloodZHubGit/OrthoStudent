@@ -61,13 +61,38 @@ UE01: [
 ],
 
 UE02: [
+  { fig: 'descartes',
+    img: 'Un rayon qui change de milieu est un coureur qui passe du bitume au sable : il ralentit, et sa trajectoire se casse. Plus le milieu est réfringent, plus il ralentit, et plus il se rapproche de la perpendiculaire.',
+    cle: 'n₁ sin i₁ = n₂ sin i₂. Tout le reste — angle limite, réflexion totale, fibres optiques, condition d’émergence d’un prisme — n’est que cette égalité poussée à sa borne.',
+    ex: 'C’est pourquoi un poisson vu de la berge n’est pas là où on le croit, et pourquoi l’œil, dont la cornée sépare l’air (n = 1) des larmes (n = 1,376), fait à lui seul les deux tiers de la puissance de l’œil.',
+    err: 'Oublier que sin i₂ ne peut pas dépasser 1. Quand n₁ sin i₁ > n₂, il n’y a pas de solution : le rayon ne sort pas, il est totalement réfléchi. Ce n’est pas une erreur de calcul, c’est le phénomène.' },
+
+  { fig: 'prismeGeo',
+    img: 'Un prisme est un dioptre pris deux fois : la lumière se casse en entrant, se casse encore en sortant, et les deux cassures s’ajoutent au lieu de s’annuler — parce que les deux faces ne sont pas parallèles.',
+    cle: 'A = r + r′ et D = i + i′ − A. Aux petits angles, D = (n−1)A : c’est la seule forme dont l’orthoptiste se sert, et elle suffit parce qu’un prisme de correction travaille toujours à incidence quasi nulle.',
+    ex: 'Une barre de prismes va de 1 à 40 Δ. Un prisme de 4 Δ dévie l’image de 4 cm à un mètre : c’est ce qu’on met devant un œil pour mesurer une hétérophorie au Maddox ou pour compenser une déviation.',
+    err: 'Confondre l’angle du prisme A et la déviation D. Un prisme de 8° en verre n’est pas un prisme de 8 Δ : il dévie de 4°, soit 7 Δ.' },
+
   { fig: 'vergence', img: 'La vergence est la « courbure » du faisceau. Loin, les rayons arrivent plats (vergence nulle) ; plus l’objet se rapproche, plus ils divergent, et plus il faut de puissance pour les remettre au point.',
     cle: 'V = 1/d en mètres : 1 m → 1 D, 50 cm → 2 D, 33 cm → 3 D, 25 cm → 4 D. Ces quatre couples se sachent par cœur, ils reviennent tout le temps.',
     err: 'Oublier que la distance se compte en mètres. 33 cm donne 3 D, pas 0,03 D — l’erreur d’unité est la première cause de résultat aberrant.' },
 
-  { img: 'Trois rayons suffisent à construire n’importe quelle image : celui qui arrive parallèle repart par le foyer image, celui qui passe par le centre optique ne dévie pas, celui qui vient du foyer objet repart parallèle.',
+  { fig: 'dioptreSpherique',
+    img: 'Le dioptre sphérique est la brique élémentaire : une surface courbe entre deux indices. Une lentille, c’est deux dioptres dos à dos ; un œil, c’est quatre à la suite. Tout le reste de l’optique se construit là-dessus.',
+    cle: 'n′/SA′ − n/SA = (n′−n)/SC. Deux vérifications qui sauvent : f + f′ = SC, et f/f′ = −n/n′. Si l’une des deux tombe faux, c’est une erreur de signe, jamais de calcul.',
+    ex: 'La cornée, c’est ce calcul-là : n = 1 (air), n′ = 1,376 (larmes), rayon 7,8 mm. On trouve environ +48 D pour la face antérieure seule — d’où viennent les deux tiers de la puissance de l’œil.',
+    err: 'Prendre SC positif parce que « le rayon est de 8 mm ». SC est une mesure ALGÉBRIQUE depuis le sommet : négative si le centre est en amont, positive s’il est en aval. C’est la première cause de vergence trouvée à l’envers.' },
+
+  { fig: 'lentilleMince',
+    img: 'Trois rayons suffisent à construire n’importe quelle image : celui qui arrive parallèle repart par le foyer image, celui qui passe par le centre optique ne dévie pas, celui qui vient du foyer objet repart parallèle.',
     cle: 'Toute la construction d’image tient dans ces trois rayons ; le reste n’est que convention de signe.',
     ex: 'C’est le même schéma qui explique pourquoi un myope fort voit son œil rapetissé derrière ses verres, et pourquoi un aphaque voit tout plus grand.' },
+
+  { fig: 'miroirSpherique',
+    img: 'Un miroir sphérique, c’est un dioptre où la lumière fait demi-tour au lieu de traverser. Les constructions sont les mêmes, les foyers aussi — seul le sens du retour change, et avec lui le signe.',
+    cle: 'SF = SC/2 et 2/SC = 1/SA + 1/SA′. Le foyer est au MILIEU du rayon, pas au centre : c’est la seule chose à retenir pour ne jamais se tromper de moitié.',
+    ex: 'Le miroir de dentiste : concave, objet plus près que le foyer, donc image virtuelle, droite et agrandie. C’est le même raisonnement qui explique le miroir grossissant de salle de bain, et son basculement brutal quand on s’en éloigne trop.',
+    err: 'Oublier que le centre C d’un miroir CONVEXE est dans l’espace virtuel, donc derrière le miroir. Le placer devant inverse tous les signes et rend l’image réelle alors qu’elle ne peut jamais l’être.' },
 
   { fig: 'oeilOptique',
     img: 'L’œil n’est pas une lentille, c’est une paire : une cornée très puissante et fixe (+43 D) et un cristallin plus faible mais réglable (+20 D au repos). Le gros du travail est fait avant même que l’image entre dans l’œil.',

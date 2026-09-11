@@ -1,0 +1,9 @@
+{
+  "appId": "fr.orthostudent.planning",
+  "appName": "Ortho Planning",
+  "webDir": "dist",
+  "plugins": {
+    "CapacitorHttp": { "enabled": true }
+  },
+  "android": { "allowMixedContent": false }
+}

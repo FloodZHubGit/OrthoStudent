@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Ortho Planning</string>
+    <string name="title_activity_main">Ortho Planning</string>
+    <string name="package_name">fr.orthostudent.planning</string>
+    <string name="custom_url_scheme">fr.orthostudent.planning</string>
+</resources>

@@ -1,5 +1,9 @@
 node_modules/
 dist/
+mobile/node_modules/
+mobile/dist/
+mobile/releases/
+mobile/test-output/
 out/
 .DS_Store
 Thumbs.db

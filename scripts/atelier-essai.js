@@ -11,6 +11,10 @@
    3. Chaque piège est effectivement reconnu quand on lui donne
       la valeur fausse correspondante — sinon le diagnostic ne
       sert à rien.
+   4. Pour les postes d'optique, la réponse annoncée vérifie la
+      loi — relue dans l'énoncé, pas dans le code qui l'a écrit.
+      Une mesure algébrique prise à l'envers ne casse rien : elle
+      enseigne juste le contraire de ce qu'il faut.
    ============================================================ */
 'use strict';
 const fs = require('fs');
@@ -115,6 +119,73 @@ new Function('window', fs.readFileSync(path.join(RACINE, 'src/js/data/formulas.j
 Atelier.postes.forEach(function (p) {
   if (!global.window.FORMULAS[p.formule]) dur.push(p.id + ' : formule inconnue « ' + p.formule + ' »');
 });
+
+/* ---------------- La physique des postes d'optique ----------------
+   Le reste de ce banc vérifie que les pièges se distinguent ; il ne dit
+   rien de la justesse. Or une inversion de signe dans une mesure
+   algébrique ne casse rien : elle donne juste une fausse réponse à
+   l'étudiant, sans qu'aucun test ne bronche.
+
+   On relit donc les nombres DANS L'ÉNONCÉ — pas dans le code qui l'a
+   produit — et l'on vérifie que la réponse annoncée satisfait bien la
+   loi. Ce détour par le texte fait d'une pierre deux coups : un énoncé
+   qui cesserait d'annoncer les valeurs réellement utilisées se voit
+   aussi. */
+var RAD = Math.PI / 180;
+function sin(a) { return Math.sin(a * RAD); }
+
+/* les valeurs en gras de l'énoncé, dans l'ordre, celles qui sont des nombres */
+function chiffres(enonce) {
+  var out = [];
+  (enonce.match(/<b>[^<]*<\/b>/g) || []).forEach(function (m) {
+    var t = m.replace(/<\/?b>/g, '').replace(/−/g, '-').replace(/,/g, '.');
+    var n = t.match(/-?\d+(?:\.\d+)?/);
+    if (n) out.push(parseFloat(n[0]));
+  });
+  return out;
+}
+
+var LOIS = {
+  /* n₁ sin i₁ = n₂ sin i₂ */
+  descartes: function (c, a) { return c[0] * sin(c[2]) - c[1] * sin(a); },
+  /* sin λ = n₂/n₁ */
+  angle_limite: function (c, a) { return c[0] * sin(a) - c[1]; },
+  /* D = i + i′ − A, avec A = r + r′ */
+  prisme_exact: function (c, a) {
+    var r = Math.asin(sin(c[2]) / c[1]) / RAD;
+    var ip = Math.asin(c[1] * sin(c[0] - r)) / RAD;
+    return a - (c[2] + ip - c[0]);
+  },
+  /* Δ = 100 tan((n−1)A) */
+  prisme_ortho: function (c, a) { return a - 100 * Math.tan((c[1] - 1) * c[0] * RAD); },
+  /* V = (n′−n)/SC, le rayon en mètres */
+  dioptre_vergence: function (c, a) { return a - (c[2] - c[1]) / (c[0] / 100); },
+  /* 2/SC = 1/SA + 1/SA′, miroir concave : SC = −R, objet réel : SA = −d */
+  miroir_conjug: function (c, a) { return a - 1 / (2 / -c[0] - 1 / -c[1]); },
+  /* 1/OA′ − 1/OA = 1/f′ */
+  lentille_conjug: function (c, a) { return a - 1 / (1 / c[0] + 1 / -c[1]); }
+};
+
+var lois = 0;
+Object.keys(LOIS).forEach(function (id) {
+  if (!Atelier.poste(id)) { dur.push('poste d’optique absent : ' + id); return; }
+  ['initie', 'rode'].forEach(function (niv) {
+    for (var k = 0; k < 300; k++) {
+      var s = Atelier.tirer(id, niv, graine(k * 31 + (niv === 'rode' ? 7 : 0)));
+      var c = chiffres(s.enonce);
+      var a = s.champs[0].attendu;
+      var ecart = Math.abs(LOIS[id](c, a));
+      lois++;
+      if (!isFinite(ecart) || ecart > 0.02) {
+        dur.push(id + ' : la réponse ne vérifie pas la loi (écart ' +
+          (isFinite(ecart) ? ecart.toFixed(4) : ecart) + ', énoncé ' + JSON.stringify(c) +
+          ', attendu ' + a + ')');
+        return;
+      }
+    }
+  });
+});
+console.log('\nphysique : ' + lois + ' réponses relues dans l’énoncé et confrontées à leur loi');
 
 console.log('\n' + sujets + ' sujets tirés, ' + Atelier.postes.length + ' postes.');
 if (dur.length) {
