@@ -40,7 +40,9 @@
     if (v === null || v === undefined || !isFinite(v)) return '—';
     var s = Number(v).toFixed(d === undefined ? 2 : d);
     s = s.replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '');
-    return s.replace('.', ',');
+    /* moins typographique, comme dpt() : les mesures algebriques de
+       l’optique sont les premieres valeurs negatives de l’atelier. */
+    return s.replace('.', ',').replace(/^-/, '−');
   }
   function dpt(v) { return (v > 0 ? '+' : v < 0 ? '−' : '') + nb(Math.abs(v), 2); }
   /* Optics.formatRx écrit « +1.00 (-1.00 à 180°) » : point décimal et trait
@@ -317,7 +319,254 @@
           ],
           rappel: 'addition ≈ 1 / ' + nb(dec, 2) + ' = <b>' + nb(att, 1) + ' D</b>'
         };
-      } }
+      } },
+
+    /* ============================================================
+       Optique géométrique — les exercices du cours d'UE02
+       ------------------------------------------------------------
+       Sept postes tirés des problèmes du poly : Descartes, l'angle
+       limite, le prisme exact et le prisme de l'orthoptiste, la
+       vergence d'un dioptre, la conjugaison d'un miroir et d'une
+       lentille, et le poisson-pêcheur du dioptre plan.
+
+       Les pièges ne sont pas inventés : ce sont les erreurs que la
+       convention algébrique fabrique — un signe pris à l'envers,
+       des centimètres laissés en centimètres, la formule des petits
+       angles appliquée à un prisme de soixante degrés.
+       ============================================================ */
+
+    { id: 'descartes', nom: 'Descartes — l’angle réfracté', ic: '🔦',
+      formule: 'descartes', ue: 'UE02',
+      tirer: function (rnd, niv) {
+        var n1 = pick(rnd, niv === 'rode' ? [1.33, 1.5, 1.6] : [1, 1.33, 1.5]);
+        var n2 = pick(rnd, niv === 'rode' ? [1, 1.33, 1.5, 1.6] : [1.33, 1.5]);
+        if (n1 === n2) n2 = n1 === 1.5 ? 1 : 1.5;
+        var i1 = pick(rnd, niv === 'rode' ? [38, 44, 51, 58, 65] : [40, 45, 50, 60]);
+        var sin = function (a) { return Math.sin(a * Math.PI / 180); };
+        var s = n1 * sin(i1) / n2;
+        if (Math.abs(s) > 1) { n2 = n1 + 0.3; s = n1 * sin(i1) / n2; }
+        /* Tant que « i₁ × n₁/n₂ » reste a moins d’un degre de la vraie
+           reponse, ce piege serait accepte comme juste : on ouvre
+           l’incidence jusqu’a ce que les deux se separent. */
+        while (Math.abs(i1 * n1 / n2 - Math.asin(s) * 180 / Math.PI) < 1 && i1 < 78) {
+          i1 += 6;
+          s = n1 * sin(i1) / n2;
+          if (Math.abs(s) > 1) { n2 = r2(n1 * sin(i1) / 0.97, 2); s = n1 * sin(i1) / n2; }
+        }
+        var att = r2(Math.asin(s) * 180 / Math.PI, 2);
+        var inverse = n2 * sin(i1) / n1;
+        return {
+          enonce: 'Un rayon passe d’un milieu d’indice <b>n₁ = ' + nb(n1, 2) + '</b> vers un milieu ' +
+            'd’indice <b>n₂ = ' + nb(n2, 2) + '</b> avec un angle d’incidence de <b>' + nb(i1, 0) +
+            '°</b>. Quel est l’angle de réfraction ?',
+          champs: [{ k: 'v', label: 'angle réfracté i₂', unite: '°', attendu: att, tol: 0.4, pas: 0.5 }],
+          pieges: [
+            { k: 'v', v: r2(Math.abs(inverse) <= 1 ? Math.asin(inverse) * 180 / Math.PI : 0, 2),
+              dit: 'Rapport inversé. La loi s’écrit n₁ sin i₁ = n₂ sin i₂, donc sin i₂ = ' +
+                '<b>n₁/n₂</b> × sin i₁ — l’indice du milieu d’<b>arrivée</b> est au dénominateur.' },
+            { k: 'v', v: r2(i1 * n1 / n2, 2),
+              dit: 'Vous avez appliqué le rapport aux <b>angles</b> et non à leurs sinus. ' +
+                'Descartes porte sur les sinus ; l’assimilation angle ≈ sinus n’est valable que ' +
+                'sous quelques degrés.' },
+            { k: 'v', v: r2(i1, 0),
+              dit: 'C’est l’angle d’<b>incidence</b>, pas le réfracté. Seul le rayon réfléchi ' +
+                'garde le même angle (i′ = i₁).' }
+          ],
+          rappel: 'sin i₂ = (n₁/n₂) sin i₁ = (' + nb(n1, 2) + '/' + nb(n2, 2) + ') × sin ' +
+            nb(i1, 0) + '° → i₂ = <b>' + nb(att, 1) + '°</b>' +
+            (n1 > n2 ? ' — on s’éloigne de la normale, puisqu’on va vers un milieu moins réfringent.'
+                     : ' — on se rapproche de la normale.')
+        };
+      } },
+
+    { id: 'angle_limite', nom: 'Angle limite et réflexion totale', ic: '🪞',
+      formule: 'reflexion_totale', ue: 'UE02',
+      tirer: function (rnd, niv) {
+        var n1 = pick(rnd, niv === 'rode' ? [1.33, 1.45, 1.52, 1.62, 1.7] : [1.33, 1.5, 1.6]);
+        var n2 = pick(rnd, niv === 'rode' ? [1, 1.33] : [1]);
+        if (n2 >= n1) n2 = 1;
+        var att = r2(Math.asin(n2 / n1) * 180 / Math.PI, 2);
+        return {
+          enonce: 'Un rayon va d’un milieu d’indice <b>' + nb(n1, 2) + '</b> vers un milieu ' +
+            'd’indice <b>' + nb(n2, 2) + '</b>. À partir de quel angle d’incidence n’y a-t-il ' +
+            '<b>plus aucun rayon transmis</b> ?',
+          champs: [{ k: 'v', label: 'angle limite λ', unite: '°', attendu: att, tol: 0.4, pas: 0.5 }],
+          pieges: [
+            { k: 'v', v: r2(Math.acos(n2 / n1) * 180 / Math.PI, 2),
+              dit: 'Vous avez pris l’<b>arc cosinus</b>. L’angle limite est celui dont le sinus ' +
+                'vaut n₂/n₁ : c’est là que le rayon réfracté rase la surface (i₂ = 90°).' },
+            { k: 'v', v: 90,
+              dit: 'C’est l’angle du rayon RÉFRACTÉ à la limite, pas celui de l’incident. ' +
+                'On cherche l’incidence à partir de laquelle il n’y a plus de solution.' },
+            { k: 'v', v: r2(Math.asin(n1 - n2) * 180 / Math.PI, 2),
+              dit: 'Vous avez pris la <b>différence</b> des indices. C’est la formule du ' +
+                'dioptre sphérique, où (n′−n) mesure le saut ; l’angle limite, lui, porte ' +
+                'sur leur <b>rapport</b> : sin λ = n₂/n₁.' }
+          ],
+          rappel: 'sin λ = n₂/n₁ = ' + nb(n2, 2) + '/' + nb(n1, 2) + ' → λ = <b>' + nb(att, 1) +
+            '°</b>. C’est ce qui fait marcher les fibres optiques, et ce qui empêche un prisme ' +
+            'trop ouvert de laisser sortir la lumière.'
+        };
+      } },
+
+    { id: 'prisme_exact', nom: 'Prisme — la déviation exacte', ic: '🔺',
+      formule: 'prisme_exact', ue: 'UE02',
+      tirer: function (rnd, niv) {
+        var A = pick(rnd, niv === 'rode' ? [35, 45, 55, 60] : [30, 40, 50, 60]);
+        var n = pick(rnd, niv === 'rode' ? [1.45, 1.52, 1.62] : [1.5]);
+        var i = pick(rnd, niv === 'rode' ? [42, 48, 55, 62] : [45, 50, 60]);
+        var r = Math.asin(Math.sin(i * Math.PI / 180) / n) * 180 / Math.PI;
+        var rp = A - r;
+        var s = n * Math.sin(rp * Math.PI / 180);
+        if (Math.abs(s) > 1) { A = 40; r = Math.asin(Math.sin(i * Math.PI / 180) / n) * 180 / Math.PI;
+          rp = A - r; s = n * Math.sin(rp * Math.PI / 180); }
+        var ip = Math.asin(s) * 180 / Math.PI;
+        var att = r2(i + ip - A, 2);
+        return {
+          enonce: 'Un prisme d’angle au sommet <b>A = ' + nb(A, 0) + '°</b> et d’indice <b>' +
+            nb(n, 2) + '</b> reçoit un rayon sous une incidence de <b>' + nb(i, 0) + '°</b>. ' +
+            'Quelle est la <b>déviation D</b> ?',
+          champs: [{ k: 'v', label: 'déviation D', unite: '°', attendu: att, tol: 0.5, pas: 0.5 }],
+          pieges: [
+            { k: 'v', v: r2((n - 1) * A, 2),
+              dit: 'Vous avez utilisé D = (n−1)A. Cette formule vient de l’approximation des ' +
+                'petits angles : elle ne vaut que pour un prisme de quelques degrés attaqué ' +
+                'presque de face — le prisme de l’orthoptiste, pas celui-ci.' },
+            { k: 'v', v: r2(i + ip, 2),
+              dit: 'Il manque le <b>−A</b>. La déviation vaut D = i + i′ − A : on retranche ' +
+                'l’angle du prisme, sinon on compte deux fois la géométrie du triangle.' },
+            { k: 'v', v: r2(r + rp, 2),
+              dit: 'C’est A que vous avez recalculé : A = r + r′. La déviation se lit sur les ' +
+                'angles <b>extérieurs</b> i et i′.' }
+          ],
+          rappel: 'r = ' + nb(r, 1) + '° · r′ = A − r = ' + nb(rp, 1) + '° · i′ = ' + nb(ip, 1) +
+            '° → D = i + i′ − A = <b>' + nb(att, 1) + '°</b>'
+        };
+      } },
+
+    { id: 'prisme_ortho', nom: 'Prisme mince — du degré à la dioptrie', ic: '📐',
+      calc: 'prism', formule: 'prisme', ue: 'UE02',
+      tirer: function (rnd, niv) {
+        /* en deca de 4°, la puissance en Δ et l’angle du prisme se
+           rejoignent : le premier piege deviendrait invisible. */
+        var A = pick(rnd, niv === 'rode' ? [5, 7, 9, 12, 15] : [4, 6, 8, 10, 12]);
+        var n = pick(rnd, niv === 'rode' ? [1.49, 1.52, 1.6] : [1.5]);
+        var D = (n - 1) * A;
+        var att = r2(100 * Math.tan(D * Math.PI / 180), 2);
+        return {
+          enonce: 'Un prisme mince d’angle <b>' + nb(A, 0) + '°</b> et d’indice <b>' + nb(n, 2) +
+            '</b> est posé devant un œil. Quelle est sa puissance en <b>dioptries prismatiques</b> ?',
+          champs: [{ k: 'v', label: 'puissance', unite: 'Δ', attendu: att, tol: 0.25, pas: 0.5 }],
+          pieges: [
+            { k: 'v', v: r2(A, 0),
+              dit: 'Vous avez rendu l’angle du prisme. Un prisme de ' + nb(A, 0) + '° ne dévie ' +
+                'que de (n−1)A = ' + nb(D, 1) + '° : c’est la déviation, pas la taille du verre, ' +
+                'qui fait la puissance.' },
+            { k: 'v', v: r2(100 * Math.tan(A * Math.PI / 180), 2),
+              dit: 'Vous avez converti l’angle du prisme au lieu de la <b>déviation</b>. ' +
+                'Il faut d’abord D = (n−1)A = ' + nb(D, 1) + '°, puis Δ = 100 tan D.' },
+            { k: 'v', v: r2(D, 2),
+              dit: 'C’est la déviation en <b>degrés</b>. Une dioptrie prismatique est un ' +
+                'déplacement de 1 cm à 1 m : Δ = 100 × tan D, et 1 Δ ≈ 0,57°.' }
+          ],
+          rappel: 'D = (n−1)A = ' + nb(n - 1, 2) + ' × ' + nb(A, 0) + '° = ' + nb(D, 1) +
+            '° → Δ = 100 tan D = <b>' + nb(att, 1) + ' Δ</b>'
+        };
+      } },
+
+    { id: 'dioptre_vergence', nom: 'Dioptre sphérique — la vergence', ic: '🔵',
+      formule: 'dioptre_spherique', ue: 'UE02',
+      tirer: function (rnd, niv) {
+        var n = pick(rnd, niv === 'rode' ? [1, 1.33, 1.5] : [1, 1.33]);
+        var np = pick(rnd, niv === 'rode' ? [1.33, 1.5, 1.6] : [1.5]);
+        if (np === n) np = n + 0.5;
+        var Rcm = pick(rnd, niv === 'rode' ? [-40, -25, 15, 30, 50] : [20, 40, -30]);
+        var att = r2((np - n) / (Rcm / 100), 2);
+        return {
+          enonce: 'Un dioptre sphérique de rayon <b>SC = ' + nb(Rcm, 0) + ' cm</b> sépare un ' +
+            'milieu d’indice <b>n = ' + nb(n, 2) + '</b> d’un milieu d’indice <b>n′ = ' +
+            nb(np, 2) + '</b>. Quelle est sa <b>vergence</b> ?',
+          champs: [{ k: 'v', label: 'vergence', unite: 'D', attendu: att, tol: 0.15, pas: 0.25 }],
+          pieges: [
+            { k: 'v', v: r2((np - n) / Rcm, 2),
+              dit: 'Le rayon est resté en <b>centimètres</b>. Une vergence s’exprime en m⁻¹ : ' +
+                nb(Rcm, 0) + ' cm = ' + nb(Rcm / 100, 2) + ' m. Votre résultat est cent fois ' +
+                'trop petit.' },
+            { k: 'v', v: r2((n - np) / (Rcm / 100), 2),
+              dit: 'Signe inversé : c’est <b>n′ − n</b> au numérateur, l’indice d’arrivée moins ' +
+                'l’indice de départ. Le sens de propagation décide, pas l’ordre d’écriture.' },
+            { k: 'v', v: r2(np / (Rcm / 100), 2),
+              dit: 'Vous avez oublié de retrancher n. Sans <b>saut</b> d’indice il n’y a pas de ' +
+                'dioptre : une lentille dans un liquide de même indice est invisible.' }
+          ],
+          rappel: 'V = (n′ − n)/SC = (' + nb(np, 2) + ' − ' + nb(n, 2) + ')/' + nb(Rcm / 100, 2) +
+            ' m = <b>' + nb(att, 2) + ' D</b> — dioptre ' + (att > 0 ? 'convergent' : 'divergent')
+        };
+      } },
+
+    { id: 'miroir_conjug', nom: 'Miroir sphérique — où se forme l’image', ic: '🔮',
+      formule: 'miroir_spherique', ue: 'UE02',
+      tirer: function (rnd, niv) {
+        var R = pick(rnd, niv === 'rode' ? [24, 36, 50, 64] : [20, 40, 60]);
+        var d = pick(rnd, niv === 'rode' ? [15, 22, 35, 48, 75] : [10, 30, 60, 90]);
+        /* ni au foyer (image a l’infini) ni au centre : la, le piege du
+           facteur 2 oublie diviserait par zero. */
+        if (Math.abs(d - R / 2) < 3) d = d + 10;
+        if (Math.abs(d - R) < 3) d = d + 12;
+        var SC = -R, SA = -d;
+        var att = r2(1 / (2 / SC - 1 / SA), 2);
+        return {
+          enonce: 'Un miroir <b>concave</b> de rayon <b>' + nb(R, 0) + ' cm</b> reçoit un objet ' +
+            'réel placé à <b>' + nb(d, 0) + ' cm</b> devant lui. Où se forme l’image ? ' +
+            '<i style="opacity:.68">(mesure algébrique SA′, négative devant le miroir)</i>',
+          champs: [{ k: 'v', label: 'SA′', unite: 'cm', attendu: att, tol: 1.2, pas: 1 }],
+          pieges: [
+            { k: 'v', v: r2(1 / (1 / SC - 1 / SA), 2),
+              dit: 'Il manque le <b>facteur 2</b>. La relation est 2/SC = 1/SA + 1/SA′ : le foyer ' +
+                'est au MILIEU du rayon, pas au centre.' },
+            { k: 'v', v: r2(-1 / (2 / SC - 1 / SA), 2),
+              dit: 'Bonne valeur, mauvais signe. L’objet est à gauche donc SA < 0 ; une image ' +
+                'réelle se forme <b>devant</b> le miroir, donc SA′ < 0 elle aussi.' },
+            { k: 'v', v: r2(1 / (2 / R - 1 / SA), 2),
+              dit: 'Vous avez pris SC positif. Pour un miroir <b>concave</b>, le centre est dans ' +
+                'l’espace réel, donc en amont du sommet : SC = −' + nb(R, 0) + ' cm.' }
+          ],
+          rappel: '2/SC = 1/SA + 1/SA′ avec SC = ' + nb(SC, 0) + ' et SA = ' + nb(SA, 0) +
+            ' → SA′ = <b>' + nb(att, 1) + ' cm</b>, image ' +
+            (att < 0 ? 'réelle (devant le miroir)' : 'virtuelle (derrière)')
+        };
+      } },
+
+    { id: 'lentille_conjug', nom: 'Lentille mince — position de l’image', ic: '🔍',
+      calc: 'vergence', formule: 'lentille_mince', ue: 'UE02',
+      tirer: function (rnd, niv) {
+        var f = pick(rnd, niv === 'rode' ? [-25, -12, 8, 16, 33] : [10, 20, 25, -20]);
+        var d = pick(rnd, niv === 'rode' ? [14, 27, 42, 65] : [15, 30, 50, 60]);
+        if (Math.abs(d - f) < 3) d = d + 8;
+        var OA = -d;
+        var att = r2(1 / (1 / f + 1 / OA), 2);
+        return {
+          enonce: 'Une lentille mince de distance focale <b>f′ = ' + nb(f, 0) + ' cm</b> reçoit ' +
+            'un objet réel à <b>' + nb(d, 0) + ' cm</b> devant elle. Où se forme l’image ? ' +
+            '<i style="opacity:.68">(mesure algébrique OA′, positive après la lentille)</i>',
+          champs: [{ k: 'v', label: 'OA′', unite: 'cm', attendu: att, tol: 1.2, pas: 1 }],
+          pieges: [
+            { k: 'v', v: r2(1 / (1 / f - 1 / OA), 2),
+              dit: 'Signe de OA. L’objet est <b>avant</b> la lentille, donc OA = −' + nb(d, 0) +
+                ' cm. La relation 1/OA′ − 1/OA = 1/f′ devient 1/OA′ = 1/f′ + 1/OA, avec un OA ' +
+                'négatif.' },
+            { k: 'v', v: r2(f + d, 2),
+              dit: 'Les distances ne s’ajoutent pas : ce sont leurs <b>inverses</b> qui se ' +
+                'combinent. C’est toute la raison d’être de la dioptrie.' },
+            { k: 'v', v: r2(-1 / (1 / f + 1 / OA), 2),
+              dit: 'Bonne valeur, signe inversé. Une image réelle se forme <b>après</b> la ' +
+                'lentille : OA′ > 0. Une image virtuelle est en amont, donc négative.' }
+          ],
+          rappel: '1/OA′ = 1/f′ + 1/OA = 1/' + nb(f, 0) + ' + 1/(' + nb(OA, 0) + ') → OA′ = <b>' +
+            nb(att, 1) + ' cm</b>, image ' + (att > 0 ? 'réelle et renversée' : 'virtuelle et droite')
+        };
+      } },
+
   ];
 
   /* ---------------- Tirage ---------------- */

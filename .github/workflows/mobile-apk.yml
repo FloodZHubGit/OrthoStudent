@@ -1,0 +1,32 @@
+name: APK Ortho Planning
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['mobile-v*']
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: gradle
+      - run: npm ci
+      - run: npm run cap:sync
+      - run: chmod +x android/gradlew && node scripts/build-apk.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: OrthoPlanning-APK
+          path: mobile/releases/OrthoPlanning.apk

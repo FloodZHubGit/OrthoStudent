@@ -1,0 +1,25 @@
+{
+  "name": "ortho-planning-mobile",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "test": "node --test",
+    "build": "vite build",
+    "preview": "vite preview",
+    "web": "node server.mjs",
+    "cap:sync": "npm run build && cap sync",
+    "android": "npm run cap:sync && cap open android",
+    "apk": "npm run cap:sync && node scripts/build-apk.mjs"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.1",
+    "@capacitor/core": "^8.5.1",
+    "@capacitor/preferences": "^8.0.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.4.3",
+    "vite": "^8.3.0"
+  }
+}

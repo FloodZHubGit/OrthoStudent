@@ -220,7 +220,10 @@
         jeu.i + 1 < jeu.serie.length
           ? UI.btn('Calcul suivant  ⏎', suivant, 'primary')
           : UI.btn('Voir le compte rendu', suivant, 'primary'),
-        UI.btn('Ouvrir la calculatrice', function () { App.go('converters', { calc: p.calc }); }),
+        /* trois postes d’optique n’ont pas de calculatrice qui leur corresponde */
+        p.calc
+          ? UI.btn('Ouvrir la calculatrice', function () { App.go('converters', { calc: p.calc }); })
+          : null,
         p.ue && semestreDe(p.ue)
           ? UI.btn('Revoir ' + p.ue, function () { App.go('studies', { sem: semestreDe(p.ue), ue: p.ue }); })
           : null
